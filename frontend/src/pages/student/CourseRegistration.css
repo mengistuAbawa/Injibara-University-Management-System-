@@ -1,0 +1,21 @@
+.course-registration { padding: 12px 16px 24px; color: #203247; }
+.registration-intro { margin: 12px 0 18px; line-height: 1.55; }
+.registration-status { display: grid; gap: 6px; margin: 14px 0 20px; padding: 14px 16px; border: 1px solid #b9cde0; border-left: 4px solid #2876bd; border-radius: 6px; background: #f3f8fc; }
+.registration-status.status-approved { border-left-color: #25834a; background: #f1faf4; }
+.registration-status.status-rejected { border-left-color: #b84141; background: #fff6f5; }
+.registration-status p, .registration-status ul { margin: 4px 0 0; }
+.registration-year, .registration-note { display: grid; gap: 6px; max-width: 440px; margin: 16px 0; font-weight: 600; }
+.registration-year select, .registration-note textarea { padding: 9px 10px; border: 1px solid #b7c4d1; border-radius: 5px; font: inherit; background: #fff; }
+.registration-table-wrap { overflow-x: auto; }
+.registration-table { width: 100%; border-collapse: collapse; background: #fff; }
+.registration-table th, .registration-table td { padding: 10px; border: 1px solid #d9e1e8; text-align: left; vertical-align: middle; }
+.registration-table th { background: #eaf2f9; color: #173b5d; }
+.registration-table input { width: 17px; height: 17px; }
+.registration-empty { padding: 20px !important; text-align: center !important; color: #637386; }
+.registration-submit { padding: 10px 18px; border: 0; border-radius: 5px; background: #246eb5; color: #fff; font-weight: 700; cursor: pointer; }
+.registration-submit:disabled { opacity: .55; cursor: not-allowed; }
+.registration-message { margin: 12px 0; padding: 10px 12px; border-radius: 5px; }
+.registration-message.error { background: #fff0ef; color: #922f2b; }
+.registration-message.success { background: #edf8ef; color: #21683b; }
+.registration-pending { margin: 18px 0; padding: 14px; border-radius: 5px; background: #fff8e7; color: #6d5318; }
+@media (max-width: 700px) { .course-registration { padding: 10px; } .registration-table th, .registration-table td { padding: 8px; min-width: 90px; } }

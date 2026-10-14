@@ -1,0 +1,88 @@
+.site-header {
+  width: 100%;
+}
+
+/* ---------- Top banner ---------- */
+.brand-bar {
+  display: flex;
+  align-items: center;
+  gap: 400px;
+  background: #b3dcf2;
+  padding: 10px 20px;
+  border-bottom: 2px solid #4a9fd4;
+}
+
+.brand-logo {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: #fff;
+  padding: 3px;
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #0b4a7a;
+  letter-spacing: 0.3px;
+}
+
+.brand-text h2 {
+  margin: 2px 0 0 0;
+  font-size: 15px;
+  font-weight: bold;
+  color: #1565a8;
+}
+
+/* ---------- Blue navigation bar ---------- */
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #29a3e8;
+  color: #ffffff;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 22px;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.nav-links .welcome-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 500px) {
+  .brand-logo {
+    width: 55px;
+    height: 55px;
+  }
+  .brand-text h1 {
+    font-size: 17px;
+  }
+  .brand-text h2 {
+    font-size: 12px;
+  }
+  .nav-bar {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .nav-links a {
+    margin-left: 12px;
+  }
+}

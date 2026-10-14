@@ -1,0 +1,32 @@
+.cp-page { padding: 8px 12px 20px 12px; font-family: Arial, sans-serif; font-size: 13px; }
+
+.title-strip {
+  background: #bfe0f2; border: 1px solid #7db4d6; border-radius: 2px;
+  padding: 6px 12px; color: #0b4a7a; font-weight: bold; margin-bottom: 12px;
+}
+
+.filter-row { display: flex; gap: 16px; margin-bottom: 14px; }
+.filter-row label { display: flex; flex-direction: column; font-size: 12px; font-weight: bold; }
+.filter-row select {
+  margin-top: 4px; padding: 6px 8px; border: 1px solid #999;
+  border-radius: 3px; min-width: 300px; font-size: 13px;
+}
+
+.stat-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px; margin-bottom: 20px;
+}
+
+.stat-box {
+  background: #f0f6fb; border: 1px solid #c8dceb;
+  border-radius: 6px; padding: 14px; text-align: center;
+}
+
+.stat-box.green { background: #e8f6e8; border-color: #a3d7a3; }
+.stat-box.red   { background: #fde8e8; border-color: #e8a3a3; }
+
+.stat-box .v { font-size: 22px; font-weight: bold; color: #0b3a5c; }
+.stat-box .l { font-size: 12px; color: #555; }
+
+.section-title { color: #0b3a5c; font-size: 14px; margin: 12px 0 8px 0; }
+.empty { color: #666; font-style: italic; }

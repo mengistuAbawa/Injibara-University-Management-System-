@@ -1,0 +1,31 @@
+.perf-page { padding: 8px 12px 24px 12px; font-family: Arial, sans-serif; font-size: 13px; }
+
+.title-strip {
+  background: #bfe0f2; border: 1px solid #7db4d6; border-radius: 2px;
+  padding: 8px 14px; color: #0b4a7a; font-weight: bold; margin-bottom: 16px;
+}
+
+.mini-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px; margin-bottom: 24px;
+}
+
+.mini-stats div {
+  background: #e6f2fb; border: 1px solid #c0dceb;
+  border-radius: 6px; padding: 12px; text-align: center;
+}
+
+.mini-stats div.pass { background: #e8f6e8; border-color: #a3d7a3; }
+.mini-stats div.fail { background: #fde8e8; border-color: #e8a3a3; }
+.mini-stats div.rate { background: #e8eef7; border-color: #a3b8d7; }
+
+.mini-stats strong {
+  display: block; font-size: 22px; color: #0b3a5c; margin-bottom: 2px;
+}
+
+.mini-stats span { font-size: 12px; color: #555; }
+
+.section-title { color: #0b3a5c; font-size: 14px; margin: 20px 0 8px 0; }
+.empty { color: #666; font-style: italic; }
+.pass { color: #1b7d1b; font-weight: bold; }
+.fail { color: #b30000; font-weight: bold; }

@@ -1,0 +1,156 @@
+.fieldsel-page {
+  --selection-blue: #1769aa;
+  --selection-ink: #172b4d;
+  --selection-muted: #53657d;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 40px);
+  padding: 24px clamp(16px, 4vw, 48px) 0;
+  color: var(--selection-ink);
+  background: #f4f7fb;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.fieldsel-page .title-strip {
+  margin: 0 0 20px;
+  padding: 18px 22px;
+  color: #fff;
+  background: linear-gradient(110deg, #155c9b, #2786c7);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(21, 92, 155, 0.16);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.fieldsel-page .info-block {
+  padding: clamp(18px, 3vw, 30px);
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid #e1e9f2;
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(30, 57, 87, 0.06);
+}
+
+.fieldsel-page .info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fieldsel-page .info-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(20px, 5vw, 64px);
+  border-bottom: 1px solid #edf1f6;
+}
+
+.fieldsel-page .info-row:last-child {
+  border-bottom: 0;
+}
+
+.fieldsel-page .info-item {
+  display: grid;
+  grid-template-columns: minmax(145px, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+}
+
+.fieldsel-page .info-label {
+  min-width: 0;
+  color: var(--selection-muted);
+  font-weight: 500;
+}
+
+.fieldsel-page .info-value {
+  display: block;
+  min-width: 0;
+  min-height: 22px;
+  height: auto;
+  padding: 2px 0 5px;
+  color: var(--selection-ink);
+  border-bottom: 1px dotted #b7c5d5;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fieldsel-page .start-strip {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  margin: 0 0 20px;
+  background: #eaf3fb;
+  border: 1px solid #d7e7f5;
+  border-radius: 14px;
+}
+
+.fieldsel-page .start-btn {
+  padding: 13px 24px;
+  color: #fff;
+  background: var(--selection-blue);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(23, 105, 170, 0.2);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition: background-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.fieldsel-page .start-btn:hover {
+  background: #10578f;
+  box-shadow: 0 6px 14px rgba(23, 105, 170, 0.26);
+  transform: translateY(-1px);
+}
+
+.fieldsel-page .start-btn:focus-visible {
+  outline: 3px solid #8cc7f0;
+  outline-offset: 3px;
+}
+
+.fieldsel-page .copyright-bar {
+  padding: 12px 16px;
+  margin-top: auto;
+  color: #fff;
+  background: #155c9b;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 700px) {
+  .fieldsel-page {
+    padding: 16px 14px 0;
+  }
+
+  .fieldsel-page .info-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fieldsel-page .info-row:last-child .info-item:first-child {
+    display: none;
+  }
+
+  .fieldsel-page .info-item {
+    grid-template-columns: minmax(125px, 0.8fr) minmax(0, 1.2fr);
+    min-height: 52px;
+  }
+
+  .fieldsel-page .start-strip {
+    padding: 18px 14px;
+  }
+
+  .fieldsel-page .start-btn {
+    width: 100%;
+    padding: 13px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fieldsel-page .start-btn {
+    transition: none;
+  }
+}

@@ -1,0 +1,48 @@
+.manage-page { padding: 8px 12px 20px 12px; font-family: Arial, sans-serif; font-size: 13px; }
+
+.title-strip {
+  background: #bfe0f2; border: 1px solid #7db4d6; border-radius: 2px;
+  padding: 6px 12px; color: #0b4a7a; font-weight: bold; margin-bottom: 12px;
+}
+
+.search-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.search-row input { flex: 1; max-width: 400px; padding: 6px 10px; border: 1px solid #999; border-radius: 3px; font-size: 13px; }
+
+.search-btn {
+  background: #2b7de9; color: #fff; border: none; padding: 6px 16px;
+  border-radius: 3px; cursor: pointer; font-weight: bold;
+}
+
+.msg { padding: 8px 14px; background: #e6f7e6; border: 1px solid #9ad09a; border-radius: 4px; margin-bottom: 12px; }
+
+.edit-box {
+  margin-top: 24px; padding: 20px;
+  border: 1px solid #b0b0b0; border-radius: 6px;
+  background: #fafcff;
+}
+
+.edit-box h3 { margin: 0 0 14px 0; font-size: 14px; color: #0b3a5c; }
+
+.edit-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 24px;
+}
+
+.edit-grid label { display: flex; flex-direction: column; font-size: 12px; font-weight: bold; color: #333; }
+
+.edit-grid input,
+.edit-grid select {
+  margin-top: 4px; padding: 6px 8px; border: 1px solid #999;
+  border-radius: 3px; font-size: 13px; font-family: inherit;
+}
+
+.edit-actions { display: flex; gap: 12px; margin-top: 18px; }
+
+.save-btn {
+  background: #2b7de9; color: #fff; border: none;
+  padding: 8px 22px; border-radius: 3px; font-weight: bold; cursor: pointer;
+}
+
+.cancel-btn {
+  background: #e0e0e0; border: 1px solid #999;
+  padding: 8px 20px; border-radius: 3px; cursor: pointer;
+}

@@ -1,0 +1,203 @@
+.create-student-page {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #222;
+  padding: 8px 12px 20px 12px;
+  background: #fff;
+}
+
+/* ---------- Title strip ---------- */
+.title-strip {
+  background: #bfe0f2;
+  border: 1px solid #7db4d6;
+  border-radius: 2px;
+  padding: 6px 12px;
+  color: #0b4a7a;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Banners ---------- */
+.success-banner {
+  background: #d4f7d4;
+  border: 1px solid #7cc47c;
+  color: #145214;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.temp-pass {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.temp-pass code,
+.hint code {
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: Consolas, monospace;
+  color: #b30000;
+}
+
+.hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #333;
+}
+
+.view-btn {
+  margin-top: 10px;
+  background: #2b7de9;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.error-banner {
+  background: #ffe5e5;
+  border: 1px solid #e08080;
+  color: #a00;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+/* ---------- Form ---------- */
+.reg-form {
+  max-width: 1100px;
+}
+
+.form-section {
+  border: 1px solid #b0b0b0;
+  border-radius: 4px;
+  padding: 12px 18px 18px 18px;
+  margin-bottom: 16px;
+  background: #fafcff;
+}
+
+.form-section legend {
+  padding: 0 8px;
+  color: #0b3a5c;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-grid input,
+.form-grid select {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid #999;
+  border-radius: 3px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  border-color: #2b7de9;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(43, 125, 233, 0.15);
+}
+
+.req {
+  color: #c00;
+}
+
+/* ---------- Password preview ---------- */
+.preview-box {
+  background: #fffbe6;
+  border: 1px dashed #c9a227;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.preview-label {
+  color: #7a5f00;
+  font-weight: bold;
+}
+
+.preview-box code {
+  background: #fff;
+  border: 1px solid #c9a227;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: Consolas, monospace;
+  color: #b30000;
+  font-size: 13px;
+}
+
+/* ---------- Actions ---------- */
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.submit-btn {
+  background: #2b7de9;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #1c68c9;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: #e0e0e0;
+  border: 1px solid #999;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #d0d0d0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

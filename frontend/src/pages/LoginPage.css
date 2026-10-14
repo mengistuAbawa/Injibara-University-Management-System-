@@ -1,0 +1,13 @@
+.login-container { max-width: 550px; margin: 40px auto; padding: 20px; font-family: Arial, sans-serif; }
+.login-container h2 { color: #000; font-size: 24px; margin-bottom: 20px; }
+.login-container label { display: block; margin-top: 15px; color: #333; font-weight: bold; }
+.login-container input[type="text"], .login-container input[type="password"] {
+  width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #666; border-radius: 2px; font-size: 15px;
+}
+.remember { display: flex; align-items: center; margin: 15px 0; }
+.remember label { margin: 0 0 0 8px; font-weight: normal; }
+.buttons { display: flex; gap: 15px; margin-top: 10px; }
+.cancel-btn, .reset-btn { background: #e0e0e0; border: 1px solid #aaa; padding: 12px 20px; font-size: 15px; border-radius: 3px; cursor: pointer; }
+.cancel-btn { flex: 1; }
+.reset-btn { margin-top: 20px; width: 200px; }
+.error { color: red; background: #ffe5e5; padding: 8px; border-radius: 3px; }

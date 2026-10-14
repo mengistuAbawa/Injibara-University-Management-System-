@@ -1,0 +1,32 @@
+.rep-page { padding: 8px 12px 24px 12px; font-family: Arial, sans-serif; font-size: 13px; }
+
+.title-strip {
+  background: #bfe0f2; border: 1px solid #7db4d6; border-radius: 2px;
+  padding: 6px 12px; color: #0b4a7a; font-weight: bold; margin-bottom: 14px;
+}
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+
+.tab {
+  background: #f0f0f0;
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #0b3a5c;
+}
+
+.tab.active {
+  background: #2b7de9; color: #fff; border-color: #1c68c9; font-weight: bold;
+}
+
+.tab:hover { background: #e1f0fb; }
+.tab.active:hover { background: #2b7de9; }
+
+.empty-row { text-align: center; color: #666; padding: 16px; }
+.report-actions { display: flex; gap: 8px; justify-content: flex-end; margin: 0 0 12px; }
+.report-actions button { border: 1px solid #7db4d6; border-radius: 4px; background: #fff; color: #0b4a7a; padding: 7px 12px; cursor: pointer; }
+.report-actions button:disabled { opacity: .5; cursor: default; }
+.table-scroll { overflow-x: auto; }
+@media print { .sidebar, header, .tabs, .report-actions { display: none !important; } .rep-page { padding: 0; } }

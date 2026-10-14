@@ -1,0 +1,123 @@
+.dash-layout {
+  display: flex;
+  min-height: calc(100vh - 160px);
+  background: #f5f8fc;
+}
+
+.dash-main {
+  flex: 1;
+  min-width: 0;
+  padding: 24px clamp(16px, 3vw, 36px) 40px;
+  color: #27384a;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.notice-strip {
+  margin-bottom: 22px;
+  padding: 11px 16px;
+  border: 1px solid #c5def2;
+  border-left: 4px solid #2781bd;
+  border-radius: 6px;
+  background: #eaf5fd;
+  color: #164d75;
+  font-weight: 600;
+}
+
+.greeting {
+  margin: 0 0 12px;
+  color: #163e61;
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.3;
+}
+
+.link-line,
+.intro,
+.paragraph {
+  max-width: 1000px;
+  margin: 12px 0;
+  line-height: 1.7;
+}
+
+.inline-link {
+  color: #0875b9;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.inline-link:hover { color: #064d7d; }
+.inline-link:focus-visible { outline: 2px solid #2781bd; outline-offset: 3px; }
+
+.info-list {
+  display: grid;
+  gap: 8px;
+  max-width: 1000px;
+  margin: 14px 0 24px;
+  padding: 18px 22px 18px 42px;
+  border: 1px solid #e0e8f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.info-list li { padding-left: 3px; }
+.info-list li::marker { color: #2781bd; }
+
+.section-title {
+  margin: 26px 0 10px;
+  color: #163e61;
+  font-size: 18px;
+}
+
+.guide-table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 16px 0 22px;
+  border-collapse: collapse;
+  border: 1px solid #d4dee8;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.guide-table th,
+.guide-table td {
+  padding: 10px 12px;
+  border: 1px solid #dce5ed;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+.guide-table th {
+  background: #eaf3fa;
+  color: #173f60;
+  font-weight: 700;
+}
+
+.guide-table tbody tr:nth-child(even) { background: #f8fbfd; }
+.guide-table tbody tr:hover { background: #eff7fd; }
+
+.remark-cell {
+  width: 100px;
+  text-align: center !important;
+  vertical-align: middle !important;
+  color: #596b7c;
+  font-size: 12px;
+}
+
+.dash-layout + .copyright-bar {
+  background: #17699e;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .dash-layout { flex-direction: column; }
+  .dash-main { padding: 18px 14px 28px; }
+  .guide-table { display: block; overflow-x: auto; white-space: nowrap; }
+  .guide-table th, .guide-table td { padding: 8px; }
+}

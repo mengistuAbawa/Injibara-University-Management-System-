@@ -1,0 +1,227 @@
+/* ---------------------------------------------
+   PAGE SHELL
+--------------------------------------------- */
+.mycourse-page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 110px);
+  background: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #222;
+}
+
+/* ---------------------------------------------
+   BREADCRUMB STRIP  ("My Course")
+--------------------------------------------- */
+.breadcrumb-bar {
+  background: #f0f0f0;
+  border-bottom: 1px solid #c8c8c8;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: #333;
+  text-align: right;
+}
+
+/* ---------------------------------------------
+   BLUE TITLE STRIP  ("My Courses (list of ...)")
+--------------------------------------------- */
+.title-bar {
+  background: #bfe0f2;
+  border-bottom: 1px solid #7db4d6;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: #0b4a7a;
+  font-weight: bold;
+}
+
+/* ---------------------------------------------
+   FILTER ROW  (Curriculum dropdown + Search)
+--------------------------------------------- */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 12px;
+  color: #333;
+  font-weight: normal;
+}
+
+.req {
+  color: #c00;
+  font-weight: bold;
+}
+
+.curriculum-select {
+  min-width: 380px;
+  max-width: 100%;
+  padding: 4px 6px;
+  font-size: 12px;
+  border: 1px solid #a0a0a0;
+  border-radius: 2px;
+  background: #ffffff;
+  color: #222;
+}
+
+.search-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  background: #f5f5f5;
+  border: 1px solid #a0a0a0;
+  border-radius: 2px;
+  cursor: pointer;
+  color: #222;
+}
+
+.search-btn:hover {
+  background: #e8e8e8;
+}
+
+/* ---------------------------------------------
+   GRID CONTAINER
+--------------------------------------------- */
+.grid-container {
+  flex: 1;
+  margin: 10px 14px;
+  border: 1px solid #b0b0b0;
+  border-radius: 3px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* "Drag a column header here to group by that column." */
+.grid-group-strip {
+  background: #e0e0e0;
+  border-bottom: 1px solid #b0b0b0;
+  padding: 5px 10px;
+  font-size: 11px;
+  color: #444;
+}
+
+/* ---------------------------------------------
+   KENDO-STYLE GRID TABLE
+--------------------------------------------- */
+.kendo-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.kendo-grid thead th {
+  background: linear-gradient(to bottom, #e9e9e9 0%, #d5d5d5 100%);
+  border-right: 1px solid #b0b0b0;
+  border-bottom: 1px solid #a0a0a0;
+  padding: 5px 8px;
+  text-align: left;
+  font-weight: normal;
+  color: #333;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.kendo-grid thead th:last-child {
+  border-right: none;
+}
+
+.th-label {
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.th-icons {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-size: 8px;
+  color: #555;
+  line-height: 1;
+}
+
+.sort-icon {
+  font-size: 9px;
+  letter-spacing: -2px;
+}
+
+.filter-icon {
+  font-size: 7px;
+  margin-top: 2px;
+}
+
+.kendo-grid tbody td {
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #eeeeee;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #222;
+  background: #ffffff;
+}
+
+.kendo-grid tbody td:last-child {
+  border-right: none;
+}
+
+.kendo-grid tbody tr:hover td {
+  background: #f5faff;
+}
+
+/* Empty row */
+.empty-msg {
+  text-align: center !important;
+  color: #666;
+  padding: 14px 8px !important;
+  font-size: 12px;
+  font-style: normal;
+}
+
+/* ---------------------------------------------
+   COPYRIGHT FOOTER
+--------------------------------------------- */
+.copyright-bar {
+  background: #29a3e8;
+  color: #ffffff;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: auto;
+}
+
+/* ---------------------------------------------
+   RESPONSIVE
+--------------------------------------------- */
+@media (max-width: 768px) {
+  .curriculum-select {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .kendo-grid {
+    font-size: 11px;
+  }
+
+  .kendo-grid thead th,
+  .kendo-grid tbody td {
+    padding: 4px 5px;
+  }
+
+  .grid-container {
+    overflow-x: auto;
+  }
+
+  .kendo-grid {
+    min-width: 640px;
+  }
+}

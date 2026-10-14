@@ -1,0 +1,191 @@
+/* ---------------------------------------------
+   PAGE LAYOUT
+--------------------------------------------- */
+.page-wrapper {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.body-layout {
+  display: flex;
+  min-height: calc(100vh - 110px); /* minus header height */
+}
+
+.main-content {
+  flex: 1;
+  padding: 14px 22px 40px 22px;
+  background: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #222;
+}
+
+/* ---------------------------------------------
+   NOTICE BAR  (blue strip at top of content)
+--------------------------------------------- */
+.notice-bar {
+  background: #d4e9f7;
+  color: #003366;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+/* ---------------------------------------------
+   HEADINGS
+--------------------------------------------- */
+.greeting {
+  color: #003366;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+}
+
+.section-title {
+  color: #003366;
+  font-size: 15px;
+  font-weight: bold;
+  margin: 22px 0 10px 0;
+}
+
+/* ---------------------------------------------
+   PARAGRAPHS & LINKS
+--------------------------------------------- */
+.link-line,
+.intro,
+.paragraph {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #222;
+  margin: 8px 0;
+}
+
+.inline-link {
+  color: #0b5fa5;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.inline-link:hover {
+  color: #083e6e;
+}
+
+/* ---------------------------------------------
+   BULLET LIST
+--------------------------------------------- */
+.info-list {
+  margin: 8px 0 8px 22px;
+  padding: 0;
+  list-style: disc;
+}
+
+.info-list li {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+/* ---------------------------------------------
+   CREDENTIALS TABLE
+--------------------------------------------- */
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 12px;
+  border: 1px solid #888;
+}
+
+.guide-table th,
+.guide-table td {
+  border: 1px solid #888;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.35;
+}
+
+.guide-table th {
+  background: #ffffff;
+  color: #222;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: left;
+}
+
+.guide-table td {
+  background: #ffffff;
+  font-weight: normal;
+}
+
+/* The tall Remark cell spans all 5 rows and is center-aligned */
+.remark-cell {
+  vertical-align: middle !important;
+  text-align: center !important;
+  font-size: 11px;
+  line-height: 1.25;
+  width: 90px;
+}
+
+/* ---------------------------------------------
+   RESPONSIVE
+--------------------------------------------- */
+@media (max-width: 768px) {
+  .body-layout {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 12px;
+  }
+
+  .guide-table {
+    font-size: 11px;
+  }
+
+  .guide-table th,
+  .guide-table td {
+    padding: 4px 5px;
+  }
+
+  .remark-cell {
+    font-size: 10px;
+  }
+}
+
+.welcome-page { min-height: 100vh; background: #f4f7fb; }
+.welcome-main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
+.welcome-hero { padding: 40px; border-radius: 16px; color: #fff; background: linear-gradient(120deg, #063b70, #0875a8); }
+.welcome-eyebrow { margin: 0 0 10px; color: #bde7ff; font-size: 12px; font-weight: 700; letter-spacing: .14em; }
+.welcome-hero h1, .access-card h1 { margin: 0 0 12px; font-size: clamp(30px, 5vw, 48px); }
+.welcome-hero > p:not(.welcome-eyebrow) { max-width: 620px; line-height: 1.6; }
+.welcome-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.welcome-primary, .welcome-secondary { display: inline-block; padding: 12px 20px; border-radius: 7px; font-weight: 700; text-decoration: none; }
+.welcome-primary { color: #07365e; background: #fff; }
+.welcome-secondary { color: #fff; border: 1px solid rgba(255,255,255,.7); }
+.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-top: 22px; }
+.role-card, .registration-option { padding: 20px; border: 1px solid #e1e8f0; border-radius: 10px; background: #fff; }
+.role-card h2, .registration-option h2 { margin: 0 0 8px; color: #073b68; font-size: 18px; }
+.role-card p, .registration-option p { margin: 0; color: #536273; line-height: 1.55; }
+.access-card { max-width: 720px; margin: 42px auto; padding: 32px; border: 1px solid #e1e8f0; border-radius: 14px; background: #fff; }
+.access-card .welcome-eyebrow { color: #0875a8; }
+.access-card > p { color: #536273; line-height: 1.6; }
+.registration-option { margin-top: 18px; }
+.registration-option .welcome-primary { margin-top: 16px; color: #fff; background: #0b67a3; }
+.back-link, .register-prompt a { color: #0b67a3; }
+.back-link { display: inline-block; margin-top: 22px; }
+.register-prompt { margin-top: 22px; }
+.access-form { display: grid; gap: 14px; margin-top: 22px; }
+.access-form label { display: grid; gap: 6px; color: #173a5b; font-weight: 600; }
+.access-form input, .access-form select { min-height: 42px; padding: 9px 11px; border: 1px solid #b8c6d4; border-radius: 6px; font: inherit; }
+.access-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.approval-note { margin: 0; padding: 12px; border-radius: 6px; color: #42566b; background: #eef5fa; font-size: 14px; line-height: 1.5; }
+.request-submit { border: 0; color: white; background: #0b67a3; font: inherit; cursor: pointer; }
+.request-submit:disabled { opacity: .65; cursor: wait; }
+.request-success { padding: 18px; border-radius: 8px; background: #edf8f0; }
+.request-success h2 { margin-top: 0; color: #245c35; }
+.request-success .welcome-primary { color: #fff; background: #0b67a3; }
+.request-another { display: block; margin-top: 15px; padding: 0; border: 0; color: #0b67a3; background: transparent; font: inherit; text-decoration: underline; cursor: pointer; }
+@media (max-width: 600px) { .welcome-main { padding: 24px 16px; } .welcome-hero { padding: 28px 22px; } .access-card { margin: 24px 16px; padding: 24px 20px; } .access-fields { grid-template-columns: 1fr; } }

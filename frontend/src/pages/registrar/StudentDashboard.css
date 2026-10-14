@@ -1,0 +1,134 @@
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.dash-layout {
+  display: flex;
+  min-height: calc(100vh - 160px);
+  background: #ffffff;
+}
+
+.dash-main {
+  flex: 1;
+  padding: 14px 24px 40px 22px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #222;
+}
+
+/* ============================================================
+   NOTICE STRIP
+   ============================================================ */
+.notice-strip {
+  background: #d4e9f7;
+  border: 1px solid #b5d4ea;
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #003366;
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   TEXT
+   ============================================================ */
+.greeting {
+  color: #003366;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0 0 14px 0;
+}
+
+.section-title {
+  color: #003366;
+  font-size: 15px;
+  font-weight: bold;
+  margin: 22px 0 10px 0;
+}
+
+.link-line,
+.intro,
+.paragraph {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #222;
+  margin: 10px 0;
+}
+
+.inline-link {
+  color: #0b5fa5;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.inline-link:hover { color: #083e6e; }
+
+/* ============================================================
+   BULLET LIST
+   ============================================================ */
+.info-list {
+  margin: 10px 0 10px 24px;
+  padding: 0;
+  list-style: disc;
+}
+
+.info-list li {
+  font-size: 14px;
+  line-height: 1.55;
+  margin-bottom: 5px;
+}
+
+/* ============================================================
+   CREDENTIALS TABLE
+   ============================================================ */
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  font-size: 12px;
+  border: 1px solid #888;
+}
+
+.guide-table th,
+.guide-table td {
+  border: 1px solid #888;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.35;
+  font-size: 12px;
+}
+
+.guide-table th { background: #fff; font-weight: bold; }
+.guide-table td { background: #fff; }
+
+.remark-cell {
+  vertical-align: middle !important;
+  text-align: center !important;
+  font-size: 11px;
+  line-height: 1.25;
+  width: 90px;
+}
+
+/* ============================================================
+   COPYRIGHT
+   ============================================================ */
+.copyright-bar {
+  background: #29a3e8;
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .dash-layout { flex-direction: column; }
+  .dash-main { padding: 12px; font-size: 13px; }
+  .greeting { font-size: 15px; }
+  .section-title { font-size: 14px; }
+  .guide-table th,
+  .guide-table td { padding: 4px 5px; font-size: 11px; }
+  .remark-cell { font-size: 10px; width: 70px; }
+}

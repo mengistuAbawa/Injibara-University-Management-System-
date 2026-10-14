@@ -1,0 +1,20 @@
+.profile-photo-widget { display: flex; align-items: center; gap: 10px; padding: 12px; background: #e1f0fb; border-bottom: 1px solid #a0c4e0; color: #003366; text-align: left; }
+.profile-photo-avatar { display: grid; flex: 0 0 54px; width: 54px; height: 54px; place-items: center; overflow: hidden; border: 2px solid #fff; border-radius: 50%; background: #0b67a3; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.profile-photo-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-photo-avatar span { font-size: 18px; font-weight: 700; }
+.profile-photo-details { display: grid; min-width: 0; gap: 4px; }
+.profile-photo-details > strong { overflow-wrap: anywhere; font-size: 13px; }
+.profile-photo-details > small { color: #46647e; }
+.profile-photo-actions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+.profile-photo-actions button { padding: 4px 6px; border: 1px solid #9ab9d0; border-radius: 4px; background: #fff; color: #064875; font: inherit; font-size: 10px; cursor: pointer; }
+.profile-photo-actions button:disabled { opacity: .6; cursor: wait; }
+.profile-photo-input { display: none; }
+.profile-photo-error { max-width: 130px; color: #a1231c !important; line-height: 1.35; }
+.profile-camera-backdrop { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(9, 23, 37, .72); }
+.profile-camera-dialog { display: grid; width: min(560px, 100%); gap: 14px; padding: 20px; border-radius: 12px; background: #fff; box-shadow: 0 18px 60px rgba(0,0,0,.3); }
+.profile-camera-dialog h3 { margin: 0; color: #123d64; }
+.profile-camera-dialog video { width: 100%; max-height: 65vh; border-radius: 8px; background: #17212a; object-fit: cover; }
+.profile-camera-dialog > div { display: flex; justify-content: flex-end; gap: 8px; }
+.profile-camera-dialog button { padding: 9px 14px; border: 0; border-radius: 5px; background: #0b67a3; color: #fff; font: inherit; cursor: pointer; }
+.profile-camera-dialog button + button { background: #657586; }
+@media (max-width: 768px) { .profile-photo-widget { justify-content: flex-start; } .profile-photo-error { max-width: none; } }
