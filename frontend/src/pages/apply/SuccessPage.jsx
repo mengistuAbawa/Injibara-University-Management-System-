@@ -1,0 +1,3 @@
+/** Confirmation page displayed after a successful public application. */
+import { Link, useLocation } from 'react-router-dom'; import './ApplyWizard.css';
+export default function SuccessPage(){const {state}=useLocation();return <main className="actor-page"><div className="title-strip"><h1>Application Submitted</h1></div><div className="actor-card"><p>Your application has been received.</p><h2>Reference number: {state?.request_id||'Submitted'}</h2><p>Application email: {state?.email||'See your submission details'}</p><Link className="actor-button" to="/apply/status">Check application status</Link></div></main>;}

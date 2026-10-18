@@ -24,12 +24,15 @@ const registrarRoutes   = require('./routes/registrarRoutes');
 const hodRoutes         = require('./routes/hodRoutes');
 const registrationRoutes = require('./routes/registrationRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const applicantRoutes = require('./routes/applicantRoutes');
+const alumniRoutes = require('./routes/alumniRoutes');
+const financeRoutes = require('./routes/financeRoutes');
 
 const app = express();
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json({ limit: '8mb' }));
+app.use(express.json({ limit: '12mb' }));
 app.use(morgan('dev'));
 
 // Health check
@@ -44,6 +47,9 @@ app.use('/uploads', (req, res, next) => {
 
 // Mount routers
 app.use('/api/auth',         authRoutes);
+app.use('/api/public',       applicantRoutes);
+app.use('/api/alumni',       alumniRoutes);
+app.use('/api/finance',      financeRoutes);
 app.use('/api/profile',      profileRoutes);
 app.use('/api/students',     studentRoutes);
 app.use('/api/instructors',  instructorRoutes);

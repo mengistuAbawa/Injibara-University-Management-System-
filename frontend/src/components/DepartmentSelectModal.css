@@ -1,0 +1,41 @@
+/** Layout, responsive table, and availability states for the department picker modal. */
+.department-modal-overlay{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.5)}
+.department-modal{display:flex;flex-direction:column;width:min(1000px,100%);max-height:90vh;overflow:hidden;background:#fff;border:1px solid #b7d4e5;border-radius:8px;box-shadow:0 18px 55px rgba(0,0,0,.3)}
+.department-modal-header{position:relative;display:flex;align-items:center;justify-content:center;min-height:60px;padding:12px 58px;background:#bfe0f2;color:#153d5b;border-bottom:1px solid #a9cfe4}
+.department-modal-header h2{margin:0;text-align:center;font-size:20px}
+.department-modal-close{position:absolute;right:14px;top:8px;width:40px;height:40px;border:0;background:transparent;color:#173e5b;font-size:32px;line-height:1;cursor:pointer}
+.department-modal-body{min-height:0;overflow:auto;padding:16px 20px 10px}
+.department-score{margin:0 0 14px;padding:11px 14px;background:#edf7fc;border-left:4px solid #1d78b5;color:#173d5a;font-size:16px}
+.department-filters{display:grid;grid-template-columns:minmax(200px,1fr) minmax(190px,.7fr) auto;gap:12px;align-items:end;padding:12px;margin-bottom:12px;background:#f4f8fb;border:1px solid #dce8ef;border-radius:5px}
+.department-filters label{display:grid;gap:5px;color:#304c61;font-size:13px;font-weight:600}
+.department-filters input[type=search],.department-filters select{min-width:0;height:38px;padding:7px 9px;border:1px solid #b7c8d5;border-radius:4px;font:inherit;background:white}
+.department-filters .department-available-filter{display:flex;align-items:center;gap:7px;height:38px;white-space:nowrap}
+.department-table-scroll{max-height:43vh;overflow:auto;border:1px solid #cbd9e3}
+.department-table{width:100%;border-collapse:collapse;font-size:13px}
+.department-table thead{position:sticky;top:0;z-index:1;background:linear-gradient(180deg,#2786bd,#17699e);color:#fff}
+.department-table th,.department-table td{padding:9px 8px;border:1px solid #d6e1e8;text-align:left;vertical-align:middle}
+.department-table th:first-child,.department-table td:first-child{text-align:center;width:40px}
+.department-table tbody tr{cursor:pointer;transition:background-color .12s ease}
+.department-row-eligible{background:#e8f5e9}
+.department-row-eligible:hover,.department-row-selected{background:#ccebd1}
+.department-row-ineligible{background:#fdebec;color:#743c40}
+.department-row-unavailable{background:#eceff1;color:#697780;cursor:not-allowed!important}
+.department-row-ineligible:not([aria-disabled=true]):hover{background:#f8d9dc}
+.department-current-label{display:inline-block;margin-left:5px;color:#17633b;font-weight:600}
+.department-red{color:#b4232c;font-weight:700}
+.department-priority-preview{margin:14px 0 2px;padding:12px 14px;background:#f7fafc;border:1px solid #e0e8ee;border-radius:4px}
+.department-priority-preview ol{display:flex;flex-wrap:wrap;gap:7px 28px;margin:8px 0 0;padding-left:22px}
+.department-priority-preview p{margin:7px 0 0;color:#687a88}
+.department-modal-footer{position:sticky;bottom:0;z-index:2;padding:12px 20px;background:#f1f7fb;border-top:1px solid #cbdde8;box-shadow:0 -4px 12px rgba(26,69,100,.08)}
+.department-modal-selection{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px}
+.department-modal-selection label{display:flex;align-items:center;gap:8px;font-weight:600}
+.department-modal-selection select{padding:7px 9px;border:1px solid #aebfca;border-radius:4px;background:#fff}
+.department-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:9px}
+.department-add-button,.department-cancel-button{padding:9px 16px;border:0;border-radius:4px;font:inherit;font-weight:600;cursor:pointer}
+.department-add-button{background:#176fa8;color:#fff}.department-add-button:hover:not(:disabled){background:#105982}
+.department-cancel-button{background:#dce6ec;color:#294355}
+.department-add-button:disabled{opacity:.5;cursor:not-allowed}
+.department-modal-notice{margin:8px 0 0;color:#245b7d;font-size:13px}
+.department-modal-error{color:#a3212c}
+@media(max-width:700px){.department-modal-overlay{padding:8px}.department-modal{max-height:94vh}.department-modal-header{min-height:52px}.department-modal-header h2{font-size:17px}.department-modal-body{padding:12px}.department-filters{grid-template-columns:1fr}.department-table-scroll{max-height:39vh}.department-table{min-width:760px}.department-modal-footer{padding:10px 12px}.department-modal-selection{align-items:flex-start;flex-direction:column}.department-priority-preview ol{display:block}.department-modal-actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){.department-table tbody tr{transition:none}}

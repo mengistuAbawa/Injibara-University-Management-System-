@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -10,7 +10,8 @@ const blank = { role: 'student', first_name: '', last_name: '', email: '', passw
 const ranks = ['Graduate Assistant', 'Lecturer', 'Assistant Professor', 'Associate Professor', 'Professor'];
 
 export default function RegisterPage() {
-  const [form, setForm] = useState(blank);
+  const [searchParams] = useSearchParams();
+  const [form, setForm] = useState(() => ({ ...blank, role: searchParams.get('role') === 'finance' ? 'finance' : blank.role }));
   const [departments, setDepartments] = useState([]);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -50,7 +51,7 @@ export default function RegisterPage() {
     <p>Choose your university role and complete the matching form. Your account is created only after the appropriate office approves your request.</p>
     {notice ? <div className="request-success" role="status"><h2>Request submitted</h2><p>{notice}</p><Link className="welcome-primary" to="/login">Go to login</Link><button className="request-another" type="button" onClick={() => setNotice('')}>Submit another request</button></div> : <form className="access-form" onSubmit={submit}>
       {error && <p className="error" role="alert">{error}</p>}
-      <label>University role<select name="role" value={form.role} onChange={update}><option value="student">Student</option><option value="instructor">Instructor</option><option value="head">Department head</option><option value="registrar">Registrar</option><option value="admin">Administrator</option></select></label>
+      <label>University role<select name="role" value={form.role} onChange={update}><option value="student">Student</option><option value="instructor">Instructor</option><option value="head">Department head</option><option value="finance">Finance officer</option><option value="registrar">Registrar</option><option value="admin">Administrator</option></select></label>
       <div className="access-fields">
         <label>First name<input name="first_name" value={form.first_name} onChange={update} autoComplete="given-name" required /></label>
         <label>Last name<input name="last_name" value={form.last_name} onChange={update} autoComplete="family-name" required /></label>
@@ -67,7 +68,7 @@ export default function RegisterPage() {
       {['registrar', 'admin'].includes(form.role) && <label>{form.role === 'admin' ? 'Admin' : 'Registrar'} invitation code<input type="password" name="invite_code" value={form.invite_code} onChange={update} autoComplete="one-time-code" required /><small>Get this code from the system administrator. A valid code lets you sign in immediately.</small></label>}
       {isInstructor && <label>Academic rank<select name="academic_rank" value={form.academic_rank} onChange={update} required><option value="">Choose rank</option>{ranks.map((rank) => <option key={rank}>{rank}</option>)}</select></label>}
       <label>Phone number (optional)<input type="tel" name="phone_number" value={form.phone_number} onChange={update} /></label>
-      <p className="approval-note">{['registrar', 'admin'].includes(form.role) ? `With a valid invitation code, your ${form.role} account is created and you are signed in immediately.` : 'Student, instructor, and department head requests are sent to the Registrar for review.'}</p>
+      <p className="approval-note">{['registrar', 'admin'].includes(form.role) ? `With a valid invitation code, your ${form.role} account is created and you are signed in immediately.` : form.role === 'finance' ? 'Finance officer requests are sent to the Administrator for review.' : 'Student, instructor, and department head requests are sent to the Registrar for review.'}</p>
       <button className="welcome-primary request-submit" disabled={submitting}>{submitting ? 'Submitting…' : ['registrar', 'admin'].includes(form.role) ? 'Create account and sign in' : 'Submit access request'}</button>
     </form>}
     <Link to="/" className="back-link">Back to welcome page</Link>

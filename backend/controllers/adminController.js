@@ -41,7 +41,7 @@ exports.listUsers = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { email, first_name, last_name, role } = req.body;
-    if (!email || !first_name || !last_name || !['admin','registrar','instructor','student'].includes(role)) {
+    if (!email || !first_name || !last_name || !['admin','registrar','instructor','student','finance'].includes(role)) {
       return res.status(400).json({ message: 'Name, email, and a valid role are required' });
     }
     await db.query('UPDATE users SET email = ?, first_name = ?, last_name = ?, role = ? WHERE user_id = ?',
@@ -149,8 +149,8 @@ exports.createUser = async (req, res, next) => {
     if (!req.body.first_name || !req.body.last_name) {
       return res.status(400).json({ message: 'First and last name are required' });
     }
-    if (!['registrar', 'instructor'].includes(role)) {
-      return res.status(400).json({ message: 'Admins can create registrar or instructor accounts here' });
+    if (!['registrar', 'instructor', 'finance'].includes(role)) {
+      return res.status(400).json({ message: 'Choose registrar, instructor, or finance' });
     }
     if (!req.body.employee_number) {
       return res.status(400).json({ message: 'Employee number is required to create a staff username' });
@@ -210,7 +210,7 @@ exports.toggleUserActive = async (req, res, next) => {
 exports.changeUserRole = async (req, res, next) => {
   try {
     const { role } = req.body;
-    if (!['admin','registrar','instructor','student'].includes(role)) {
+    if (!['admin','registrar','instructor','student','finance'].includes(role)) {
       return res.status(400).json({ message: 'Invalid role' });
     }
     await db.query('UPDATE users SET role = ? WHERE user_id = ?', [role, req.params.userId]);

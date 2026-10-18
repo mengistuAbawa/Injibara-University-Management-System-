@@ -277,6 +277,15 @@ exports.enrollStudent = async (req, res, next) => {
   try {
     const { student_id, section_id, academic_year } = req.body;
 
+    const [[balance]] = await db.query(
+      `SELECT COUNT(*) AS unpaid_count FROM student_invoices i
+       JOIN fee_types f ON f.fee_id = i.fee_id
+       WHERE i.student_id = ? AND f.is_mandatory = TRUE
+         AND i.status IN ('Unpaid','Partial','Overdue')`,
+      [student_id]
+    );
+    if (balance.unpaid_count > 0) return res.status(400).json({ message: 'Student has unpaid fees' });
+
     /* capacity check */
     const [[{ cap, taken }]] = await db.query(
       `SELECT

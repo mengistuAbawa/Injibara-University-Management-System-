@@ -24,6 +24,8 @@ export default function Sidebar() {
         <ul className="sidebar-list">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/graduated">Graduated Students</Link></li>
+          <li><Link to="/apply">Apply for Admission</Link></li>
+          <li><Link to="/apply/status">Check Application</Link></li>
           <li>
             <a href="https://inu.edu.et" target="_blank" rel="noreferrer">
               INU Web Site
@@ -38,15 +40,29 @@ export default function Sidebar() {
   const menus = {
     student: [
       { to: '/dashboard',           label: 'Home' },
-      { to: '/register',            label: 'Course Registration' },
       { to: '/placement-tutorials', label: 'Placement Tutorials' },
       { to: '/my-course',           label: 'My Course' },
       { to: '/my-status',           label: 'My Status' },
       { to: '/my-grade',            label: 'My Grade' },
       { to: '/field-selection',     label: 'Field Selection' },
       { to: '/selection-results',   label: 'Selection Results Summary' },
+      { to: '/my-fees',             label: 'My Fees' },
       { popup: 'priority',          label: 'Priority Summary' },
     ],
+ alumni: [
+  { to: '/alumni/dashboard', label: 'Home' },
+  { to: '/alumni/request', label: 'Request Document' },
+  { to: '/alumni/requests', label: 'My Requests' },
+  { to: '/alumni/profile', label: 'My Profile' },
+  { to: '/alumni/transcript', label: 'Transcript' },
+],
+ finance: [
+  { to: '/finance/dashboard', label: 'Dashboard' },
+  { to: '/finance/fees', label: 'Fee Types' },
+  { to: '/finance/invoices', label: 'Invoices' },
+  { to: '/finance/payments', label: 'Payments' },
+  { to: '/finance/reports', label: 'Reports' },
+],
  instructor: [
   { to: '/instructor/dashboard',    label: 'Dashboard' },
   { to: '/instructor/sections',     label: 'My Sections' },
@@ -89,13 +105,14 @@ admin: [
   { to: '/hod/students',    label: 'Department Students' },
 ] : [];
 
-  const current = [...(menus[role] || []), ...hodMenu];
+ const menuRole = role === 'student' && user.status === 'Graduated' ? 'alumni' : role;
+ const current = [...(menus[menuRole] || []), ...hodMenu];
 
   return (
     <>
       <aside className="sidebar">
         <div className="sidebar-header">
-          {role.charAt(0).toUpperCase() + role.slice(1)} Menu
+          {menuRole.charAt(0).toUpperCase() + menuRole.slice(1)} Menu
           {user.is_hod && ' (HOD)'}
         </div>
 

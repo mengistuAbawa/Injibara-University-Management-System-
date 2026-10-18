@@ -1,141 +1,85 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { getMyCourses } from '../../services/studentService';
 import './MyCourse.css';
 
+const semesterOrder = { I: 1, II: 2, Summer: 3 };
+
 export default function MyCourse() {
   const [courses, setCourses] = useState([]);
-  const [curriculum, setCurriculum] = useState('Bachelor of Science Degree in Software Engineering');
   const [loading, setLoading] = useState(true);
-
-  const load = () => {
-    setLoading(true);
-    getMyCourses()
-      .then((data) => setCourses(data || []))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  };
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    load();
+    getMyCourses()
+      .then((data) => setCourses(data || []))
+      .catch((err) => setError(err.response?.data?.message || 'Unable to load your assigned courses.'))
+      .finally(() => setLoading(false));
   }, []);
+
+  const groups = useMemo(() => {
+    const grouped = new Map();
+    courses.forEach((course) => {
+      const year = Number(course.year_level || 0);
+      const semester = course.section_semester || course.semester || 'Unassigned';
+      const key = `${year}-${semester}`;
+      if (!grouped.has(key)) grouped.set(key, { year, semester, courses: [] });
+      grouped.get(key).courses.push(course);
+    });
+    return [...grouped.values()].sort((a, b) =>
+      a.year - b.year || (semesterOrder[a.semester] || 4) - (semesterOrder[b.semester] || 4)
+    );
+  }, [courses]);
 
   return (
     <div className="mycourse-page">
-      {/* Breadcrumb strip */}
       <div className="breadcrumb-bar">My Course</div>
+      <div className="title-bar">Courses Assigned to Me</div>
+      <p className="mycourse-note">
+        Your department assigns courses according to your study year and semester. Contact your department head if an assigned course is missing.
+      </p>
 
-      {/* Title strip */}
-      <div className="title-bar">
-        My Courses (list of courses in my Curriculum...)
-      </div>
+      {error && <p className="mycourse-error" role="alert">{error}</p>}
 
-      {/* Filter row */}
-      <div className="filter-row">
-        <label className="filter-label">
-          Student's Curriculum <span className="req">*</span>
-        </label>
-
-        <select
-          className="curriculum-select"
-          value={curriculum}
-          onChange={(e) => setCurriculum(e.target.value)}
-        >
-          <option>Bachelor of Science Degree in Software Engineering</option>
-          <option>Bachelor of Science Degree in Computer Science</option>
-          <option>Bachelor of Science Degree in Information Systems</option>
-          <option>Bachelor of Science Degree in Information Technology</option>
-        </select>
-
-        <button className="search-btn" onClick={load}>
-          Search Courses
-        </button>
-      </div>
-
-      {/* Grid container */}
       <div className="grid-container">
-        {/* Kendo-style "drag a column header" strip */}
-        <div className="grid-group-strip">
-          Drag a column header here to group by that column.
-        </div>
-
-        {/* Grid header row */}
+        <div className="grid-group-strip">Courses are organized by study year and semester.</div>
         <table className="kendo-grid">
           <thead>
             <tr>
-              <th>
-                <span className="th-label">Course</span>
-                <span className="th-icons">
-                  <span className="sort-icon">⬍</span>
-                  <span className="filter-icon">▼</span>
-                </span>
-              </th>
-              <th>
-                <span className="th-label">Course Title</span>
-                <span className="th-icons">
-                  <span className="sort-icon">⬍</span>
-                  <span className="filter-icon">▼</span>
-                </span>
-              </th>
-              <th>
-                <span className="th-label">Credit</span>
-                <span className="th-icons">
-                  <span className="sort-icon">⬍</span>
-                  <span className="filter-icon">▼</span>
-                </span>
-              </th>
-              <th>
-                <span className="th-label">Year</span>
-                <span className="th-icons">
-                  <span className="sort-icon">⬍</span>
-                  <span className="filter-icon">▼</span>
-                </span>
-              </th>
-              <th>
-                <span className="th-label">Semester</span>
-                <span className="th-icons">
-                  <span className="sort-icon">⬍</span>
-                  <span className="filter-icon">▼</span>
-                </span>
-              </th>
-              <th>
-                <span className="th-label">Course Category</span>
-                <span className="th-icons">
-                  <span className="sort-icon">⬍</span>
-                  <span className="filter-icon">▼</span>
-                </span>
-              </th>
+              <th>Course code</th>
+              <th>Course title</th>
+              <th>Credits</th>
+              <th>Category</th>
+              <th>Academic year</th>
+              <th>Instructor</th>
+              <th>Schedule / Room</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan="6" className="empty-msg">
-                  Loading...
-                </td>
-              </tr>
-            ) : courses.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="empty-msg">
-                  There are no records available
-                </td>
-              </tr>
-            ) : (
-              courses.map((c, i) => (
-                <tr key={i}>
-                  <td>{c.course_code}</td>
-                  <td>{c.course_title}</td>
-                  <td>{c.credit_hours}</td>
-                  <td>{c.year_level || c.current_year || '—'}</td>
-                  <td>{c.semester || '—'}</td>
-                  <td>{c.is_elective ? 'Elective' : 'Core'}</td>
+              <tr><td colSpan="7" className="empty-msg">Loading assigned courses...</td></tr>
+            ) : groups.length === 0 ? (
+              <tr><td colSpan="7" className="empty-msg">No courses have been assigned to your account yet.</td></tr>
+            ) : groups.map((group) => (
+              <Fragment key={`${group.year}-${group.semester}`}>
+                <tr className="course-group-heading">
+                  <th colSpan="7">Year {group.year || '—'} · Semester {group.semester}</th>
                 </tr>
-              ))
-            )}
+                {group.courses.map((course, index) => (
+                  <tr key={`${course.course_code}-${index}`}>
+                    <td>{course.course_code}</td>
+                    <td>{course.course_title}</td>
+                    <td>{course.credit_hours}</td>
+                    <td>{course.category || (course.is_elective ? 'Elective' : 'Core')}</td>
+                    <td>{course.academic_year || '—'}</td>
+                    <td>{course.instructor || 'Not assigned'}</td>
+                    <td>{course.schedule || course.room || 'Not scheduled'}</td>
+                  </tr>
+                ))}
+              </Fragment>
+            ))}
           </tbody>
         </table>
       </div>
-
-      {/* Copyright footer */}
       <div className="copyright-bar">Copyright 2026</div>
     </div>
   );

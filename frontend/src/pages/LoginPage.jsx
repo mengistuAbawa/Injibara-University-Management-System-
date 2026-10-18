@@ -5,13 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import { loginApi } from '../services/authService';
 import './LoginPage.css';
 
-function roleRedirect(role, isHod) {
+function roleRedirect(role, isHod, status) {
   if (isHod) return '/hod/dashboard';
   switch (role) {
     case 'admin': return '/admin/dashboard';
     case 'registrar': return '/registrar/dashboard';
     case 'instructor': return '/instructor/dashboard';
-    case 'student': return '/dashboard';
+    case 'student': return status === 'Graduated' ? '/alumni/dashboard' : '/dashboard';
+    case 'finance': return '/finance/dashboard';
     default: return '/';
   }
 }
@@ -38,7 +39,7 @@ export default function LoginPage() {
       login(data.token, data.student);
       if (remember) localStorage.setItem('rememberUser', username);
       else localStorage.removeItem('rememberUser');
-      navigate(roleRedirect(data.student.role, data.student.is_hod));
+      navigate(roleRedirect(data.student.role, data.student.is_hod, data.student.status));
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }

@@ -1,0 +1,2 @@
+/** Step four of the prospective student application wizard. */
+export default function UploadDocuments({ value, onChange }) { return <div className="actor-grid"><label>Transcript (PDF)<input required type="file" accept="application/pdf" onChange={onChange('transcript')} /></label><label>Photo (JPG or PNG)<input required type="file" accept="image/jpeg,image/png" onChange={onChange('photo')} /></label><p>Each document must be smaller than 5 MB.</p></div>; }

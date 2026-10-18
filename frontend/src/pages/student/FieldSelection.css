@@ -111,6 +111,31 @@
   outline-offset: 3px;
 }
 
+.fieldsel-page .start-btn:disabled,
+.fieldsel-page .fieldsel-submit:disabled {
+  opacity: .52;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.fieldsel-start-content { width: min(720px, 100%); text-align: center; }
+.fieldsel-window-message { margin: 0 0 8px; color: #24455e; font-weight: 700; }
+.fieldsel-window-dates { margin: 0 0 14px; color: var(--selection-muted); font-size: 13px; }
+.fieldsel-page .fieldsel-alert,
+.fieldsel-page .fieldsel-notice { padding: 11px 15px; margin: 0 0 14px; border-radius: 7px; }
+.fieldsel-page .fieldsel-alert { color: #8e2028; background: #fdebed; border: 1px solid #f2c7cb; }
+.fieldsel-page .fieldsel-notice { color: #205d3b; background: #e9f6ed; border: 1px solid #c9e7d1; }
+.fieldsel-page .fieldsel-priorities { padding: 22px; margin: 0 0 20px; background: #fff; border: 1px solid #d5e3ed; border-radius: 12px; box-shadow: 0 5px 18px rgba(30,57,87,.06); }
+.fieldsel-page .fieldsel-priorities-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 2px solid #bfe0f2; }
+.fieldsel-page .fieldsel-priorities-heading h2 { margin: 0; color: #164f78; font-size: 19px; }
+.fieldsel-page .fieldsel-priorities-heading span { color: var(--selection-muted); font-weight: 600; }
+.fieldsel-page .fieldsel-priorities ol { padding-left: 28px; margin: 12px 0 18px; }
+.fieldsel-page .fieldsel-priorities li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 11px 8px; border-bottom: 1px solid #e9eff4; }
+.fieldsel-page .fieldsel-priorities li small { color: var(--selection-muted); }
+.fieldsel-page .fieldsel-remove { padding: 6px 10px; color: #8d252b; background: #fff; border: 1px solid #d9aeb1; border-radius: 5px; cursor: pointer; }
+.fieldsel-page .fieldsel-remove:disabled { opacity: .45; cursor: not-allowed; }
+.fieldsel-page .fieldsel-submit { display: block; margin: 18px auto 0; padding: 12px 20px; color: #fff; background: linear-gradient(110deg,#17699f,#2786c7); border: 0; border-radius: 7px; font: inherit; font-weight: 700; cursor: pointer; }
+
 .fieldsel-page .copyright-bar {
   padding: 12px 16px;
   margin-top: auto;
@@ -147,6 +172,10 @@
     width: 100%;
     padding: 13px 16px;
   }
+
+  .fieldsel-page .fieldsel-priorities { padding: 17px 14px; }
+  .fieldsel-page .fieldsel-priorities li { align-items: flex-start; }
+  .fieldsel-page .fieldsel-priorities-heading { align-items: flex-start; flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {

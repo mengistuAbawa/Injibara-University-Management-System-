@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import api from '../../services/api';
 import './StudentDashboard.css';
 
 export default function StudentDashboard() {
+  const [outstanding, setOutstanding] = useState(0);
+  useEffect(() => { api.get('/students/my-fees').then(({ data }) => setOutstanding(data.reduce((sum, invoice) => sum + Math.max(0, Number(invoice.amount_due) - Number(invoice.amount_paid)), 0))).catch(() => {}); }, []);
   return (
     <>
+      <div className="actor-kpi" style={{ margin: '16px 0' }}>Outstanding Balance<strong>{outstanding.toLocaleString()} ETB</strong><Link to="/my-fees">View invoices and payment history</Link></div>
       <div className="dash-layout">
         <main className="dash-main">
           <div className="notice-strip">

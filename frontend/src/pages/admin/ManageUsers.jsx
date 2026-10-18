@@ -39,7 +39,7 @@ export default function ManageUsers() {
       await api.post('/admin/users', { ...form, email: `${form.email.trim()}@gmail.com` });
       setForm(initialForm);
       await refresh();
-      setNotice(`${form.role === 'instructor' ? 'Instructor' : 'Registrar'} account created. Username: INU${String(form.employee_number).replace(/^INU/i, '').toUpperCase()}.`);
+      setNotice(`${form.role === 'instructor' ? 'Instructor' : form.role === 'finance' ? 'Finance' : 'Registrar'} account created. Username: INU${String(form.employee_number).replace(/^INU/i, '').toUpperCase()}.`);
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to create account.');
     }
@@ -72,7 +72,7 @@ export default function ManageUsers() {
     if (last_name === null) return;
     const email = window.prompt('Email', user.email);
     if (email === null) return;
-    const role = window.prompt('Role (admin, registrar, instructor, student)', user.role);
+    const role = window.prompt('Role (admin, registrar, instructor, student, finance)', user.role);
     if (role === null) return;
     try { await updateUser(user.user_id, { first_name, last_name, email, role }); await refresh(); setNotice('User updated.'); }
     catch (err) { setError(err.response?.data?.message || 'Unable to update user.'); }
@@ -87,7 +87,7 @@ export default function ManageUsers() {
   return (
     <section className="mu-page">
       <h2>Staff accounts</h2>
-      <p>Create registrar and instructor accounts. Their username is INU followed by their employee number.</p>
+      <p>Create registrar, instructor, and finance accounts. Staff usernames use INU followed by their employee number.</p>
       {notice && <p className="mu-notice" role="status">{notice}</p>}
       {error && <p className="mu-error" role="alert">{error}</p>}
 
@@ -95,10 +95,16 @@ export default function ManageUsers() {
         <h3>Create staff account</h3>
         <label>Email<GmailAddressInput name="email" value={form.email} onChange={update} autoComplete="off" /></label>
         <label>Initial password<input name="password" type="password" minLength="8" autoComplete="new-password" required value={form.password} onChange={update} /></label>
-        <label>Role<select name="role" value={form.role} onChange={update}><option value="registrar">Registrar</option><option value="instructor">Instructor</option></select></label>
+        <label>Role<select name="role" value={form.role} onChange={update}><option value="registrar">Registrar</option><option value="instructor">Instructor</option><option value="finance">Finance officer</option></select></label>
         {form.role === 'registrar' && <>
           <label>First name<input name="first_name" required value={form.first_name} onChange={update} /></label>
           <label>Last name<input name="last_name" required value={form.last_name} onChange={update} /></label>
+          <label>Employee number<input name="employee_number" required value={form.employee_number || ''} onChange={update} /></label>
+        </>}
+
+        {form.role === 'finance' && <>
+          <label>First name<input name="first_name" required value={form.first_name || ''} onChange={update} /></label>
+          <label>Last name<input name="last_name" required value={form.last_name || ''} onChange={update} /></label>
           <label>Employee number<input name="employee_number" required value={form.employee_number || ''} onChange={update} /></label>
         </>}
 

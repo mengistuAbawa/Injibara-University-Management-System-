@@ -3,11 +3,14 @@ const c = require('../controllers/adminController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 const accessRequests = require('../controllers/accessRequestController');
+const alumni = require('../controllers/alumniController');
 
 /* every route requires admin role */
 router.use(protect, authorize('admin'));
 router.get('/access-requests', accessRequests.list);
 router.patch('/access-requests/:requestId', accessRequests.review);
+router.get('/alumni-requests', alumni.adminList);
+router.patch('/alumni-requests/:id', alumni.adminUpdate);
 
 /* dashboard */
 router.get('/stats',                           c.getStats);

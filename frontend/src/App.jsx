@@ -17,7 +17,6 @@ import MyGrade from './pages/student/MyGrade';
 import FieldSelection from './pages/student/FieldSelection';
 import SelectDepartments from './pages/student/SelectDepartments';
 import SelectionResultsSummary from './pages/student/SelectionResultsSummary';
-import CourseRegistration from './pages/student/CourseRegistration';
 import InstructorDashboard from './pages/instructor/InstructorDashboard';
 import MySections from './pages/instructor/MySections';
 import SectionStudents from './pages/instructor/SectionStudents';
@@ -51,6 +50,24 @@ import ClassPerformance from './pages/instructor/ClassPerformance';
 import AccessRequests from './pages/AccessRequests';
 import StudentAccounts from './pages/registrar/StudentAccounts';
 import AssignInstructorSections from './pages/registrar/AssignInstructorSections';
+import ApplyWizard from './pages/apply/ApplyWizard';
+import ApplicationStatus from './pages/apply/ApplicationStatus';
+import SuccessPage from './pages/apply/SuccessPage';
+import AlumniLayout from './layouts/AlumniLayout';
+import AlumniDashboard from './pages/alumni/AlumniDashboard';
+import RequestDocument from './pages/alumni/RequestDocument';
+import MyRequests from './pages/alumni/MyRequests';
+import AlumniProfile from './pages/alumni/AlumniProfile';
+import Transcript from './pages/alumni/Transcript';
+import FinanceLayout from './layouts/FinanceLayout';
+import FinanceDashboard from './pages/finance/FinanceDashboard';
+import FeeTypes from './pages/finance/FeeTypes';
+import Invoices from './pages/finance/Invoices';
+import CreateInvoice from './pages/finance/CreateInvoice';
+import Payments from './pages/finance/Payments';
+import FinanceReports from './pages/finance/Reports';
+import StudentStatement from './pages/finance/StudentStatement';
+import MyFees from './pages/student/MyFees';
 
 export default function App() {
   return <Routes>
@@ -59,9 +76,12 @@ export default function App() {
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register-account" element={<RegisterPage />} />
     <Route path="/graduated" element={<GraduatedStudents />} />
+    <Route path="/apply" element={<ApplyWizard />} />
+    <Route path="/apply/status" element={<ApplicationStatus />} />
+    <Route path="/apply/success" element={<SuccessPage />} />
     <Route element={<StudentLayout />}>
       <Route path="/dashboard" element={<StudentDashboard />} />
-      <Route path="/register" element={<CourseRegistration />} />
+      <Route path="/register" element={<Navigate to="/my-course" replace />} />
       <Route path="/placement-tutorials" element={<PlacementTutorials />} />
       <Route path="/my-course" element={<MyCourse />} />
       <Route path="/my-status" element={<MyStatus />} />
@@ -69,6 +89,23 @@ export default function App() {
       <Route path="/field-selection" element={<FieldSelection />} />
       <Route path="/field-selection/select" element={<SelectDepartments />} />
       <Route path="/selection-results" element={<SelectionResultsSummary />} />
+      <Route path="/my-fees" element={<MyFees />} />
+    </Route>
+    <Route element={<AlumniLayout />}>
+      <Route path="/alumni/dashboard" element={<AlumniDashboard />} />
+      <Route path="/alumni/request" element={<RequestDocument />} />
+      <Route path="/alumni/requests" element={<MyRequests />} />
+      <Route path="/alumni/profile" element={<AlumniProfile />} />
+      <Route path="/alumni/transcript" element={<Transcript />} />
+    </Route>
+    <Route element={<FinanceLayout />}>
+      <Route path="/finance/dashboard" element={<FinanceDashboard />} />
+      <Route path="/finance/fees" element={<FeeTypes />} />
+      <Route path="/finance/invoices" element={<Invoices />} />
+      <Route path="/finance/invoices/create" element={<CreateInvoice />} />
+      <Route path="/finance/payments" element={<Payments />} />
+      <Route path="/finance/reports" element={<FinanceReports />} />
+      <Route path="/finance/students/:id" element={<StudentStatement />} />
     </Route>
     <Route element={<InstructorLayout />}>
       <Route path="/instructor/dashboard" element={<InstructorDashboard />} />

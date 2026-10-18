@@ -186,6 +186,28 @@
   font-style: normal;
 }
 
+.mycourse-note {
+  margin: 10px 14px 0;
+  padding: 10px 12px;
+  border-left: 4px solid #29a3e8;
+  background: #f2f9fd;
+  color: #24475e;
+  line-height: 1.5;
+}
+
+.mycourse-error {
+  margin: 10px 14px 0;
+  color: #a12622;
+}
+
+.kendo-grid .course-group-heading th {
+  padding: 8px;
+  background: #bfe0f2;
+  border-bottom: 1px solid #7db4d6;
+  color: #0b4a7a;
+  text-align: left;
+}
+
 /* ---------------------------------------------
    COPYRIGHT FOOTER
 --------------------------------------------- */
