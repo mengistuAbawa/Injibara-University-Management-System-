@@ -12,11 +12,26 @@ export default function ManageDepartments() {
   const [colleges, setColleges] = useState([]);
   const [collegeForm, setCollegeForm] = useState({ college_name: '', college_code: '' });
   const [editingCollege, setEditingCollege] = useState(null);
+  const [selectedCollegeId, setSelectedCollegeId] = useState('');
   const [form, setForm] = useState(empty);
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState('');
 
   const load = () => Promise.all([listDepartments(), listColleges()]).then(([d, c]) => { setItems(d); setColleges(c); }).catch(console.error);
+  const renderDepartmentTable = (departments) => (
+    <div className="table-scroll">
+      <table className="data-table"><thead><tr>
+        <th>Name</th><th>Code</th><th>Faculty</th><th>Capacity</th><th>Min score</th><th>Available</th><th>Students</th><th>Instructors</th><th>Courses</th><th>Actions</th>
+      </tr></thead><tbody>
+        {departments.map((d) => <tr key={d.department_id}>
+          <td>{d.department_name}</td><td>{d.department_code}</td><td>{d.faculty || '—'}</td><td>{d.capacity}</td><td>{d.min_score}</td>
+          <td>{d.is_available_for_selection ? 'Yes' : 'No'}</td><td>{d.student_count}</td><td>{d.instructor_count}</td><td>{d.course_count}</td>
+          <td><button className="mini" onClick={() => startEdit(d)}>Edit</button><button className="mini del" onClick={() => del(d.department_id)}>Delete</button></td>
+        </tr>)}
+        {!departments.length && <tr><td colSpan="10" className="empty-row">No departments in this college yet.</td></tr>}
+      </tbody></table>
+    </div>
+  );
   useEffect(() => { load(); }, []);
 
   const submit = async (e) => {
@@ -29,7 +44,7 @@ export default function ManageDepartments() {
         await createDepartment(form);
         setMessage('✅ Department created');
       }
-      setForm(empty);
+      setForm({ ...empty, college_id: selectedCollegeId });
       setEditing(null);
       load();
     } catch (err) {
@@ -39,6 +54,7 @@ export default function ManageDepartments() {
 
   const startEdit = (d) => {
     setEditing(d);
+    setSelectedCollegeId(d.college_id ? String(d.college_id) : '');
     setForm({
       department_name: d.department_name,
       department_code: d.department_code,
@@ -81,12 +97,23 @@ export default function ManageDepartments() {
       </form>
       <table className="data-table"><thead><tr><th>Name</th><th>Code</th><th>Departments</th><th>Actions</th></tr></thead><tbody>
         {colleges.map((c) => <tr key={c.college_id}><td>{c.college_name}</td><td>{c.college_code}</td><td>{c.department_count}</td><td>
+          <button className="mini" onClick={() => { setSelectedCollegeId(String(c.college_id)); setForm({ ...empty, college_id: String(c.college_id) }); }}>Manage departments</button>
           <button className="mini" onClick={() => { setEditingCollege(c); setCollegeForm({ college_name: c.college_name, college_code: c.college_code }); }}>Edit</button>
           <button className="mini del" onClick={async () => { if (window.confirm('Delete this college?')) { try { await deleteCollege(c.college_id); setMessage('College deleted'); load(); } catch (err) { setMessage(err.response?.data?.message || 'Could not delete college'); } } }}>Delete</button>
         </td></tr>)}
       </tbody></table>
 
-      <h3>Departments</h3>
+      <h3>Departments by College</h3>
+      <div className="college-filter">
+        <label htmlFor="college-filter-select">Select a college to view and assign departments</label>
+        <select id="college-filter-select" value={selectedCollegeId} onChange={(e) => {
+          setSelectedCollegeId(e.target.value);
+          if (!editing) setForm({ ...form, college_id: e.target.value });
+        }}>
+          <option value="">All colleges</option>
+          {colleges.map((college) => <option key={college.college_id} value={college.college_id}>{college.college_name}</option>)}
+        </select>
+      </div>
       <form className="dep-form" onSubmit={submit}>
         <label>Name
           <input
@@ -110,7 +137,7 @@ export default function ManageDepartments() {
             placeholder="Faculty of Technology"
           />
         </label>
-        <label>College<select value={form.college_id} onChange={(e) => setForm({ ...form, college_id: e.target.value })}><option value="">No college</option>{colleges.map((c) => <option key={c.college_id} value={c.college_id}>{c.college_name}</option>)}</select></label>
+        <label>College<select value={form.college_id} onChange={(e) => { setForm({ ...form, college_id: e.target.value }); setSelectedCollegeId(e.target.value); }}><option value="">No college</option>{colleges.map((c) => <option key={c.college_id} value={c.college_id}>{c.college_name}</option>)}</select></label>
         <label>Placement capacity<input type="number" min="1" required value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} /></label>
         <label>Minimum total score<input type="number" min="0" step="0.01" value={form.min_score} onChange={(e) => setForm({ ...form, min_score: Number(e.target.value) })} /></label>
         <label className="check-label"><input type="checkbox" checked={form.is_available_for_selection} onChange={(e) => setForm({ ...form, is_available_for_selection: e.target.checked })} /> Available for placement selection</label>
@@ -121,7 +148,7 @@ export default function ManageDepartments() {
           <button
             type="button"
             className="cancel-btn"
-            onClick={() => { setEditing(null); setForm(empty); }}
+            onClick={() => { setEditing(null); setForm({ ...empty, college_id: selectedCollegeId }); }}
           >
             Cancel
           </button>
@@ -130,39 +157,19 @@ export default function ManageDepartments() {
 
       {message && <div className="msg">{message}</div>}
 
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Code</th>
-            <th>Faculty</th>
-            <th>College</th><th>Capacity</th><th>Min score</th><th>Available</th>
-            <th>Students</th>
-            <th>Instructors</th>
-            <th>Courses</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((d) => (
-            <tr key={d.department_id}>
-              <td>{d.department_id}</td>
-              <td>{d.department_name}</td>
-              <td>{d.department_code}</td>
-              <td>{d.faculty || '—'}</td>
-              <td>{d.college_name || '—'}</td><td>{d.capacity}</td><td>{d.min_score}</td><td>{d.is_available_for_selection ? 'Yes' : 'No'}</td>
-              <td>{d.student_count}</td>
-              <td>{d.instructor_count}</td>
-              <td>{d.course_count}</td>
-              <td>
-                <button className="mini" onClick={() => startEdit(d)}>Edit</button>
-                <button className="mini del" onClick={() => del(d.department_id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="college-department-list">
+        {colleges.filter((college) => !selectedCollegeId || Number(college.college_id) === Number(selectedCollegeId)).map((college) => {
+          const collegeDepartments = items.filter((d) => Number(d.college_id) === Number(college.college_id));
+          return <section className="college-department-block" key={college.college_id}>
+            <h4>{college.college_name}<span>{collegeDepartments.length} departments</span></h4>
+            {renderDepartmentTable(collegeDepartments)}
+          </section>;
+        })}
+        {!selectedCollegeId && items.some((d) => !d.college_id) && <section className="college-department-block">
+          <h4>Unassigned departments</h4>
+          {renderDepartmentTable(items.filter((d) => !d.college_id))}
+        </section>}
+      </div>
     </div>
   );
 }

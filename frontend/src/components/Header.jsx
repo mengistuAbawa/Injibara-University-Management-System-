@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/inu-logo.png';
 import './Header.css';
@@ -6,6 +7,13 @@ import './Header.css';
 export default function Header() {
   const { user } = useAuth();
   const location = useLocation();
+  const [theme, setTheme] = useState(() => window.localStorage.getItem('inu-theme') === 'dark' ? 'dark' : 'light');
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = nextTheme;
+    window.localStorage.setItem('inu-theme', nextTheme);
+    setTheme(nextTheme);
+  };
   const today = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -39,6 +47,9 @@ export default function Header() {
           {user && location.pathname !== '/welcome' && <Link className="welcome-back-link" to="/welcome" aria-label="Back to welcome page" title="Back to welcome page">← Welcome</Link>}
           <Link to="/">Home</Link>
           <Link to="/login">Login</Link>
+          <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} aria-pressed={theme === 'dark'}>
+            {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+          </button>
         </nav>
       </div>
     </header>

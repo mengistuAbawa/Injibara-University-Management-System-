@@ -1,0 +1,36 @@
+.gmail-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  overflow: hidden;
+  border: 1px solid #aab7c4;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.gmail-input input {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.gmail-domain {
+  padding: 0 10px 0 0;
+  color: #526579;
+  white-space: nowrap;
+}
+
+:root[data-theme="dark"] .gmail-input {
+  border-color: #526273;
+  background: #111923;
+}
+
+:root[data-theme="dark"] .gmail-input input { color: #f0f5fa; }
+:root[data-theme="dark"] .gmail-domain { color: #c3d2e1; }

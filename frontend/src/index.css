@@ -1,5 +1,5 @@
 * { box-sizing: border-box; }
-body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #222; background: #fff; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #222; background: #fff; transition: background-color .2s ease, color .2s ease; }
 .layout { display: flex; min-height: 100vh; }
 .content { flex: 1; padding: 20px; }
 
@@ -28,3 +28,78 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #222; backgr
 .field-option span { color:#003366; }
 .table-scroll { overflow-x:auto; }
 @media (max-width: 720px) { .layout { display:block; } .sidebar { width:100%; min-height:0; } .content { padding:14px; } .form-grid { grid-template-columns:1fr; } }
+
+/* Persistent dark theme */
+:root[data-theme="dark"] { color-scheme: dark; }
+:root[data-theme="dark"] body { color: #e6edf5; background: #111923; }
+:root[data-theme="dark"] .content { background: #111923; }
+:root[data-theme="dark"] .brand-bar { background: #172b3b; border-color: #315a78; }
+:root[data-theme="dark"] .brand-text h1 { color: #e2f2ff; }
+:root[data-theme="dark"] .brand-text h2 { color: #a9d6f5; }
+:root[data-theme="dark"] .nav-bar { background: #174d70; }
+:root[data-theme="dark"] .sidebar { background: #17212d; border-color: #344454; }
+:root[data-theme="dark"] .sidebar-header,
+:root[data-theme="dark"] .user-badge { background: #20384b; color: #dceeff; border-color: #3a566d; }
+:root[data-theme="dark"] .sidebar-list li a,
+:root[data-theme="dark"] .sidebar-popup-btn,
+:root[data-theme="dark"] .logout-btn { color: #dce5ee; border-color: #2b3947; }
+:root[data-theme="dark"] .sidebar-list li a:hover,
+:root[data-theme="dark"] .sidebar-popup-btn:hover,
+:root[data-theme="dark"] .logout-btn:hover { background: #29465d; }
+:root[data-theme="dark"] .data-table th { background: #20384b; color: #e2f2ff; }
+:root[data-theme="dark"] .data-table th,
+:root[data-theme="dark"] .data-table td { border-color: #3b4a59; }
+:root[data-theme="dark"] .data-table tr { background-color: #17212d; color: #e6edf5; }
+:root[data-theme="dark"] .data-table tr:nth-child(even) { background-color: #1b2835; }
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .form-card,
+:root[data-theme="dark"] .mu-form,
+:root[data-theme="dark"] [class*="-card"],
+:root[data-theme="dark"] [class*="-panel"] { background-color: #1a2734; border-color: #3b4a59; color: #e6edf5; }
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .form-card label,
+:root[data-theme="dark"] .mu-page > h2,
+:root[data-theme="dark"] .mu-form h3,
+:root[data-theme="dark"] .mu-form label { color: #dceeff; }
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea { color-scheme: dark; background-color: #111923; color: #e6edf5; border-color: #526273; }
+:root[data-theme="dark"] .mu-page > p { color: #b7c5d3; }
+:root[data-theme="dark"] .mu-page .data-table button { color: #e6edf5; background: #243545; border-color: #526273; }
+:root[data-theme="dark"] a { color: #8dcaff; }
+:root[data-theme="dark"] .nav-links a,
+:root[data-theme="dark"] .nav-links .theme-toggle { color: #fff; }
+:root[data-theme="dark"] .field-option { border-color: #344454; }
+:root[data-theme="dark"] .field-option span { color: #dceeff; }
+
+/* Keep page-level styles from leaving dark text on dark surfaces. */
+:root[data-theme="dark"] body :where(h1, h2, h3, h4, h5, h6, p, span, label, li, td, th, dt, dd, small, strong, em, legend, figcaption) {
+  color: #e6edf5 !important;
+}
+:root[data-theme="dark"] body a { color: #91ceff !important; }
+:root[data-theme="dark"] body .nav-bar a,
+:root[data-theme="dark"] body .nav-bar button { color: #fff !important; }
+:root[data-theme="dark"] body :where([class*="-card"], [class*="-panel"], [class*="-box"], [class*="-form"], [class*="-list"], [class*="-detail"], [class*="-container"]) {
+  background-color: #1a2734 !important;
+  border-color: #3b4a59;
+}
+:root[data-theme="dark"] body button {
+  background-color: #28445c !important;
+  color: #fff !important;
+  border-color: #526b80;
+}
+:root[data-theme="dark"] body :where(.msg, .error, .success, .notice, [class*="-error"], [class*="-success"], [class*="-notice"], [class*="-warning"], [class*="-warn"]) {
+  background-color: #253443 !important;
+  color: #f0f5fa !important;
+  border-color: #526273;
+}
+:root[data-theme="dark"] body :where(.pass, .fail) { color: #e6edf5 !important; }
+:root[data-theme="dark"] body input,
+:root[data-theme="dark"] body select,
+:root[data-theme="dark"] body textarea {
+  background-color: #111923 !important;
+  color: #f0f5fa !important;
+  border-color: #526273;
+}
+:root[data-theme="dark"] body input::placeholder,
+:root[data-theme="dark"] body textarea::placeholder { color: #aab8c7; }

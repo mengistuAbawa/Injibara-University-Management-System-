@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { updateUser, deleteUser } from '../../services/adminService';
+import GmailAddressInput from '../../components/GmailAddressInput';
 import './ManageUsers.css';
 
 const initialForm = { email: '', password: '', role: 'registrar', employee_number: '', first_name: '', last_name: '' };
@@ -35,7 +36,7 @@ export default function ManageUsers() {
     setNotice('');
     setError('');
     try {
-      await api.post('/admin/users', form);
+      await api.post('/admin/users', { ...form, email: `${form.email.trim()}@gmail.com` });
       setForm(initialForm);
       await refresh();
       setNotice(`${form.role === 'instructor' ? 'Instructor' : 'Registrar'} account created. Username: INU${String(form.employee_number).replace(/^INU/i, '').toUpperCase()}.`);
@@ -78,7 +79,7 @@ export default function ManageUsers() {
   };
 
   const removeUser = async (user) => {
-    if (!window.confirm(`Delete ${user.username || user.email}? Users with student or instructor records are protected.`)) return;
+    if (!window.confirm(`Permanently delete ${user.username || user.email}? This also deletes linked student records and removes any instructor assignments from sections.`)) return;
     try { await deleteUser(user.user_id); await refresh(); setNotice('User deleted.'); }
     catch (err) { setError(err.response?.data?.message || 'Unable to delete user.'); }
   };
@@ -92,7 +93,7 @@ export default function ManageUsers() {
 
       <form className="mu-form" onSubmit={create}>
         <h3>Create staff account</h3>
-        <label>Email<input name="email" type="email" autoComplete="off" required value={form.email} onChange={update} /></label>
+        <label>Email<GmailAddressInput name="email" value={form.email} onChange={update} autoComplete="off" /></label>
         <label>Initial password<input name="password" type="password" minLength="8" autoComplete="new-password" required value={form.password} onChange={update} /></label>
         <label>Role<select name="role" value={form.role} onChange={update}><option value="registrar">Registrar</option><option value="instructor">Instructor</option></select></label>
         {form.role === 'registrar' && <>

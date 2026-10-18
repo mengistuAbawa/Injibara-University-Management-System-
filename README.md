@@ -10,7 +10,7 @@ INU Portal is a React and Express university portal backed by MySQL. It supports
 
 ## Database setup
 
-In phpMyAdmin, import `database/university_db.sql`, then import `database/seed.sql`. The schema creates `university_db`; the seed file inserts the sample departments, roles, course, enrollment, grade, and field options.
+In phpMyAdmin, import `database/university_db.sql`, then import `database/seed.sql`, then import `database/migrations/20261014_seed_colleges_and_departments.sql`. The schema creates `university_db`; the seed file inserts sample accounts and academic records; the final script adds the eight colleges and their departments from the supplied list. That script is safe to run more than once.
 
 If `university_db` already exists and registration pages report that `student_registration_requests` is missing, import `database/migrations/20261011_student_registration_requests.sql` in phpMyAdmin. It creates both request tables without replacing existing data. For a fresh database, `university_db.sql` already includes them.
 

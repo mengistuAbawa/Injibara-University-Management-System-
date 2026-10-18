@@ -58,17 +58,40 @@ exports.updateUser = async (req, res, next) => {
 };
 
 exports.deleteUser = async (req, res, next) => {
+  let conn;
   try {
     if (Number(req.params.userId) === Number(req.user.id || req.user.user_id)) return res.status(400).json({ message: 'You cannot delete your own account' });
-    const [[linked]] = await db.query(
-      `SELECT (SELECT COUNT(*) FROM students WHERE user_id = ?) +
-              (SELECT COUNT(*) FROM instructors WHERE user_id = ?) AS linked`,
-      [req.params.userId, req.params.userId]
+
+    conn = await db.getConnection();
+    await conn.beginTransaction();
+
+    const [[user]] = await conn.query(
+      'SELECT user_id FROM users WHERE user_id = ? FOR UPDATE',
+      [req.params.userId]
     );
-    if (linked.linked) return res.status(400).json({ message: 'Cannot delete a user with a student or instructor record' });
-    await db.query('DELETE FROM users WHERE user_id = ?', [req.params.userId]);
+    if (!user) {
+      await conn.rollback();
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Sections restrict instructor deletion, so clear assignments first. Student
+    // profiles and their dependent records are removed by the configured cascades.
+    await conn.query(
+      `UPDATE sections s
+       INNER JOIN instructors i ON i.instructor_id = s.instructor_id
+       SET s.instructor_id = NULL
+       WHERE i.user_id = ?`,
+      [req.params.userId]
+    );
+    await conn.query('DELETE FROM users WHERE user_id = ?', [req.params.userId]);
+    await conn.commit();
     res.json({ message: 'User deleted' });
-  } catch (err) { next(err); }
+  } catch (err) {
+    if (conn) await conn.rollback();
+    next(err);
+  } finally {
+    if (conn) conn.release();
+  }
 };
 
 /* =========================================================

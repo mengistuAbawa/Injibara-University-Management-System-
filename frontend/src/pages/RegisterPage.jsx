@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import GmailAddressInput from '../components/GmailAddressInput';
 import './HomePage.css';
 
 const blank = { role: 'student', first_name: '', last_name: '', email: '', password: '', student_number: '', grandfather_name: '', employee_number: '', invite_code: '', department_id: '', academic_rank: '', phone_number: '' };
@@ -32,7 +33,7 @@ export default function RegisterPage() {
   const submit = async (event) => {
     event.preventDefault(); setError(''); setNotice(''); setSubmitting(true);
     try {
-      const { data } = await api.post('/auth/access-requests', form);
+      const { data } = await api.post('/auth/access-requests', { ...form, email: `${form.email.trim()}@gmail.com` });
       if (data.token && data.user) {
         login(data.token, data.user);
         navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/registrar/dashboard');
@@ -54,7 +55,7 @@ export default function RegisterPage() {
         <label>First name<input name="first_name" value={form.first_name} onChange={update} autoComplete="given-name" required /></label>
         <label>Last name<input name="last_name" value={form.last_name} onChange={update} autoComplete="family-name" required /></label>
       </div>
-      <label>Email address<input type="email" name="email" value={form.email} onChange={update} autoComplete="email" required /></label>
+      <label>Email address<GmailAddressInput name="email" value={form.email} onChange={update} /></label>
       <label>Password (at least 8 characters)<input type="password" name="password" value={form.password} onChange={update} minLength="8" autoComplete="new-password" required /></label>
       {isStudent && <>
         <label>Student number<input name="student_number" value={form.student_number} onChange={update} required /></label>

@@ -38,3 +38,14 @@
 }
 .mini:hover { background: #e1f0fb; }
 .mini.del { color: #b30000; }
+
+.college-department-list { display: grid; gap: 16px; }
+.college-department-block { min-width: 0; border: 1px solid #d0e3f0; border-radius: 6px; background: #fff; overflow: hidden; }
+.college-department-block h4 { display: flex; justify-content: space-between; gap: 12px; margin: 0; padding: 11px 14px; background: #eaf4fa; color: #164d70; font-size: 14px; }
+.college-department-block h4 span { color: #526b7c; font-size: 12px; font-weight: normal; }
+.table-scroll { overflow-x: auto; }
+.college-department-block .data-table { margin: 0; min-width: 900px; }
+.empty-row { padding: 14px; color: #667; text-align: center; }
+.college-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 12px; padding: 12px 14px; border: 1px solid #d0e3f0; border-radius: 6px; background: #f5f9fc; }
+.college-filter label { color: #164d70; font-weight: bold; }
+.college-filter select { min-width: 280px; padding: 7px 9px; border: 1px solid #999; border-radius: 3px; background: #fff; font-size: 13px; }
