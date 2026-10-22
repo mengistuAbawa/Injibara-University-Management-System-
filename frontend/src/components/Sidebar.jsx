@@ -63,6 +63,17 @@ export default function Sidebar() {
   { to: '/finance/payments', label: 'Payments' },
   { to: '/finance/reports', label: 'Reports' },
 ],
+ dean: [
+  { to: '/dean/dashboard', label: '🏛 Dean Dashboard' },
+  { to: '/dean/departments', label: '🏢 Departments' },
+  { to: '/dean/offerings', label: '📚 Course Offerings' },
+  { to: '/dean/grade-approvals', label: '✅ Grade Approvals' },
+  { to: '/dean/statistics', label: '📊 Statistics' },
+  { to: '/dean/allocation-results', label: '📑 Allocation Results' },
+  { to: '/dean/hods', label: '👨‍🏫 HOD Monitor' },
+  { to: '/dean/ng-students', label: '⚠️ NG Students' },
+  { to: '/dean/top-students', label: '🏆 Top Students' },
+],
  instructor: [
   { to: '/instructor/dashboard',    label: 'Dashboard' },
   { to: '/instructor/sections',     label: 'My Sections' },
@@ -106,7 +117,9 @@ admin: [
 ] : [];
 
  const menuRole = role === 'student' && user.status === 'Graduated' ? 'alumni' : role;
- const current = [...(menus[menuRole] || []), ...hodMenu];
+ const current = user.is_dean
+   ? [...(menus.dean || []), ...(menus.instructor || [])]
+   : [...(menus[menuRole] || []), ...hodMenu];
 
   return (
     <>

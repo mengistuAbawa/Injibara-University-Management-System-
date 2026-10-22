@@ -156,6 +156,14 @@
 }
 
 .welcome-page { min-height: 100vh; background: #f4f7fb; }
+.welcome-home {
+  background-image:
+    linear-gradient(rgba(244, 247, 251, .3), rgba(244, 247, 251, .4)),
+    url('https://pbs.twimg.com/media/FTNDWbfWIAEFNjU.jpg');
+  background-position: center;
+  background-size: cover;
+  background-attachment: scroll;
+}
 .welcome-main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
 .welcome-hero { padding: 40px; border-radius: 16px; color: #fff; background: linear-gradient(120deg, #063b70, #0875a8); }
 .welcome-eyebrow { margin: 0 0 10px; color: #bde7ff; font-size: 12px; font-weight: 700; letter-spacing: .14em; }
@@ -170,6 +178,15 @@
 .role-card h2, .registration-option h2 { margin: 0 0 8px; color: #073b68; font-size: 18px; }
 .role-card p, .registration-option p { margin: 0; color: #536273; line-height: 1.55; }
 .role-request-link { display: inline-block; margin-top: 12px; color: #0b67a3; font-weight: 700; }
+.welcome-footer { color: #e8f2fb; background: #07365e; }
+.welcome-footer-inner { display: grid; grid-template-columns: 1fr auto; gap: 18px 32px; max-width: 1120px; margin: 0 auto; padding: 28px 24px 20px; }
+.welcome-footer-brand { display: grid; gap: 5px; }
+.welcome-footer-brand strong { color: #fff; font-size: 17px; }
+.welcome-footer-brand span { color: #c5d9ea; font-size: 13px; }
+.welcome-footer-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px 20px; }
+.welcome-footer-links a { color: #fff; font-size: 14px; text-decoration: none; }
+.welcome-footer-links a:hover { text-decoration: underline; }
+.welcome-footer-copy { grid-column: 1 / -1; margin: 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.2); color: #c5d9ea; font-size: 12px; }
 .access-card { max-width: 720px; margin: 42px auto; padding: 32px; border: 1px solid #e1e8f0; border-radius: 14px; background: #fff; }
 .access-card .welcome-eyebrow { color: #0875a8; }
 .access-card > p { color: #536273; line-height: 1.6; }
@@ -189,4 +206,4 @@
 .request-success h2 { margin-top: 0; color: #245c35; }
 .request-success .welcome-primary { color: #fff; background: #0b67a3; }
 .request-another { display: block; margin-top: 15px; padding: 0; border: 0; color: #0b67a3; background: transparent; font: inherit; text-decoration: underline; cursor: pointer; }
-@media (max-width: 600px) { .welcome-main { padding: 24px 16px; } .welcome-hero { padding: 28px 22px; } .access-card { margin: 24px 16px; padding: 24px 20px; } .access-fields { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .welcome-main { padding: 24px 16px; } .welcome-hero { padding: 28px 22px; } .access-card { margin: 24px 16px; padding: 24px 20px; } .access-fields { grid-template-columns: 1fr; } .welcome-footer-inner { grid-template-columns: 1fr; padding: 24px 16px 18px; } .welcome-footer-links { justify-content: flex-start; } }

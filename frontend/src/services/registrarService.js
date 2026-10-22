@@ -11,6 +11,8 @@ export const updateStudent         = (id, data) => api.put(`/registrar/students/
 
 /* enrollments */
 export const listSections          = ()         => api.get('/registrar/sections').then(r => r.data);
+export const listDepartmentOfferings = (params = {}) => api.get('/registrar/offerings', { params }).then(r => r.data);
+export const createSection = (payload) => api.post('/registrar/sections', payload).then(r => r.data);
 export const getSectionStudents = (sectionId) =>
   api.get(`/registrar/sections/${sectionId}/students`).then(r => r.data);
 export const enrollStudent         = (payload)  => api.post('/registrar/enrollments', payload).then(r => r.data);

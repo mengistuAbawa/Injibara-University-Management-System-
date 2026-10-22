@@ -13,8 +13,6 @@ router.get('/overview',                c.getOverview);
 /* department resources */
 router.get('/instructors',             c.listInstructors);
 router.get('/courses',                 c.listCourses);
-router.post('/courses',                c.createCourse);
-router.put('/courses/:courseId',        c.updateCourse);
 router.get('/sections',                c.listSections);
 router.put('/sections/:sectionId',      c.updateSection);
 router.get('/students',                c.listStudents);
@@ -26,8 +24,5 @@ router.delete('/sections/:sectionId/unassign', c.unassignInstructor);
 /* reports */
 router.get('/performance',             c.getPerformance);
 router.get('/grade-distribution',      c.getGradeDistribution);
-
-/* course approval (optional) */
-router.patch('/courses/:courseId/approve', c.approveCourse);
 
 module.exports = router;

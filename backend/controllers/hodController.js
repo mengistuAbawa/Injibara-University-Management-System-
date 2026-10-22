@@ -86,15 +86,12 @@ exports.listCourses = async (req, res, next) => {
     if (!deptId) return res.status(403).json({ message: 'Not a HOD' });
 
     const [rows] = await db.query(
-      `SELECT course_id, course_code, course_title, credit_hours,
-              year_level, semester, is_elective, category, department_id,
-              (SELECT COUNT(*) FROM sections sec
-               WHERE sec.course_id = c.course_id) AS section_count
-       FROM courses c
-       WHERE department_id = ?
-       ORDER BY year_level, semester, course_code`,
-      [deptId]
-    );
+      `SELECT o.offering_id,c.course_id,c.course_code,c.course_title,c.credit_hours,
+              o.year_level,o.semester,o.academic_year,c.is_elective,c.department_id,
+              (SELECT COUNT(*) FROM sections sec WHERE sec.course_id=c.course_id AND sec.academic_year=o.academic_year AND sec.semester=o.semester) AS section_count
+       FROM department_offerings o JOIN courses c ON c.course_id=o.course_id
+       WHERE o.department_id=? AND o.is_active=TRUE
+       ORDER BY o.academic_year DESC,o.year_level,o.semester,c.course_code`, [deptId]);
     res.json(rows);
   } catch (err) { next(err); }
 };
@@ -146,6 +143,14 @@ exports.updateSection = async (req, res, next) => {
     if (!academic_year || !['I', 'II', 'Summer'].includes(semester) || !Number.isInteger(capacityValue) || capacityValue < 1) {
       return res.status(400).json({ message: 'Enter a valid academic year, semester, and positive capacity' });
     }
+    const [offering] = await db.query(
+      `SELECT 1 FROM sections sec JOIN courses c ON c.course_id=sec.course_id
+       JOIN department_offerings o ON o.course_id=sec.course_id AND o.year_level=c.year_level
+       AND o.academic_year=? AND o.semester=? AND o.is_active=TRUE
+       WHERE sec.section_id=? AND o.department_id=? LIMIT 1`,
+      [academic_year.trim(), semester, req.params.sectionId, deptId]
+    );
+    if (!offering.length) return res.status(400).json({ message: 'Section term must match an active Dean-assigned course offering.' });
     const [result] = await db.query(
       `UPDATE sections sec JOIN courses c ON c.course_id = sec.course_id
        SET sec.academic_year = ?, sec.semester = ?, sec.room = ?, sec.schedule = ?, sec.capacity = ?

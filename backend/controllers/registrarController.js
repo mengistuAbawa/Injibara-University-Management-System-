@@ -218,6 +218,37 @@ exports.listSections = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.listDepartmentOfferings = async (req, res, next) => {
+  try {
+    const { academic_year, semester, department_id } = req.query;
+    const conditions = ['o.is_active=TRUE']; const params = [];
+    if (academic_year) { conditions.push('o.academic_year=?'); params.push(academic_year); }
+    if (semester) { if (!['I','II','Summer'].includes(semester)) return res.status(400).json({ message: 'Invalid semester.' }); conditions.push('o.semester=?'); params.push(semester); }
+    if (department_id) { if (!Number.isInteger(Number(department_id)) || Number(department_id)<1) return res.status(400).json({ message: 'Invalid department.' }); conditions.push('o.department_id=?'); params.push(department_id); }
+    const [rows] = await db.query(`SELECT o.offering_id,o.department_id,o.course_id,o.year_level,o.semester,o.academic_year,d.department_name,c.course_code,c.course_title,c.credit_hours
+      FROM department_offerings o JOIN departments d ON d.department_id=o.department_id JOIN courses c ON c.course_id=o.course_id
+      WHERE ${conditions.join(' AND ')} ORDER BY o.academic_year DESC,o.semester,d.department_name,c.course_code`, params);
+    res.json(rows);
+  } catch (error) { next(error); }
+};
+
+exports.createSection = async (req, res, next) => {
+  const conn = await db.getConnection();
+  try {
+    const { course_id, year_level, academic_year, semester, room, schedule, capacity } = req.body;
+    const numericCapacity = capacity === undefined || capacity === '' ? 50 : Number(capacity);
+    if (!Number.isInteger(Number(course_id)) || Number(course_id)<1 || !Number.isInteger(Number(year_level)) || Number(year_level)<1 || Number(year_level)>5 || typeof academic_year !== 'string' || !/^\d{4}\/\d{4}$/.test(academic_year) || !['I','II','Summer'].includes(semester) || !Number.isInteger(numericCapacity) || numericCapacity<1 || numericCapacity>1000) return res.status(400).json({ message: 'Enter a course offering, academic year, semester, and capacity from 1 to 1000.' });
+    await conn.beginTransaction();
+    const [offering] = await conn.query(`SELECT o.department_id,o.year_level FROM department_offerings o
+      JOIN courses c ON c.course_id=o.course_id AND c.department_id=o.department_id
+      WHERE o.course_id=? AND o.year_level=? AND o.academic_year=? AND o.semester=? AND o.is_active=TRUE LIMIT 1 FOR UPDATE`, [course_id, year_level, academic_year, semester]);
+    if (!offering.length) { await conn.rollback(); return res.status(400).json({ message: 'This course has not been assigned to your department by the Dean for this year and semester.' }); }
+    const [result] = await conn.query('INSERT INTO sections (course_id,academic_year,semester,room,schedule,capacity) VALUES (?,?,?,?,?,?)', [course_id, academic_year, semester, room?.trim() || null, schedule?.trim() || null, numericCapacity]);
+    await conn.commit(); res.status(201).json({ section_id: result.insertId, message: 'Section created.' });
+  } catch (error) { await conn.rollback(); next(error); }
+  finally { conn.release(); }
+};
+
 /* Sections for a newly approved instructor, limited to their department. */
 exports.getInstructorAssignableSections = async (req, res, next) => {
   try {
@@ -261,7 +292,7 @@ exports.getSectionStudents = async (req, res, next) => {
               g.letter_grade
        FROM enrollments e
        JOIN students s ON s.student_id = e.student_id
-       LEFT JOIN grades g ON g.enrollment_id = e.enrollment_id
+       LEFT JOIN grades g ON g.enrollment_id = e.enrollment_id AND g.approval_status = 'Approved'
        WHERE e.section_id = ? AND e.status = 'Enrolled'
        ORDER BY s.last_name, s.first_name, s.student_number`,
       [req.params.sectionId]
@@ -417,7 +448,7 @@ exports.getTranscript = async (req, res, next) => {
        FROM enrollments e
        JOIN sections sec ON e.section_id = sec.section_id
        JOIN courses c    ON sec.course_id = c.course_id
-       LEFT JOIN grades g ON g.enrollment_id = e.enrollment_id
+       LEFT JOIN grades g ON g.enrollment_id = e.enrollment_id AND g.approval_status = 'Approved'
        WHERE e.student_id = ?
        ORDER BY sec.academic_year, sec.semester, c.course_code`,
       [req.params.studentId]

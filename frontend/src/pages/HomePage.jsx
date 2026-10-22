@@ -6,7 +6,7 @@ import './HomePage.css';
 const dashboardFor = (user) => {
   if (user?.is_hod) return '/hod/dashboard';
   if (user?.role === 'student' && user.status === 'Graduated') return '/alumni/dashboard';
-  return ({ admin: '/admin/dashboard', registrar: '/registrar/dashboard', instructor: '/instructor/dashboard', student: '/dashboard', finance: '/finance/dashboard' })[user?.role];
+  return ({ admin: '/admin/dashboard', registrar: '/registrar/dashboard', instructor: '/instructor/dashboard', student: '/dashboard', finance: '/finance/dashboard', dean: '/dean/dashboard' })[user?.role];
 };
 
 export default function HomePage({ welcomeOnly = false }) {
@@ -15,7 +15,7 @@ export default function HomePage({ welcomeOnly = false }) {
   if (destination && !welcomeOnly) return <Navigate to={destination} replace />;
 
   return (
-    <div className="welcome-page">
+    <div className="welcome-page welcome-home">
       <Header />
       <main className="welcome-main">
         <section className="welcome-hero">
@@ -38,15 +38,32 @@ export default function HomePage({ welcomeOnly = false }) {
             ['Instructor', 'Manage sections, attendance, and student grades.'],
             ['Registrar', 'Manage student records, enrollment, and results.'],
             ['Department head', 'Review department activity and assign instructors.'],
+            ['College dean', 'Review grades and monitor departments, performance, and allocation in your college.'],
             ['Administrator', 'Manage users and university system settings.'],
           ].map(([title, description]) => (
             <article className="role-card" key={title}>
               <h2>{title}</h2><p>{description}</p>
               {title === 'Finance officer' && <Link className="role-request-link" to="/register-account?role=finance">Request Finance access</Link>}
+              {title === 'College dean' && <Link className="role-request-link" to="/register-account?role=dean">Request Dean access</Link>}
             </article>
           ))}
         </section>
       </main>
+      <footer className="welcome-footer">
+        <div className="welcome-footer-inner">
+          <div className="welcome-footer-brand">
+            <strong>Injibara University</strong>
+            <span>University Management System</span>
+          </div>
+          <nav className="welcome-footer-links" aria-label="Footer links">
+            <Link to="/">Home</Link>
+            <Link to="/login">Log in</Link>
+            <Link to="/apply">Admissions</Link>
+            <Link to="/apply/status">Application status</Link>
+          </nav>
+          <p className="welcome-footer-copy">© {new Date().getFullYear()} Injibara University. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

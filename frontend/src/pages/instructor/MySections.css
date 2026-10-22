@@ -30,3 +30,4 @@
 }
 
 .row-btn:hover { background: #e1f0fb; }
+.grade-rejection-note { display:block; max-width:240px; margin-top:4px; color:#a1231c; white-space:normal; }

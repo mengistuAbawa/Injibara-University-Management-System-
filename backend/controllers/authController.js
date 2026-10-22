@@ -15,18 +15,22 @@ exports.login = async (req, res, next) => {
     const alternateStudentNumber = normalizedStudentNumber.startsWith('INU')
       ? normalizedStudentNumber.slice(3)
       : `INU${normalizedStudentNumber}`;
+    const [[collegeColumn]] = await db.query("SHOW COLUMNS FROM users LIKE 'college_id'");
+    const collegeSelect = collegeColumn ? 'u.college_id' : 'NULL AS college_id';
 
     const [rows] = await db.query(
       `SELECT u.user_id, u.username, u.avatar_path, u.email, u.password_hash, u.role,
               s.student_id, s.student_number,
               COALESCE(s.first_name, i.first_name, u.first_name) AS first_name,
               COALESCE(s.last_name, i.last_name, u.last_name) AS last_name,
-              s.current_year, s.status, s.dormitory, s.grandfather_name,
-              d.department_name, i.instructor_id, i.is_hod, i.hod_department_id, u.is_active
+              s.current_year, s.status, s.dormitory, s.grandfather_name, ${collegeSelect},
+              d.department_name, i.instructor_id, i.is_hod, i.hod_department_id,
+              cd.dean_id, cd.college_id AS dean_college_id, u.is_active
        FROM users u
        LEFT JOIN students s   ON s.user_id = u.user_id
        LEFT JOIN departments d ON s.department_id = d.department_id
        LEFT JOIN instructors i ON i.user_id = u.user_id
+       LEFT JOIN college_deans cd ON cd.user_id = u.user_id AND cd.is_active = TRUE
        WHERE u.username = ? OR u.email = ?
           OR s.student_number = ? OR s.student_number = ?
           OR i.employee_number = ? OR i.employee_number = ?
@@ -65,9 +69,16 @@ exports.login = async (req, res, next) => {
       role: user.role,
       is_hod: Boolean(user.is_hod),
       hod_department_id: user.hod_department_id,
+      is_dean: Boolean(user.dean_id),
+      dean_id: user.dean_id ?? null,
+      college_id: user.dean_college_id ?? user.college_id ?? null,
     });
     delete user.password_hash;
     user.is_hod = Boolean(user.is_hod);
+    user.is_dean = Boolean(user.dean_id);
+    user.college_id = user.dean_college_id ?? user.college_id ?? null;
+    delete user.dean_id;
+    delete user.dean_college_id;
     res.json({ token, student: user });
   } catch (err) {
     next(err);

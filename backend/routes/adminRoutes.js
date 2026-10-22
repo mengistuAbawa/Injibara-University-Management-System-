@@ -23,6 +23,9 @@ router.delete('/users/:userId',                c.deleteUser);
 router.patch('/users/:userId/toggle',          c.toggleUserActive);
 router.patch('/users/:userId/role',            c.changeUserRole);
 router.post('/users/:userId/reset-password',   c.resetUserPassword);
+router.get('/deans',                           c.listDeans);
+router.post('/deans',                          c.createDean);
+router.delete('/deans/:id',                    c.demoteDean);
 
 /* departments */
 router.get('/colleges',                        c.listColleges);

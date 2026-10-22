@@ -1,0 +1,21 @@
+/** Dean curriculum assignment page for department courses and term offerings. */
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createOffering, deleteOffering, listCourses, listDepartments, listOfferings } from '../../services/deanService';
+import './DeanPages.css';
+
+const yearNow=()=>{const y=new Date().getFullYear();return `${y}/${y+1}`;};
+export default function ManageOfferings(){
+  const [departments,setDepartments]=useState([]),[courses,setCourses]=useState([]),[rows,setRows]=useState([]),[department,setDepartment]=useState(''),[year,setYear]=useState(yearNow()),[semester,setSemester]=useState('I'),[form,setForm]=useState({course_id:'',year_level:1}),[error,setError]=useState(''),[notice,setNotice]=useState('');
+  useEffect(()=>{listDepartments().then((items)=>{setDepartments(items);if(items[0])setDepartment(String(items[0].department_id));}).catch((e)=>setError(e.response?.data?.message||'Unable to load departments.'));},[]);
+  const load=()=>{if(!department)return;Promise.all([listCourses(department),listOfferings(department,{academic_year:year,semester})]).then(([c,o])=>{setCourses(c);setRows(o);}).catch((e)=>setError(e.response?.data?.message||'Unable to load offerings.'));};
+  useEffect(()=>{load();},[department,year,semester]);
+  const add=async(e)=>{e.preventDefault();setError('');setNotice('');try{await createOffering(department,{...form,course_id:Number(form.course_id),year_level:Number(form.year_level),semester,academic_year:year});setNotice('Course assigned to this department.');setForm({...form,course_id:''});load();}catch(x){setError(x.response?.data?.message||'Could not add course.');}};
+  const remove=async(row)=>{if(!window.confirm(`Remove ${row.course_code} from this term?`))return;try{await deleteOffering(row.offering_id);setNotice('Offering removed.');load();}catch(e){setError(e.response?.data?.message||'Could not remove offering.');}};
+  return <main className="actor-page dean-page"><div className="title-strip"><h1>Course Offerings</h1></div><section className="actor-card"><p>Assign approved department courses to a year level and term. Registrars can create sections only for active offerings.</p>
+    <div className="dean-toolbar"><label>Department<select value={department} onChange={(e)=>setDepartment(e.target.value)}>{departments.map((d)=><option key={d.department_id} value={d.department_id}>{d.department_name}</option>)}</select></label><label>Academic year<input value={year} placeholder="2025/2026" onChange={(e)=>setYear(e.target.value)}/></label><label>Semester<select value={semester} onChange={(e)=>setSemester(e.target.value)}><option>I</option><option>II</option><option>Summer</option></select></label></div>
+    <form className="dean-form" onSubmit={add}><label>Course<select required value={form.course_id} onChange={(e)=>{const course=courses.find((item)=>String(item.course_id)===e.target.value);setForm({...form,course_id:e.target.value,year_level:course?.year_level||1});}}><option value="">Choose course</option>{courses.map((c)=><option key={c.course_id} value={c.course_id}>{c.course_code} · {c.course_title} ({c.credit_hours} cr)</option>)}</select></label><label>Year level<select value={form.year_level} onChange={(e)=>setForm({...form,year_level:e.target.value})}>{[1,2,3,4,5].map((n)=><option key={n}>{n}</option>)}</select></label><button disabled={!department}>Add course to department</button></form>
+    {error&&<p className="dean-error" role="alert">{error}</p>}{notice&&<p className="dean-success" role="status">{notice}</p>}
+    <div className="dean-table-wrap"><table className="data-table"><thead><tr><th>Course code</th><th>Title</th><th>Credit</th><th>Year</th><th>Semester</th><th>Sections</th><th>Actions</th></tr></thead><tbody>{rows.map((r)=><tr key={r.offering_id}><td>{r.course_code}</td><td>{r.course_title}</td><td>{r.credit_hours}</td><td>{r.year_level}</td><td>{r.semester}</td><td>{r.sections}</td><td><button className="danger" onClick={()=>remove(r)} disabled={Number(r.sections)>0}>Delete</button> <Link to="/registrar/sections">Create sections</Link></td></tr>)}{!rows.length&&<tr><td colSpan="7">No offerings for this year and semester.</td></tr>}</tbody></table></div>
+  </section></main>;
+}

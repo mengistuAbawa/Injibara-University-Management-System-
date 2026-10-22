@@ -34,6 +34,7 @@ export default function MySections() {
               <th>Room</th>
               <th>Schedule</th>
               <th>Enrolled</th>
+              <th>Grade review</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -48,6 +49,7 @@ export default function MySections() {
                 <td>{s.room}</td>
                 <td>{s.schedule}</td>
                 <td>{s.enrolled} / {s.capacity}</td>
+                <td>{s.upload_status || 'Not submitted'}{s.upload_status === 'Rejected' && s.dean_note && <small className="grade-rejection-note">Dean note: {s.dean_note}</small>}</td>
                 <td>
                   <Link to={`/instructor/sections/${s.section_id}`} className="row-btn">
                     Students

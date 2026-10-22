@@ -11,10 +11,12 @@ exports.getMySections = async (req, res, next) => {
          sec.section_id, c.course_code, c.course_title, c.credit_hours,
          sec.academic_year, sec.semester, sec.room, sec.schedule,
          sec.capacity,
+         a.status AS upload_status,a.dean_note,
          (SELECT COUNT(*) FROM enrollments e
           WHERE e.section_id = sec.section_id AND e.status='Enrolled') AS enrolled
        FROM sections sec
        JOIN courses c ON sec.course_id = c.course_id
+       LEFT JOIN grade_upload_approvals a ON a.section_id=sec.section_id
        WHERE sec.instructor_id = ?
        ORDER BY sec.academic_year DESC, sec.semester, c.course_code`,
       [req.user.instructor_id]
@@ -33,10 +35,12 @@ exports.getSection = async (req, res, next) => {
          sec.section_id, c.course_code, c.course_title, c.credit_hours,
          sec.academic_year, sec.semester, sec.room, sec.schedule,
          sec.capacity,
+         a.status AS upload_status,a.dean_note,
          (SELECT COUNT(*) FROM enrollments e
           WHERE e.section_id = sec.section_id AND e.status='Enrolled') AS enrolled
        FROM sections sec
        JOIN courses c ON sec.course_id = c.course_id
+       LEFT JOIN grade_upload_approvals a ON a.section_id=sec.section_id
        WHERE sec.section_id = ? AND sec.instructor_id = ?`,
       [req.params.sectionId, req.user.instructor_id]
     );
@@ -81,6 +85,7 @@ exports.getSectionStudents = async (req, res, next) => {
    4. BULK ENTER / UPDATE GRADES
    ========================================================= */
 exports.bulkEnterGrades = async (req, res, next) => {
+  if (req.user.is_dean) return res.status(403).json({ message: 'Deans cannot enter grades.' });
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -95,14 +100,16 @@ exports.bulkEnterGrades = async (req, res, next) => {
 
     /* verify ownership */
     const [own] = await conn.query(
-      `SELECT 1 FROM sections
-       WHERE section_id = ? AND instructor_id = ? LIMIT 1`,
+      `SELECT sec.section_id FROM sections sec
+       WHERE sec.section_id = ? AND sec.instructor_id = ? LIMIT 1`,
       [section_id, req.user.instructor_id]
     );
     if (!own.length) {
       await conn.rollback();
       return res.status(403).json({ message: 'Not your section' });
     }
+    const [[finalized]] = await conn.query("SELECT COUNT(*) AS count FROM grades g JOIN enrollments e ON e.enrollment_id=g.enrollment_id WHERE e.section_id=? AND g.finalized=TRUE", [section_id]);
+    if (finalized.count) { await conn.rollback(); return res.status(409).json({ message: 'Grades approved by the Dean are finalized and read-only.' }); }
 
     /* upsert each row */
     for (const g of grades) {
@@ -127,18 +134,28 @@ exports.bulkEnterGrades = async (req, res, next) => {
       await conn.query(
         `INSERT INTO grades
            (enrollment_id, assignment_mark, midterm_mark, final_mark,
-            total_mark, letter_grade, grade_point)
-         VALUES (?, ?, ?, ?, ?, ?, ?)
+            total_mark, letter_grade, grade_point, approval_status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
          ON DUPLICATE KEY UPDATE
            assignment_mark = VALUES(assignment_mark),
            midterm_mark    = VALUES(midterm_mark),
            final_mark      = VALUES(final_mark),
            total_mark      = VALUES(total_mark),
            letter_grade    = VALUES(letter_grade),
-           grade_point     = VALUES(grade_point)`,
+           grade_point     = VALUES(grade_point),
+           approval_status = 'Pending'`,
         [g.enrollment_id, assign, midterm, final, total, letter, point]
       );
     }
+
+    await conn.query(
+      `INSERT INTO grade_upload_approvals (section_id,instructor_id,college_id,status,submitted_at)
+       SELECT sec.section_id,sec.instructor_id,d.college_id,'Pending',NOW()
+       FROM sections sec JOIN courses c ON c.course_id=sec.course_id JOIN departments d ON d.department_id=c.department_id
+       WHERE sec.section_id=? AND sec.instructor_id=? AND d.college_id IS NOT NULL
+       ON DUPLICATE KEY UPDATE instructor_id=VALUES(instructor_id),college_id=VALUES(college_id),status='Pending',dean_note=NULL,submitted_at=NOW(),reviewed_by=NULL,reviewed_at=NULL`,
+      [section_id, req.user.instructor_id]
+    );
 
     await conn.commit();
     res.json({ message: 'Grades saved', count: grades.length });
@@ -154,6 +171,8 @@ exports.bulkEnterGrades = async (req, res, next) => {
    5. SINGLE GRADE UPSERT (rarely used, but useful for fixes)
    ========================================================= */
 exports.updateGrade = async (req, res, next) => {
+  if (req.user.is_dean) return res.status(403).json({ message: 'Deans cannot enter grades.' });
+  const conn = await db.getConnection();
   try {
     const { enrollment_id, assignment, midterm, final } = req.body;
 
@@ -165,23 +184,41 @@ exports.updateGrade = async (req, res, next) => {
     const total = Number(assignment) + Number(midterm) + Number(final);
     const { letter, point } = getLetterAndPoint(total);
 
-    await db.query(
+    await conn.beginTransaction();
+    const [[owned]] = await conn.query('SELECT e.section_id FROM enrollments e JOIN sections sec ON sec.section_id=e.section_id WHERE e.enrollment_id=? AND sec.instructor_id=? FOR UPDATE', [enrollment_id, req.user.instructor_id]);
+    if (!owned) { await conn.rollback(); return res.status(403).json({ message: 'Enrollment is not in your section.' }); }
+    const [[locked]] = await conn.query('SELECT finalized FROM grades WHERE enrollment_id=? FOR UPDATE', [enrollment_id]);
+    if (locked?.finalized) { await conn.rollback(); return res.status(409).json({ message: 'Grades approved by the Dean are finalized and read-only.' }); }
+
+    await conn.query(
       `INSERT INTO grades
          (enrollment_id, assignment_mark, midterm_mark, final_mark,
-          total_mark, letter_grade, grade_point)
-       VALUES (?, ?, ?, ?, ?, ?, ?)
+          total_mark, letter_grade, grade_point, approval_status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
        ON DUPLICATE KEY UPDATE
          assignment_mark = VALUES(assignment_mark),
          midterm_mark    = VALUES(midterm_mark),
          final_mark      = VALUES(final_mark),
          total_mark      = VALUES(total_mark),
          letter_grade    = VALUES(letter_grade),
-         grade_point     = VALUES(grade_point)`,
+         grade_point     = VALUES(grade_point),
+         approval_status = 'Pending'`,
       [enrollment_id, assignment, midterm, final, total, letter, point]
     );
 
+    await conn.query(
+      `INSERT INTO grade_upload_approvals (section_id,instructor_id,college_id,status,submitted_at)
+       SELECT sec.section_id,sec.instructor_id,d.college_id,'Pending',NOW() FROM sections sec
+       JOIN courses c ON c.course_id=sec.course_id JOIN departments d ON d.department_id=c.department_id
+       WHERE sec.section_id=? AND d.college_id IS NOT NULL
+       ON DUPLICATE KEY UPDATE status='Pending',dean_note=NULL,submitted_at=NOW(),reviewed_by=NULL,reviewed_at=NULL`,
+      [owned.section_id]
+    );
+
+    await conn.commit();
     res.json({ message: 'Grade updated', total, letter, point });
-  } catch (err) { next(err); }
+  } catch (err) { await conn.rollback(); next(err); }
+  finally { conn.release(); }
 };
 
 /* =========================================================

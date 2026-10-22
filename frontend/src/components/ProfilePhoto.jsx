@@ -38,6 +38,7 @@ export default function ProfilePhoto() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const [cameraOpen, setCameraOpen] = useState(false);
+  const [actionsOpen, setActionsOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -102,16 +103,35 @@ export default function ProfilePhoto() {
   const imageUrl = user?.avatar_path ? `${apiOrigin}${user.avatar_path}` : '';
 
   return <div className="profile-photo-widget">
-    <div className="profile-photo-avatar">
-      {imageUrl ? <img src={imageUrl} alt={`${name} profile`} /> : <span>{initials}</span>}
+    <div
+      className={`profile-photo-control${actionsOpen ? ' is-open' : ''}`}
+      onMouseEnter={() => setActionsOpen(true)}
+      onMouseLeave={() => setActionsOpen(false)}
+      onFocus={() => setActionsOpen(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setActionsOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        className="profile-photo-avatar"
+        aria-label="Edit profile photo"
+        aria-expanded={actionsOpen}
+        disabled={busy}
+        onClick={() => setActionsOpen(true)}
+      >
+        {imageUrl ? <img src={imageUrl} alt="" /> : <span>{initials}</span>}
+      </button>
+      <div className="profile-photo-actions" aria-label="Profile photo options">
+        <button type="button" disabled={busy} onClick={() => fileInput.current?.click()}>
+          {busy ? 'Saving...' : 'Upload photo'}
+        </button>
+        <button type="button" disabled={busy} onClick={startCamera}>Take photo</button>
+      </div>
     </div>
     <div className="profile-photo-details">
       <strong>{name}</strong>
       {user?.student_number && <small>{user.student_number}</small>}
-      <div className="profile-photo-actions">
-        <button type="button" disabled={busy} onClick={() => fileInput.current?.click()}>{busy ? 'Saving…' : user?.avatar_path ? 'Change photo' : 'Upload photo'}</button>
-        <button type="button" disabled={busy} onClick={startCamera}>Use camera</button>
-      </div>
       <input ref={fileInput} className="profile-photo-input" type="file" accept="image/jpeg,image/png,image/webp" onChange={chooseFile} />
       {error && <small className="profile-photo-error" role="alert">{error}</small>}
     </div>

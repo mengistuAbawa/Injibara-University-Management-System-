@@ -1,0 +1,21 @@
+.dean-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.dean-tabs button {
+  padding: 8px 12px;
+  border: 1px solid #b8ccd9;
+  border-radius: 4px;
+  background: #f4f8fb;
+  color: #164d70;
+  cursor: pointer;
+}
+
+.dean-tabs button.active {
+  border-color: #164d70;
+  background: #164d70;
+  color: #fff;
+}

@@ -50,7 +50,7 @@ exports.transcript = async (req, res, next) => {
       FROM students s LEFT JOIN departments d ON d.department_id=s.department_id
       LEFT JOIN enrollments e ON e.student_id=s.student_id AND e.status='Completed'
       LEFT JOIN sections sec ON sec.section_id=e.section_id LEFT JOIN courses c ON c.course_id=sec.course_id
-      LEFT JOIN grades g ON g.enrollment_id=e.enrollment_id WHERE s.student_id=? ORDER BY e.academic_year,sec.semester,c.course_code`, [req.user.student_id]);
+      LEFT JOIN grades g ON g.enrollment_id=e.enrollment_id AND g.approval_status='Approved' WHERE s.student_id=? ORDER BY e.academic_year,sec.semester,c.course_code`, [req.user.student_id]);
     if (req.query.download === 'pdf') {
       const clean = (value) => String(value ?? '').normalize('NFKD').replace(/[^\x20-\x7E]/g, '?').replace(/[\\()]/g, '\\$&');
       const first = rows[0] || {};

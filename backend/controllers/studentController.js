@@ -57,7 +57,7 @@ exports.getMyGrades = async (req, res, next) => {
        FROM enrollments e
        JOIN sections sec ON e.section_id = sec.section_id
        JOIN courses c    ON sec.course_id = c.course_id
-       LEFT JOIN grades g ON g.enrollment_id = e.enrollment_id
+       LEFT JOIN grades g ON g.enrollment_id = e.enrollment_id AND g.approval_status = 'Approved'
        WHERE e.student_id = ?`,
       [studentId]
     );
@@ -85,7 +85,7 @@ exports.getMyStatus = async (req, res, next) => {
        LEFT JOIN enrollments e ON e.student_id = s.student_id
        LEFT JOIN sections sec  ON e.section_id = sec.section_id
        LEFT JOIN courses c     ON sec.course_id = c.course_id
-       LEFT JOIN grades g      ON g.enrollment_id = e.enrollment_id
+       LEFT JOIN grades g      ON g.enrollment_id = e.enrollment_id AND g.approval_status = 'Approved'
        WHERE s.student_id = ?
        GROUP BY s.student_id`,
       [studentId]

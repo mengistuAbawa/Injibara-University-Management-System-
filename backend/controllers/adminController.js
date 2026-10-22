@@ -197,6 +197,81 @@ exports.createUser = async (req, res, next) => {
   }
 };
 
+/* =========================================================
+   DEAN ACCOUNTS
+   ========================================================= */
+exports.listDeans = async (req, res, next) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT cd.dean_id,cd.user_id,cd.employee_number,cd.first_name,cd.last_name,cd.gender,
+        cd.phone_number,cd.academic_rank,cd.college_id,cd.office_location,cd.hire_date,cd.is_active,
+        c.college_name,u.email,u.username
+       FROM college_deans cd JOIN colleges c ON c.college_id=cd.college_id
+       JOIN users u ON u.user_id=cd.user_id ORDER BY c.college_name`);
+    res.json(rows);
+  } catch (error) { next(error); }
+};
+
+exports.createDean = async (req, res, next) => {
+  const conn = await db.getConnection();
+  try {
+    const { email, password, employee_number, first_name, last_name, gender, phone_number, academic_rank, college_id, office_location, hire_date } = req.body;
+    const ranks = ['Lecturer','Assistant Professor','Associate Professor','Professor'];
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || typeof password !== 'string' || password.length < 8 || typeof employee_number !== 'string' || !employee_number.trim() || employee_number.trim().length > 20 || typeof first_name !== 'string' || !first_name.trim() || first_name.trim().length > 50 || typeof last_name !== 'string' || !last_name.trim() || last_name.trim().length > 50 || !ranks.includes(academic_rank) || !Number.isInteger(Number(college_id)) || Number(college_id) < 1 || (gender && !['Male','Female'].includes(gender)) || (phone_number !== undefined && (typeof phone_number !== 'string' || phone_number.length > 15)) || (office_location !== undefined && (typeof office_location !== 'string' || office_location.length > 50)) || (hire_date && !/^\d{4}-\d{2}-\d{2}$/.test(hire_date))) return res.status(400).json({ message: 'Enter valid dean details, a supported academic rank, college, and password of at least 8 characters.' });
+    await conn.beginTransaction();
+    const [[college]] = await conn.query('SELECT college_id,dean_user_id FROM colleges WHERE college_id=? FOR UPDATE', [college_id]);
+    if (!college) { await conn.rollback(); return res.status(400).json({ message: 'Choose a valid college.' }); }
+    if (college.dean_user_id) {
+      const [[oldDean]] = await conn.query('SELECT dean_id,user_id FROM college_deans WHERE user_id=? AND college_id=? FOR UPDATE', [college.dean_user_id, college_id]);
+      if (oldDean) {
+        await conn.query("INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details) VALUES (?,?,'auto_demote','dean',?,JSON_OBJECT('reason','Reassigned by administrator'))", [college_id, oldDean.user_id, oldDean.dean_id]);
+        await conn.query('UPDATE users SET college_id=NULL WHERE user_id=?', [oldDean.user_id]);
+        await conn.query('DELETE FROM college_deans WHERE dean_id=?', [oldDean.dean_id]);
+      }
+    }
+    const [[existing]] = await conn.query('SELECT user_id FROM users WHERE email=? LIMIT 1', [email.trim().toLowerCase()]);
+    if (existing) { await conn.rollback(); return res.status(409).json({ message: 'Email already exists.' }); }
+    const [[employee]] = await conn.query('SELECT instructor_id FROM instructors WHERE employee_number=? LIMIT 1', [employee_number.trim()]);
+    if (employee) { await conn.rollback(); return res.status(409).json({ message: 'Employee number already exists.' }); }
+    const [userResult] = await conn.query(
+      'INSERT INTO users (username,first_name,last_name,email,password_hash,role,college_id) VALUES (?,?,?,?,?,?,?)',
+      [generateUsername(employee_number.trim()), first_name.trim(), last_name.trim(), email.trim().toLowerCase(), hash(password), 'instructor', college_id]);
+    await conn.query(
+      `INSERT INTO instructors (user_id,employee_number,first_name,last_name,gender,phone_number,academic_rank,office_location,hire_date)
+       VALUES (?,?,?,?,?,?,?,?,?)`,
+      [userResult.insertId, employee_number.trim(), first_name.trim(), last_name.trim(), gender || null, phone_number?.trim() || null, academic_rank, office_location?.trim() || null, hire_date || null]);
+    const [deanResult] = await conn.query(
+      `INSERT INTO college_deans (user_id,employee_number,first_name,last_name,gender,phone_number,academic_rank,college_id,office_location,hire_date)
+       VALUES (?,?,?,?,?,?,?,?,?,?)`,
+      [userResult.insertId, employee_number.trim(), first_name.trim(), last_name.trim(), gender || null, phone_number?.trim() || null, academic_rank, college_id, office_location?.trim() || null, hire_date || null]);
+    await conn.query('UPDATE colleges SET dean_user_id=?,dean_name=? WHERE college_id=?', [userResult.insertId, `${first_name.trim()} ${last_name.trim()}`, college_id]);
+    await conn.commit();
+    res.status(201).json({ message: 'Dean account created.', user_id: userResult.insertId, dean_id: deanResult.insertId, username: generateUsername(employee_number.trim()) });
+  } catch (error) {
+    await conn.rollback();
+    if (error.code === 'ER_DUP_ENTRY') return res.status(409).json({ message: 'Email, username, or employee number already exists.' });
+    next(error);
+  } finally { conn.release(); }
+};
+
+exports.demoteDean = async (req, res, next) => {
+  const conn = await db.getConnection();
+  try {
+    const deanId = Number(req.params.id);
+    if (!Number.isInteger(deanId) || deanId < 1) return res.status(400).json({ message: 'Invalid dean.' });
+    await conn.beginTransaction();
+    const [[dean]] = await conn.query('SELECT dean_id,user_id,college_id FROM college_deans WHERE dean_id=? FOR UPDATE', [deanId]);
+    if (!dean) { await conn.rollback(); return res.status(404).json({ message: 'Dean not found.' }); }
+    await conn.query("INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details) VALUES (?,?,'demote','dean',?,JSON_OBJECT('reason','Administrator removed dean assignment'))", [dean.college_id, dean.user_id, dean.dean_id]);
+    await conn.query('UPDATE colleges SET dean_user_id=NULL,dean_name=NULL WHERE college_id=? AND dean_user_id=?', [dean.college_id, dean.user_id]);
+    await conn.query('UPDATE users SET college_id=NULL WHERE user_id=?', [dean.user_id]);
+    await conn.query('DELETE FROM college_deans WHERE dean_id=?', [deanId]);
+    await conn.commit();
+    res.json({ message: 'Dean assignment removed. The instructor account remains active.' });
+  } catch (error) { await conn.rollback(); next(error); }
+  finally { conn.release(); }
+};
+
 exports.toggleUserActive = async (req, res, next) => {
   try {
     await db.query(

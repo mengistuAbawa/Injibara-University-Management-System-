@@ -5,6 +5,8 @@ CREATE TABLE colleges (
     college_id INT AUTO_INCREMENT PRIMARY KEY,
     college_name VARCHAR(120) NOT NULL UNIQUE,
     college_code VARCHAR(20) NOT NULL UNIQUE,
+    dean_user_id INT NULL,
+    dean_name VARCHAR(120) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,14 +29,16 @@ CREATE TABLE users (
     last_name     VARCHAR(50),
     email         VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role          ENUM('admin','registrar','instructor','student') NOT NULL,
+    role          ENUM('admin','registrar','instructor','student','finance','dean') NOT NULL,
+    college_id    INT NULL,
     is_active     BOOLEAN DEFAULT TRUE,
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_users_college FOREIGN KEY (college_id) REFERENCES colleges(college_id) ON DELETE SET NULL
 );
 
 CREATE TABLE access_requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
-    role ENUM('student','registrar','instructor','head','admin') NOT NULL,
+    role ENUM('student','registrar','instructor','head','admin','finance','dean') NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     applicant_data LONGTEXT NOT NULL,
@@ -186,6 +190,10 @@ CREATE TABLE grades (
     total_mark      DECIMAL(5,2) DEFAULT 0,
     letter_grade    VARCHAR(2),
     grade_point     DECIMAL(3,2),
+    approval_status ENUM('Pending','Approved','Rejected') NOT NULL DEFAULT 'Approved',
+    finalized BOOLEAN NOT NULL DEFAULT FALSE,
+    finalized_at TIMESTAMP NULL,
+    finalized_by INT NULL,
     recorded_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (enrollment_id) REFERENCES enrollments(enrollment_id) ON DELETE CASCADE
 );
@@ -248,3 +256,73 @@ CREATE TABLE sms_logs (
 
 ALTER TABLE departments
   ADD CONSTRAINT fk_departments_hod_user FOREIGN KEY (hod_user_id) REFERENCES users(user_id) ON DELETE SET NULL;
+
+ALTER TABLE colleges
+  ADD CONSTRAINT fk_colleges_dean FOREIGN KEY (dean_user_id) REFERENCES users(user_id) ON DELETE SET NULL;
+ALTER TABLE grades
+  ADD CONSTRAINT fk_grades_finalized_by FOREIGN KEY (finalized_by) REFERENCES users(user_id) ON DELETE SET NULL;
+
+CREATE TABLE college_deans (
+  dean_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNIQUE NOT NULL,
+  employee_number VARCHAR(20) UNIQUE NOT NULL,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  gender ENUM('Male','Female') NULL,
+  phone_number VARCHAR(15) NULL,
+  academic_rank ENUM('Lecturer','Assistant Professor','Associate Professor','Professor') NOT NULL,
+  college_id INT NOT NULL UNIQUE,
+  office_location VARCHAR(50) NULL,
+  hire_date DATE NULL,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (college_id) REFERENCES colleges(college_id) ON DELETE CASCADE
+);
+
+CREATE TABLE department_offerings (
+  offering_id INT AUTO_INCREMENT PRIMARY KEY,
+  department_id INT NOT NULL,
+  course_id INT NOT NULL,
+  year_level INT NOT NULL,
+  semester ENUM('I','II','Summer') NOT NULL,
+  academic_year VARCHAR(10) NOT NULL,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_by INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_offering (department_id,course_id,academic_year,semester),
+  FOREIGN KEY (department_id) REFERENCES departments(department_id),
+  FOREIGN KEY (course_id) REFERENCES courses(course_id),
+  FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+CREATE TABLE grade_upload_approvals (
+  approval_id INT AUTO_INCREMENT PRIMARY KEY,
+  section_id INT NOT NULL,
+  instructor_id INT NOT NULL,
+  college_id INT NOT NULL,
+  status ENUM('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending',
+  dean_note TEXT NULL,
+  submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  reviewed_by INT NULL,
+  reviewed_at TIMESTAMP NULL,
+  UNIQUE KEY uniq_section_approval (section_id),
+  FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE,
+  FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id),
+  FOREIGN KEY (college_id) REFERENCES colleges(college_id),
+  FOREIGN KEY (reviewed_by) REFERENCES users(user_id) ON DELETE SET NULL
+);
+
+CREATE TABLE dean_audit_logs (
+  audit_id INT AUTO_INCREMENT PRIMARY KEY,
+  college_id INT NOT NULL,
+  dean_user_id INT NOT NULL,
+  action VARCHAR(40) NOT NULL,
+  entity_type VARCHAR(40) NOT NULL,
+  entity_id INT NULL,
+  details JSON NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_dean_audit_college (college_id,created_at),
+  FOREIGN KEY (college_id) REFERENCES colleges(college_id) ON DELETE CASCADE,
+  FOREIGN KEY (dean_user_id) REFERENCES users(user_id)
+);

@@ -24,6 +24,8 @@ router.put('/students/:studentId',           c.updateStudent);
 
 /* enrollments */
 router.get('/sections',                      c.listSections);
+router.get('/offerings',                     c.listDepartmentOfferings);
+router.post('/sections',                     c.createSection);
 router.get('/sections/:sectionId/students',  c.getSectionStudents);
 router.post('/enrollments',                  c.enrollStudent);
 router.get('/students/:studentId/enrollments', c.getStudentEnrollments);

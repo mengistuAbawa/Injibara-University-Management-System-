@@ -23,6 +23,7 @@ export default function SectionStudents() {
 
       {section && (
         <div className="meta">
+          {section.upload_status === 'Rejected' && section.dean_note && <p className="grade-rejection-note">Dean note: {section.dean_note}</p>}
           <span><strong>Room:</strong> {section.room}</span>
           <span><strong>Schedule:</strong> {section.schedule}</span>
           <span><strong>Enrolled:</strong> {section.enrolled} / {section.capacity}</span>

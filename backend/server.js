@@ -27,6 +27,7 @@ const profileRoutes = require('./routes/profileRoutes');
 const applicantRoutes = require('./routes/applicantRoutes');
 const alumniRoutes = require('./routes/alumniRoutes');
 const financeRoutes = require('./routes/financeRoutes');
+const deanRoutes = require('./routes/deanRoutes');
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/api/admin',        adminRoutes);
 app.use('/api/registrar', registrarRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/hod',       hodRoutes);
+app.use('/api/dean', deanRoutes);
 // Every API path is authenticated unless one of the route handlers above has already served it.
 app.use('/api', protect);
 app.use('/api', (req, res) => res.status(404).json({ message: 'API endpoint not found' }));
