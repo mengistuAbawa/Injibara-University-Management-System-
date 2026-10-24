@@ -15,15 +15,12 @@ exports.login = async (req, res, next) => {
     const alternateStudentNumber = normalizedStudentNumber.startsWith('INU')
       ? normalizedStudentNumber.slice(3)
       : `INU${normalizedStudentNumber}`;
-    const [[collegeColumn]] = await db.query("SHOW COLUMNS FROM users LIKE 'college_id'");
-    const collegeSelect = collegeColumn ? 'u.college_id' : 'NULL AS college_id';
-
     const [rows] = await db.query(
       `SELECT u.user_id, u.username, u.avatar_path, u.email, u.password_hash, u.role,
               s.student_id, s.student_number,
               COALESCE(s.first_name, i.first_name, u.first_name) AS first_name,
               COALESCE(s.last_name, i.last_name, u.last_name) AS last_name,
-              s.current_year, s.status, s.dormitory, s.grandfather_name, ${collegeSelect},
+              s.current_year, s.status, s.dormitory, s.grandfather_name, u.college_id,
               d.department_name, i.instructor_id, i.is_hod, i.hod_department_id,
               cd.dean_id, cd.college_id AS dean_college_id, u.is_active
        FROM users u
@@ -43,8 +40,8 @@ exports.login = async (req, res, next) => {
       const [requests] = await db.query(
         `SELECT status FROM access_requests
          WHERE email = ?
-            OR JSON_UNQUOTE(JSON_EXTRACT(applicant_data, '$.student_number')) IN (?, ?)
-            OR JSON_UNQUOTE(JSON_EXTRACT(applicant_data, '$.employee_number')) IN (?, ?)
+            OR applicant_data::jsonb ->> 'student_number' IN (?, ?)
+            OR applicant_data::jsonb ->> 'employee_number' IN (?, ?)
          ORDER BY submitted_at DESC LIMIT 1`,
         [loginName, loginName, alternateStudentNumber, loginName, alternateStudentNumber]
       );

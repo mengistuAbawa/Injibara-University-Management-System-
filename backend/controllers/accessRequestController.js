@@ -109,7 +109,7 @@ exports.list = async (req, res, next) => {
        LEFT JOIN departments d1 ON d1.department_id=ap.first_choice_department
        LEFT JOIN departments d2 ON d2.department_id=ap.second_choice_department
        LEFT JOIN departments d3 ON d3.department_id=ap.third_choice_department
-       LEFT JOIN colleges college ON college.college_id=JSON_UNQUOTE(JSON_EXTRACT(ar.applicant_data, '$.college_id'))
+       LEFT JOIN colleges college ON college.college_id=(ar.applicant_data::jsonb ->> 'college_id')::integer
        WHERE ar.role IN (?) AND (ar.status = 'Pending' OR
          (ar.role='dean' AND ar.status='Approved' AND request_user.role='dean' AND
           NOT EXISTS (SELECT 1 FROM college_deans cd WHERE cd.user_id=request_user.user_id)))

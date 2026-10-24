@@ -152,9 +152,10 @@ exports.updateSection = async (req, res, next) => {
     );
     if (!offering.length) return res.status(400).json({ message: 'Section term must match an active Dean-assigned course offering.' });
     const [result] = await db.query(
-      `UPDATE sections sec JOIN courses c ON c.course_id = sec.course_id
-       SET sec.academic_year = ?, sec.semester = ?, sec.room = ?, sec.schedule = ?, sec.capacity = ?
-       WHERE sec.section_id = ? AND c.department_id = ?`,
+      `UPDATE sections sec
+       SET academic_year = ?, semester = ?, room = ?, schedule = ?, capacity = ?
+       FROM courses c
+       WHERE c.course_id = sec.course_id AND sec.section_id = ? AND c.department_id = ?`,
       [academic_year.trim(), semester, room || null, schedule || null, capacityValue, req.params.sectionId, deptId]
     );
     if (!result.affectedRows) return res.status(404).json({ message: 'Section not found in your department' });

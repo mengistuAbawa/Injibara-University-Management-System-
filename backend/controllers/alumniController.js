@@ -19,8 +19,9 @@ exports.updateProfile = async (req, res, next) => {
     if (String(current_phone || '').length > 15 || String(current_address || '').length > 5000 ||
       String(employer || '').length > 150 || String(job_title || '').length > 150) return res.status(400).json({ message: 'Contact fields are too long' });
     await db.query(`INSERT INTO alumni_contact (student_id,current_email,current_phone,current_address,employer,job_title)
-      VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE current_email=VALUES(current_email),current_phone=VALUES(current_phone),
-      current_address=VALUES(current_address),employer=VALUES(employer),job_title=VALUES(job_title)`,
+      VALUES (?,?,?,?,?,?) ON CONFLICT (student_id) DO UPDATE SET
+      current_email=EXCLUDED.current_email,current_phone=EXCLUDED.current_phone,
+      current_address=EXCLUDED.current_address,employer=EXCLUDED.employer,job_title=EXCLUDED.job_title`,
     [req.user.student_id, current_email || null, current_phone || null, current_address || null, employer || null, job_title || null]);
     res.json({ message: 'Profile updated' });
   } catch (err) { next(err); }
@@ -96,7 +97,8 @@ exports.adminUpdate = async (req, res, next) => {
     if (!Number.isInteger(Number(req.params.id)) || Number(req.params.id) < 1) return res.status(400).json({ message: 'Invalid request id' });
     if (!['Processing', 'Ready', 'Delivered', 'Rejected'].includes(status)) return res.status(400).json({ message: 'Choose a valid request status' });
     const [result] = await db.query(`UPDATE alumni_requests SET status=?,admin_note=?,
-      ready_at=IF(?='Ready',COALESCE(ready_at,NOW()),ready_at), delivered_at=IF(?='Delivered',COALESCE(delivered_at,NOW()),delivered_at)
+      ready_at=CASE WHEN ?='Ready' THEN COALESCE(ready_at,NOW()) ELSE ready_at END,
+      delivered_at=CASE WHEN ?='Delivered' THEN COALESCE(delivered_at,NOW()) ELSE delivered_at END
       WHERE request_id=?`, [status, String(req.body.admin_note || '').slice(0, 4000) || null, status, status, req.params.id]);
     if (!result.affectedRows) return res.status(404).json({ message: 'Alumni request not found' });
     res.json({ message: 'Alumni request updated' });

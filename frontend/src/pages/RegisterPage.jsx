@@ -27,7 +27,7 @@ export default function RegisterPage() {
         if (serverMessage) {
           setError(`Could not load departments: ${serverMessage}`);
         } else {
-          setError('Could not reach the portal API at localhost:5000. Start the backend and MySQL, then reload this page.');
+          setError('Could not reach the portal API at localhost:5000. Start the backend and PostgreSQL, then reload this page.');
         }
       });
     api.get('/auth/colleges').then(({ data }) => setColleges(data));

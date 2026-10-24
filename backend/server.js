@@ -31,8 +31,30 @@ const deanRoutes = require('./routes/deanRoutes');
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    throw new Error('Set JWT_SECRET to a random value of at least 32 characters in production.');
+  }
+  if (allowedOrigins.length === 0) {
+    throw new Error('Set CORS_ORIGINS to the deployed frontend origin(s) in production.');
+  }
+}
+
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    // Allow server-to-server and same-origin requests that do not send an Origin header.
+    if (!origin || process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origin is not allowed by CORS'));
+  },
+}));
 app.use(express.json({ limit: '12mb' }));
 app.use(morgan('dev'));
 
@@ -70,15 +92,20 @@ app.use('/api', protect);
 app.use('/api', (req, res) => res.status(404).json({ message: 'API endpoint not found' }));
 // Error handler (must be last)
 app.use(errorHandler);
-const PORT = process.env.PORT || 5000;
+module.exports = app;
 
-(async () => {
-  try {
-    await db.query('SELECT 1');
-    console.log('✅ MySQL connected');
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-  } catch (err) {
-    console.error('❌ DB connection failed:', err.message);
-    process.exit(1);
-  }
-})();
+// Vercel imports this file as a serverless Express handler. Keep the listener
+// for local development and traditional Node.js hosting only.
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  (async () => {
+    try {
+      await db.query('SELECT 1');
+      console.log('PostgreSQL connected');
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    } catch (err) {
+      console.error('PostgreSQL connection failed:', err.message);
+      process.exit(1);
+    }
+  })();
+}

@@ -199,7 +199,7 @@ exports.reviewRequest = async (req, res, next) => {
           await conn.query(
             `INSERT INTO enrollments (student_id, section_id, academic_year)
              VALUES (?, ?, ?)
-             ON DUPLICATE KEY UPDATE status = 'Enrolled'`,
+             ON CONFLICT (student_id, section_id, academic_year) DO UPDATE SET status = 'Enrolled'`,
             [request.student_id, sectionId, request.academic_year]
           );
         }

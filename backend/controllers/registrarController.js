@@ -333,7 +333,7 @@ exports.enrollStudent = async (req, res, next) => {
     await db.query(
       `INSERT INTO enrollments (student_id, section_id, academic_year)
        VALUES (?, ?, ?)
-       ON DUPLICATE KEY UPDATE status='Enrolled'`,
+       ON CONFLICT (student_id, section_id, academic_year) DO UPDATE SET status='Enrolled'`,
       [student_id, section_id, academic_year]
     );
 
@@ -386,11 +386,11 @@ exports.publishResult = async (req, res, next) => {
     await db.query(
       `INSERT INTO selection_results
         (student_id, field_id, status, announced_on)
-       VALUES (?, ?, ?, CURDATE())
-       ON DUPLICATE KEY UPDATE
-         field_id     = VALUES(field_id),
-         status       = VALUES(status),
-         announced_on = VALUES(announced_on)`,
+       VALUES (?, ?, ?, CURRENT_DATE)
+       ON CONFLICT (student_id) DO UPDATE SET
+         field_id     = EXCLUDED.field_id,
+         status       = EXCLUDED.status,
+         announced_on = EXCLUDED.announced_on`,
       [student_id, field_id, status || 'Assigned']
     );
     res.json({ message: 'Result published' });
@@ -417,11 +417,11 @@ exports.bulkPublishResults = async (req, res, next) => {
       await conn.query(
         `INSERT INTO selection_results
           (student_id, field_id, status, announced_on)
-         VALUES (?, ?, 'Assigned', CURDATE())
-         ON DUPLICATE KEY UPDATE
-           field_id     = VALUES(field_id),
-           status       = VALUES(status),
-           announced_on = VALUES(announced_on)`,
+         VALUES (?, ?, 'Assigned', CURRENT_DATE)
+         ON CONFLICT (student_id) DO UPDATE SET
+           field_id     = EXCLUDED.field_id,
+           status       = EXCLUDED.status,
+           announced_on = EXCLUDED.announced_on`,
         [s.student_id, s.field_id]
       );
     }

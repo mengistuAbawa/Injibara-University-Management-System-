@@ -1,28 +1,21 @@
 # Injibara University Online Student Information System
 
-INU Portal is a React and Express university portal backed by MySQL. It supports student, instructor, department head, college dean, registrar, finance, and administrator accounts.
+INU Portal is a React and Express university portal backed by PostgreSQL. It supports student, instructor, department head, college dean, registrar, finance, and administrator accounts.
 
 ## Requirements
 
 - Node.js 20.19 or newer (or 22.12 or newer) and npm
-- XAMPP MySQL running on `localhost:3306`
-- MySQL user `root` with a blank password for the default local configuration
+- PostgreSQL 14 or newer
 
 ## Database setup
 
-In phpMyAdmin, import `database/university_db.sql`, then import `database/seed.sql`, then import `database/migrations/20261014_seed_colleges_and_departments.sql`. The schema creates `university_db`; the seed file inserts sample accounts and academic records; the final script adds the eight colleges and their departments from the supplied list. That script is safe to run more than once.
+The backend now connects to PostgreSQL. Copy `backend/.env.example` to `backend/.env` and set your local PostgreSQL connection values. For an existing XAMPP database, first apply any outstanding MySQL migrations to the XAMPP source, then migrate its schema and data to an empty PostgreSQL database with `pgloader`. See [DEPLOYMENT.md](DEPLOYMENT.md) for backup, transfer, and cutover instructions.
 
-If `university_db` already exists and registration pages report that `student_registration_requests` is missing, import `database/migrations/20261011_student_registration_requests.sql` in phpMyAdmin. It creates both request tables without replacing existing data. For a fresh database, `university_db.sql` already includes them.
+The SQL files under `database/` and `backend/database/` are the existing MySQL schema, seed data, and historical MySQL migrations. Use them only to prepare the XAMPP source before transfer; they are not PostgreSQL scripts. Never load demo accounts into a live system.
 
-If an existing database predates department placement settings and the admin department list fails with a missing-column error, import `database/migrations/20261013_department_allocation_and_colleges.sql` in phpMyAdmin with `university_db` selected. It adds the colleges table and department capacity, score, and selection fields. Fresh databases created from `database/university_db.sql` already include them.
+The backend configuration is in `backend/.env`. Use `DATABASE_URL` for hosted PostgreSQL, or set `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT` (default `5432`), and `DB_SSL` for local PostgreSQL. Set a private `JWT_SECRET` before deploying, and never commit `.env`.
 
-For an existing database, import `database/migrations/20261021_college_dean_approvals.sql` after the college migration to add the eight college options, enable dean accounts, and enable final grade approval. This resolves the missing `users.college_id` login field as well. Fresh databases include these fields in `database/university_db.sql`.
-
-If dean requests were submitted while the database did not allow the `dean` role, import `database/migrations/20261022_dean_access_request_roles.sql`. It enables the dean role for users and access requests, and restores pending dean requests that MySQL stored with an empty role.
-
-For the instructor-based dean workflow and department course offerings, first apply the existing college migration if needed, then run `backend/database/add_dean_and_offerings.sql` in phpMyAdmin with `university_db` selected. It is safe to run after a partially applied dean migration and adds dean assignments, department offerings, grade upload approvals, grade finalization, and audit records. It also queues existing pending grades for review. The same tables and fields are included in both fresh database schema files.
-
-The backend configuration is in `backend/.env`. Change `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT`, and `JWT_SECRET` for your environment. Never reuse the development JWT secret in a deployed environment.
+For production environment variables, frontend build settings, and database deployment notes, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Start the backend
 

@@ -78,8 +78,8 @@ exports.getMyStatus = async (req, res, next) => {
     const [rows] = await db.query(
       `SELECT s.current_year, s.status, s.dormitory, s.student_number,
               d.department_name,
-              IFNULL(AVG(g.grade_point), 0) AS cgpa,
-              IFNULL(SUM(c.credit_hours), 0) AS total_credit
+              COALESCE(AVG(g.grade_point), 0) AS cgpa,
+              COALESCE(SUM(c.credit_hours), 0) AS total_credit
        FROM students s
        LEFT JOIN departments d ON s.department_id = d.department_id
        LEFT JOIN enrollments e ON e.student_id = s.student_id
@@ -125,7 +125,7 @@ exports.getAvailableFields = async (req, res, next) => {
     const [rows] = await db.query(
       `SELECT f.field_id, f.field_name, f.department_id, d.department_name, d.capacity, d.min_score
        FROM fields f JOIN departments d ON d.department_id = f.department_id
-       WHERE d.is_available_for_selection = 1 ORDER BY d.department_name, f.field_name`
+       WHERE d.is_available_for_selection = TRUE ORDER BY d.department_name, f.field_name`
     );
     res.json(rows);
   } catch (err) { next(err); }
@@ -283,7 +283,7 @@ exports.getPrioritySummary = async (req, res, next) => {
     const studentId = req.user.student_id;
     const [rows] = await db.query(
       `SELECT f.field_id, COALESCE(d.department_name, f.field_name) AS field_name, fs.priority,
-              IF(sr.field_id = fs.field_id, 'Assigned', 'Not Assigned') AS status
+              CASE WHEN sr.field_id = fs.field_id THEN 'Assigned' ELSE 'Not Assigned' END AS status
        FROM field_selections fs
        JOIN fields f ON fs.field_id = f.field_id
        LEFT JOIN departments d ON d.department_id = f.department_id

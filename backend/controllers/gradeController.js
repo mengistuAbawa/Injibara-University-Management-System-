@@ -12,13 +12,13 @@ exports.upsert = async (req, res, next) => {
         (enrollment_id, assignment_mark, midterm_mark, final_mark,
          total_mark, letter_grade, grade_point)
        VALUES (?, ?, ?, ?, ?, ?, ?)
-       ON DUPLICATE KEY UPDATE
-         assignment_mark = VALUES(assignment_mark),
-         midterm_mark    = VALUES(midterm_mark),
-         final_mark      = VALUES(final_mark),
-         total_mark      = VALUES(total_mark),
-         letter_grade    = VALUES(letter_grade),
-         grade_point     = VALUES(grade_point)`,
+       ON CONFLICT (enrollment_id) DO UPDATE SET
+         assignment_mark = EXCLUDED.assignment_mark,
+         midterm_mark    = EXCLUDED.midterm_mark,
+         final_mark      = EXCLUDED.final_mark,
+         total_mark      = EXCLUDED.total_mark,
+         letter_grade    = EXCLUDED.letter_grade,
+         grade_point     = EXCLUDED.grade_point`,
       [enrollment_id, assignment_mark, midterm_mark, final_mark, total, letter, point]
     );
 

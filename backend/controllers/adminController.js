@@ -713,8 +713,8 @@ exports.getSettings = async (req, res, next) => {
   try {
     const [rows] = await db.query(
       `SELECT id, current_academic_year, current_semester, registration_open, field_selection_open,
-              DATE_FORMAT(field_selection_start, '%Y-%m-%dT%H:%i') AS field_selection_start,
-              DATE_FORMAT(field_selection_end, '%Y-%m-%dT%H:%i') AS field_selection_end
+              TO_CHAR(field_selection_start, 'YYYY-MM-DD"T"HH24:MI') AS field_selection_start,
+              TO_CHAR(field_selection_end, 'YYYY-MM-DD"T"HH24:MI') AS field_selection_end
        FROM system_settings ORDER BY id LIMIT 1`
     );
     res.json(rows[0] || {});
@@ -737,18 +737,18 @@ exports.updateSettings = async (req, res, next) => {
       `INSERT INTO system_settings
         (id, current_academic_year, current_semester, registration_open, field_selection_open, field_selection_start, field_selection_end)
        VALUES (1, ?, ?, ?, ?, ?, ?)
-       ON DUPLICATE KEY UPDATE
-         current_academic_year = VALUES(current_academic_year),
-         current_semester      = VALUES(current_semester),
-         registration_open     = VALUES(registration_open),
-         field_selection_open  = VALUES(field_selection_open),
-         field_selection_start = VALUES(field_selection_start),
-         field_selection_end = VALUES(field_selection_end)`,
+       ON CONFLICT (id) DO UPDATE SET
+         current_academic_year = EXCLUDED.current_academic_year,
+         current_semester      = EXCLUDED.current_semester,
+         registration_open     = EXCLUDED.registration_open,
+         field_selection_open  = EXCLUDED.field_selection_open,
+         field_selection_start = EXCLUDED.field_selection_start,
+         field_selection_end = EXCLUDED.field_selection_end`,
       [
         current_academic_year || '2025/2026',
         current_semester || 'I',
-        registration_open ? 1 : 0,
-        field_selection_open ? 1 : 0,
+        Boolean(registration_open),
+        Boolean(field_selection_open),
         field_selection_start || null,
         field_selection_end || null,
       ]
@@ -776,11 +776,11 @@ exports.bulkPublishResults = async (req, res, next) => {
       await conn.query(
         `INSERT INTO selection_results
           (student_id, field_id, status, announced_on)
-         VALUES (?, ?, 'Assigned', CURDATE())
-         ON DUPLICATE KEY UPDATE
-           field_id     = VALUES(field_id),
-           status       = VALUES(status),
-           announced_on = VALUES(announced_on)`,
+         VALUES (?, ?, 'Assigned', CURRENT_DATE)
+         ON CONFLICT (student_id) DO UPDATE SET
+           field_id     = EXCLUDED.field_id,
+           status       = EXCLUDED.status,
+           announced_on = EXCLUDED.announced_on`,
         [s.student_id, s.field_id]
       );
       count++;
@@ -925,7 +925,7 @@ exports.runAllocation = async (req, res, next) => {
               fs.field_id, fs.priority, f.department_id, d.capacity, d.min_score
        FROM students s JOIN field_selections fs ON fs.student_id = s.student_id
        JOIN fields f ON f.field_id = fs.field_id
-       JOIN departments d ON d.department_id = f.department_id AND d.is_available_for_selection = 1
+       JOIN departments d ON d.department_id = f.department_id AND d.is_available_for_selection = TRUE
        ORDER BY s.university_entrance_result DESC, s.student_id, fs.priority`
     );
     const grouped = new Map();
@@ -950,7 +950,7 @@ exports.runAllocation = async (req, res, next) => {
       capacityByDepartment.set(choice.department_id, (capacityByDepartment.get(choice.department_id) || 0) + 1);
       await conn.query(
         `INSERT INTO selection_results (student_id, field_id, department_id, status, announced_on)
-         VALUES (?, ?, ?, 'Assigned', CURDATE())`,
+         VALUES (?, ?, ?, 'Assigned', CURRENT_DATE)`,
         [studentId, choice.field_id, choice.department_id]
       );
       assigned++;

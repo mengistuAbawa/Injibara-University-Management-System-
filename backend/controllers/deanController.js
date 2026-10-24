@@ -186,8 +186,8 @@ exports.reviewGradeUpload = async (req, res, next) => {
     if (!rows.length) { await conn.rollback(); return res.status(404).json({ message: 'Pending grade upload not found in your college.' }); }
     const status = action === 'approve' ? 'Approved' : 'Rejected';
     await conn.query('UPDATE grade_upload_approvals SET status=?,dean_note=?,reviewed_by=?,reviewed_at=NOW() WHERE section_id=? AND college_id=?', [status, note.trim() || null, req.user.id, req.params.sectionId, collegeId(req)]);
-    if (action === 'approve') await conn.query("UPDATE grades g JOIN enrollments e ON e.enrollment_id=g.enrollment_id SET g.finalized=TRUE,g.finalized_at=NOW(),g.finalized_by=?,g.approval_status='Approved' WHERE e.section_id=?", [req.user.id, req.params.sectionId]);
-    else await conn.query("UPDATE grades g JOIN enrollments e ON e.enrollment_id=g.enrollment_id SET g.approval_status='Rejected',g.finalized=FALSE,g.finalized_at=NULL,g.finalized_by=NULL WHERE e.section_id=?", [req.params.sectionId]);
+    if (action === 'approve') await conn.query("UPDATE grades g SET finalized=TRUE,finalized_at=NOW(),finalized_by=?,approval_status='Approved' FROM enrollments e WHERE e.enrollment_id=g.enrollment_id AND e.section_id=?", [req.user.id, req.params.sectionId]);
+    else await conn.query("UPDATE grades g SET approval_status='Rejected',finalized=FALSE,finalized_at=NULL,finalized_by=NULL FROM enrollments e WHERE e.enrollment_id=g.enrollment_id AND e.section_id=?", [req.params.sectionId]);
     await audit(conn, req, action, 'grade_upload', req.params.sectionId, { note: note.trim() || null });
     await conn.commit(); res.json({ message: `Grade upload ${status.toLowerCase()}.` });
   } catch (error) { await conn.rollback(); next(error); }

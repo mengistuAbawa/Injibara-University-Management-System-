@@ -136,13 +136,13 @@ exports.bulkEnterGrades = async (req, res, next) => {
            (enrollment_id, assignment_mark, midterm_mark, final_mark,
             total_mark, letter_grade, grade_point, approval_status)
          VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
-         ON DUPLICATE KEY UPDATE
-           assignment_mark = VALUES(assignment_mark),
-           midterm_mark    = VALUES(midterm_mark),
-           final_mark      = VALUES(final_mark),
-           total_mark      = VALUES(total_mark),
-           letter_grade    = VALUES(letter_grade),
-           grade_point     = VALUES(grade_point),
+         ON CONFLICT (enrollment_id) DO UPDATE SET
+           assignment_mark = EXCLUDED.assignment_mark,
+           midterm_mark    = EXCLUDED.midterm_mark,
+           final_mark      = EXCLUDED.final_mark,
+           total_mark      = EXCLUDED.total_mark,
+           letter_grade    = EXCLUDED.letter_grade,
+           grade_point     = EXCLUDED.grade_point,
            approval_status = 'Pending'`,
         [g.enrollment_id, assign, midterm, final, total, letter, point]
       );
@@ -153,7 +153,7 @@ exports.bulkEnterGrades = async (req, res, next) => {
        SELECT sec.section_id,sec.instructor_id,d.college_id,'Pending',NOW()
        FROM sections sec JOIN courses c ON c.course_id=sec.course_id JOIN departments d ON d.department_id=c.department_id
        WHERE sec.section_id=? AND sec.instructor_id=? AND d.college_id IS NOT NULL
-       ON DUPLICATE KEY UPDATE instructor_id=VALUES(instructor_id),college_id=VALUES(college_id),status='Pending',dean_note=NULL,submitted_at=NOW(),reviewed_by=NULL,reviewed_at=NULL`,
+       ON CONFLICT (section_id) DO UPDATE SET instructor_id=EXCLUDED.instructor_id,college_id=EXCLUDED.college_id,status='Pending',dean_note=NULL,submitted_at=NOW(),reviewed_by=NULL,reviewed_at=NULL`,
       [section_id, req.user.instructor_id]
     );
 
@@ -195,13 +195,13 @@ exports.updateGrade = async (req, res, next) => {
          (enrollment_id, assignment_mark, midterm_mark, final_mark,
           total_mark, letter_grade, grade_point, approval_status)
        VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
-       ON DUPLICATE KEY UPDATE
-         assignment_mark = VALUES(assignment_mark),
-         midterm_mark    = VALUES(midterm_mark),
-         final_mark      = VALUES(final_mark),
-         total_mark      = VALUES(total_mark),
-         letter_grade    = VALUES(letter_grade),
-         grade_point     = VALUES(grade_point),
+       ON CONFLICT (enrollment_id) DO UPDATE SET
+         assignment_mark = EXCLUDED.assignment_mark,
+         midterm_mark    = EXCLUDED.midterm_mark,
+         final_mark      = EXCLUDED.final_mark,
+         total_mark      = EXCLUDED.total_mark,
+         letter_grade    = EXCLUDED.letter_grade,
+         grade_point     = EXCLUDED.grade_point,
          approval_status = 'Pending'`,
       [enrollment_id, assignment, midterm, final, total, letter, point]
     );
@@ -211,7 +211,7 @@ exports.updateGrade = async (req, res, next) => {
        SELECT sec.section_id,sec.instructor_id,d.college_id,'Pending',NOW() FROM sections sec
        JOIN courses c ON c.course_id=sec.course_id JOIN departments d ON d.department_id=c.department_id
        WHERE sec.section_id=? AND d.college_id IS NOT NULL
-       ON DUPLICATE KEY UPDATE status='Pending',dean_note=NULL,submitted_at=NOW(),reviewed_by=NULL,reviewed_at=NULL`,
+       ON CONFLICT (section_id) DO UPDATE SET status='Pending',dean_note=NULL,submitted_at=NOW(),reviewed_by=NULL,reviewed_at=NULL`,
       [owned.section_id]
     );
 
