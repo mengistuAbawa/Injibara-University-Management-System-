@@ -11,7 +11,9 @@ INU Portal is a React and Express university portal backed by PostgreSQL. It sup
 
 The backend now connects to PostgreSQL. Copy `backend/.env.example` to `backend/.env` and set your local PostgreSQL connection values. For an existing XAMPP database, first apply any outstanding MySQL migrations to the XAMPP source, then migrate its schema and data to an empty PostgreSQL database with `pgloader`. See [DEPLOYMENT.md](DEPLOYMENT.md) for backup, transfer, and cutover instructions.
 
-The SQL files under `database/` and `backend/database/` are the existing MySQL schema, seed data, and historical MySQL migrations. Use them only to prepare the XAMPP source before transfer; they are not PostgreSQL scripts. Never load demo accounts into a live system.
+For a new, empty PostgreSQL database, run [database/postgresql_schema.sql](database/postgresql_schema.sql) in the PostgreSQL query tool to create the application tables. It creates tables only and does not seed accounts or transfer existing MySQL data.
+
+The other SQL files under `database/` and `backend/database/` are the existing MySQL schema, seed data, and historical MySQL migrations. Use them only to prepare the XAMPP source before transfer; they are not PostgreSQL scripts. Never load demo accounts into a live system.
 
 The backend configuration is in `backend/.env`. Use `DATABASE_URL` for hosted PostgreSQL, or set `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT` (default `5432`), and `DB_SSL` for local PostgreSQL. Set a private `JWT_SECRET` before deploying, and never commit `.env`.
 
