@@ -23,7 +23,6 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      {/* Top strip: logo + titles on light blue banner */}
       <div className="brand-bar">
         <img
           src={logo}
@@ -32,15 +31,11 @@ export default function Header() {
           onError={(e) => (e.currentTarget.style.visibility = 'hidden')}
         />
         <div className="brand-text">
-<h1>
-  <marquee behavior="alternate" direction="p">WELCOME TO</marquee>
-</h1>
-          <h1> <span>Injibara University </span>Management System</h1>
-          
+          <p className="brand-eyebrow">WELCOME TO</p>
+          <h1>Injibara University Management System</h1>
         </div>
       </div>
 
-      {/* Bottom strip: date + nav links on blue bar */}
       <div className="nav-bar">
         <span className="date">{today}</span>
         <nav className="nav-links">
