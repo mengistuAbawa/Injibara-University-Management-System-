@@ -158,34 +158,98 @@
 .welcome-page { min-height: 100vh; background: #f4f7fb; }
 .welcome-home {
   background-image:
-    linear-gradient(rgba(244, 247, 251, .3), rgba(244, 247, 251, .4)),
+    linear-gradient(rgba(242, 248, 253, .48), rgba(236, 245, 252, .58)),
     url('https://pbs.twimg.com/media/FTNDWbfWIAEFNjU.jpg');
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
 }
-.welcome-main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
-.welcome-hero { padding: 40px; border-radius: 16px; color: #fff; background: linear-gradient(120deg, #063b70, #0875a8); }
-.welcome-eyebrow { margin: 0 0 10px; color: #bde7ff; font-size: 12px; font-weight: 700; letter-spacing: .14em; }
-.welcome-hero h1, .access-card h1 { margin: 0 0 12px; font-size: clamp(30px, 5vw, 48px); }
-.welcome-hero > p:not(.welcome-eyebrow) { max-width: 620px; line-height: 1.6; }
-.welcome-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.welcome-primary, .welcome-secondary { display: inline-block; padding: 12px 20px; border-radius: 7px; font-weight: 700; text-decoration: none; }
-.welcome-primary { color: #07365e; background: #fff; }
-.welcome-secondary { color: #fff; border: 1px solid rgba(255,255,255,.7); }
-.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-top: 22px; }
-.role-card, .registration-option { padding: 20px; border: 1px solid #e1e8f0; border-radius: 10px; background: #fff; }
-.role-card h2, .registration-option h2 { margin: 0 0 8px; color: #073b68; font-size: 18px; }
-.role-card p, .registration-option p { margin: 0; color: #536273; line-height: 1.55; }
-.role-request-link { display: inline-block; margin-top: 12px; color: #0b67a3; font-weight: 700; }
-.welcome-footer { color: #e8f2fb; background: #07365e; }
-.welcome-footer-inner { display: grid; grid-template-columns: 1fr auto; gap: 18px 32px; max-width: 1120px; margin: 0 auto; padding: 28px 24px 20px; }
+.welcome-main { max-width: 1200px; margin: 0 auto; padding: 54px 24px 72px; perspective: 1400px; }
+.welcome-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(30px, 5vw, 56px);
+  border: 1px solid rgba(197, 232, 255, .72);
+  border-radius: 18px;
+  color: #fff;
+  background:
+    radial-gradient(ellipse at 92% 8%, rgba(52, 169, 226, .42), transparent 38%),
+    linear-gradient(122deg, #062c51 0%, #07588b 58%, #0879a8 100%);
+  box-shadow: 0 24px 54px rgba(3, 37, 68, .34), 0 7px 16px rgba(3, 37, 68, .2), inset 0 1px rgba(255, 255, 255, .25);
+}
+.welcome-hero::after {
+  position: absolute;
+  z-index: -1;
+  right: -90px;
+  bottom: -180px;
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(216, 241, 255, .2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 28px rgba(216, 241, 255, .045), 0 0 0 58px rgba(216, 241, 255, .035);
+  content: "";
+}
+.welcome-eyebrow { margin: 0 0 12px; color: #bde7ff; font-size: 12px; font-weight: 800; letter-spacing: .18em; }
+.welcome-hero h1, .access-card h1 { margin: 0 0 14px; font-size: clamp(32px, 5.2vw, 54px); letter-spacing: -.035em; line-height: 1.08; text-shadow: 0 3px 14px rgba(0, 20, 42, .25); }
+.welcome-hero > p:not(.welcome-eyebrow) { max-width: 620px; color: #e5f4ff; font-size: 17px; line-height: 1.65; }
+.welcome-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 28px; }
+.welcome-primary, .welcome-secondary {
+  display: inline-block;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
+}
+.welcome-primary { color: #07365e; background: linear-gradient(180deg, #fff, #eaf5ff); box-shadow: 0 5px 0 #9cc4df, 0 10px 20px rgba(0, 23, 45, .2); }
+.welcome-secondary { color: #fff; border-color: rgba(224, 244, 255, .72); background: rgba(4, 38, 68, .18); box-shadow: inset 0 1px rgba(255, 255, 255, .18), 0 5px 14px rgba(0, 23, 45, .12); }
+.welcome-primary:hover, .welcome-secondary:hover { transform: translateY(-4px); }
+.welcome-primary:hover { background: #fff; box-shadow: 0 7px 0 #9cc4df, 0 15px 26px rgba(0, 23, 45, .27); }
+.welcome-secondary:hover { border-color: #fff; background: rgba(255, 255, 255, .16); box-shadow: inset 0 1px rgba(255, 255, 255, .24), 0 10px 22px rgba(0, 23, 45, .22); }
+.welcome-primary:active, .welcome-secondary:active { transform: translateY(1px); }
+.welcome-primary:focus-visible, .welcome-secondary:focus-visible, .role-request-link:focus-visible, .welcome-footer-links a:focus-visible { outline: 3px solid #ffd66b; outline-offset: 4px; }
+.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 28px; }
+.role-card, .registration-option {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(167, 201, 225, .95);
+  border-radius: 12px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, .98), rgba(239, 247, 253, .96));
+  box-shadow: 0 8px 0 rgba(30, 82, 117, .13), 0 14px 26px rgba(13, 51, 82, .14), inset 0 1px #fff;
+  transform: translateY(0) perspective(900px) rotateX(0deg);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+}
+.role-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #126aa0, #49b5e5, #9ce4f6);
+  content: "";
+}
+.role-card:hover {
+  z-index: 1;
+  border-color: #238dca;
+  background: linear-gradient(155deg, #fff, #e9f6ff);
+  box-shadow: 0 12px 0 rgba(30, 82, 117, .1), 0 24px 38px rgba(13, 72, 112, .24), 0 0 0 3px rgba(35, 141, 202, .13), inset 0 1px #fff;
+  transform: translateY(-8px) perspective(900px) rotateX(2deg) scale(1.015);
+}
+.role-card h2, .registration-option h2 { margin: 0 0 10px; color: #073b68; font-size: 18px; letter-spacing: -.015em; }
+.role-card p, .registration-option p { margin: 0; color: #536273; line-height: 1.6; }
+.role-request-link { display: inline-block; margin-top: 14px; color: #0b67a3; font-weight: 800; text-underline-offset: 3px; }
+.role-request-link:hover { color: #064b79; text-decoration-thickness: 2px; }
+.welcome-footer { color: #e8f2fb; border-top: 1px solid rgba(185, 225, 251, .45); background: linear-gradient(115deg, #052d4f, #073e68); box-shadow: 0 -12px 30px rgba(5, 40, 69, .12); }
+.welcome-footer-inner { display: grid; grid-template-columns: 1fr auto; gap: 18px 32px; max-width: 1200px; margin: 0 auto; padding: 28px 24px 20px; }
 .welcome-footer-brand { display: grid; gap: 5px; }
 .welcome-footer-brand strong { color: #fff; font-size: 17px; }
 .welcome-footer-brand span { color: #c5d9ea; font-size: 13px; }
 .welcome-footer-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px 20px; }
-.welcome-footer-links a { color: #fff; font-size: 14px; text-decoration: none; }
-.welcome-footer-links a:hover { text-decoration: underline; }
+.welcome-footer-links a { color: #fff; font-size: 14px; text-decoration: none; text-underline-offset: 4px; }
+.welcome-footer-links a:hover { color: #bde7ff; text-decoration: underline; text-decoration-thickness: 2px; }
 .welcome-footer-copy { grid-column: 1 / -1; margin: 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.2); color: #c5d9ea; font-size: 12px; }
 .access-card { max-width: 720px; margin: 42px auto; padding: 32px; border: 1px solid #e1e8f0; border-radius: 14px; background: #fff; }
 .access-card .welcome-eyebrow { color: #0875a8; }
@@ -206,4 +270,49 @@
 .request-success h2 { margin-top: 0; color: #245c35; }
 .request-success .welcome-primary { color: #fff; background: #0b67a3; }
 .request-another { display: block; margin-top: 15px; padding: 0; border: 0; color: #0b67a3; background: transparent; font: inherit; text-decoration: underline; cursor: pointer; }
-@media (max-width: 600px) { .welcome-main { padding: 24px 16px; } .welcome-hero { padding: 28px 22px; } .access-card { margin: 24px 16px; padding: 24px 20px; } .access-fields { grid-template-columns: 1fr; } .welcome-footer-inner { grid-template-columns: 1fr; padding: 24px 16px 18px; } .welcome-footer-links { justify-content: flex-start; } }
+@media (max-width: 600px) {
+  .welcome-main { padding: 26px 16px 44px; }
+  .welcome-hero { padding: 30px 22px; border-radius: 14px; }
+  .welcome-hero > p:not(.welcome-eyebrow) { font-size: 15px; }
+  .welcome-actions { gap: 12px; }
+  .welcome-primary, .welcome-secondary { padding: 11px 15px; }
+  .role-grid { grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 14px; }
+  .role-card { padding: 18px; }
+  .role-card:hover { transform: translateY(-5px); }
+  .access-card { margin: 24px 16px; padding: 24px 20px; }
+  .access-fields { grid-template-columns: 1fr; }
+  .welcome-footer-inner { grid-template-columns: 1fr; padding: 24px 16px 18px; }
+  .welcome-footer-links { justify-content: flex-start; }
+}
+@media (max-width: 420px) {
+  .role-grid { grid-template-columns: 1fr; }
+  .welcome-actions { align-items: stretch; flex-direction: column; }
+  .welcome-actions a { text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-primary, .welcome-secondary, .role-card { transition: none; }
+  .role-card:hover, .welcome-primary:hover, .welcome-secondary:hover { transform: none; }
+}
+:root[data-theme="dark"] .welcome-home {
+  background-image:
+    linear-gradient(rgba(8, 18, 30, .58), rgba(8, 18, 30, .7)),
+    url('https://pbs.twimg.com/media/FTNDWbfWIAEFNjU.jpg');
+}
+:root[data-theme="dark"] .role-card,
+:root[data-theme="dark"] .registration-option {
+  border-color: #54718a;
+  background: linear-gradient(155deg, #20384b, #172b3b);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .2), 0 14px 26px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .08);
+}
+:root[data-theme="dark"] .role-card h2,
+:root[data-theme="dark"] .registration-option h2 { color: #d7efff; }
+:root[data-theme="dark"] .role-card p,
+:root[data-theme="dark"] .registration-option p { color: #c4d2df; }
+:root[data-theme="dark"] .role-card:hover {
+  border-color: #64bce9;
+  background: linear-gradient(155deg, #294a62, #1d374b);
+  box-shadow: 0 12px 0 rgba(0, 0, 0, .2), 0 24px 38px rgba(0, 0, 0, .34), 0 0 0 3px rgba(100, 188, 233, .16);
+}
+@media (max-width: 768px) {
+  .welcome-home { background-attachment: scroll; }
+}
