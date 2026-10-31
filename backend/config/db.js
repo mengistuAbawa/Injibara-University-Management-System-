@@ -1,15 +1,26 @@
 const { Pool } = require('pg');
 const { bindParameters, prepareSql } = require('./sql');
+const path = require('path');
 require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env.local') });
+
+const connectionString = process.env.DATABASE_URL?.replace(
+  'sslmode=require',
+  'sslmode=verify-full'
+);
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || undefined,
+  connectionString: connectionString || undefined,
   host: process.env.DATABASE_URL ? undefined : process.env.DB_HOST,
   user: process.env.DATABASE_URL ? undefined : process.env.DB_USER,
   password: process.env.DATABASE_URL ? undefined : process.env.DB_PASSWORD,
   database: process.env.DATABASE_URL ? undefined : process.env.DB_NAME,
   port: process.env.DATABASE_URL ? undefined : Number(process.env.DB_PORT || 5432),
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
+  ssl: process.env.DATABASE_URL
+    ? undefined
+    : process.env.DB_SSL === 'true'
+      ? { rejectUnauthorized: true }
+      : undefined,
   connectionTimeoutMillis: 10000,
 });
 

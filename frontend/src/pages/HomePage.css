@@ -162,7 +162,7 @@
     url('https://pbs.twimg.com/media/FTNDWbfWIAEFNjU.jpg');
   background-position: center;
   background-size: cover;
-  background-attachment: scroll;
+  background-attachment: fixed;
 }
 .welcome-main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
 .welcome-hero { padding: 40px; border-radius: 16px; color: #fff; background: linear-gradient(120deg, #063b70, #0875a8); }

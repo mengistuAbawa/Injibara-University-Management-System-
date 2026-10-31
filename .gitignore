@@ -11,3 +11,5 @@ frontend/dist/
 
 # Uploaded files
 backend/uploads/
+.neon
+node_modules/
