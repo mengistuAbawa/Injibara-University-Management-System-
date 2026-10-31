@@ -1,0 +1,237 @@
+.allocation-results-page {
+  min-width: 0;
+}
+
+.allocation-results-title h1 {
+  margin: 0;
+}
+
+.allocation-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.allocation-summary-card {
+  display: grid;
+  gap: 8px;
+  min-height: 94px;
+  padding: 16px 18px;
+  border: 1px solid #c0dceb;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #f3f9fd, #e1f0f9);
+  color: #31566f;
+  box-shadow: 0 3px 8px rgb(23 75 110 / 8%);
+}
+
+.allocation-summary-card strong {
+  color: #0b4a7a;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.allocation-results-card {
+  min-width: 0;
+  padding: 18px;
+}
+
+.allocation-filter-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(200px, 300px);
+  align-items: end;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.allocation-filter-row label,
+.allocation-pagination label {
+  display: grid;
+  gap: 6px;
+  color: #244b67;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.allocation-filter-row input,
+.allocation-filter-row select,
+.allocation-pagination select {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid #b6cad9;
+  border-radius: 5px;
+  background: #fff;
+  color: #243746;
+  font: inherit;
+}
+
+.allocation-filter-row input:focus,
+.allocation-filter-row select:focus,
+.allocation-pagination select:focus {
+  border-color: #297eb1;
+  box-shadow: 0 0 0 3px rgb(41 126 177 / 14%);
+  outline: none;
+}
+
+.allocation-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #ccc;
+}
+
+.allocation-table {
+  min-width: 1040px;
+  margin: 0;
+}
+
+.allocation-table thead th {
+  border-color: #c4d5e0;
+  background: linear-gradient(180deg, #f0f8fd, #cfe5f3);
+  color: #123f5f;
+  white-space: nowrap;
+}
+
+.allocation-table td,
+.allocation-table th {
+  padding: 9px 10px;
+  border: 1px solid #d4dce2;
+  vertical-align: middle;
+}
+
+.allocation-table tbody tr:nth-child(even) {
+  background: #f7fafc;
+}
+
+.allocation-number {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.allocation-status {
+  display: inline-block;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.allocation-status.is-assigned {
+  color: #1b7d1b;
+}
+
+.allocation-status.is-unassigned {
+  color: #b30000;
+}
+
+.allocation-results-message {
+  margin: 0;
+  padding: 24px 16px;
+  border: 1px dashed #b6cad9;
+  border-radius: 6px;
+  background: #f8fbfd;
+  color: #445d70;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.allocation-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px 20px;
+  padding-top: 15px;
+  color: #42586a;
+  font-size: 13px;
+}
+
+.allocation-pagination label {
+  grid-template-columns: auto 72px;
+  align-items: center;
+}
+
+.allocation-pagination select {
+  min-height: 34px;
+}
+
+.allocation-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.allocation-page-controls button {
+  min-height: 34px;
+}
+
+.allocation-page-controls button:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+:root[data-theme="dark"] .allocation-summary-card {
+  border-color: #3a566d;
+  background: linear-gradient(145deg, #20384b, #172b3b);
+  color: #c4d2df;
+}
+
+:root[data-theme="dark"] .allocation-summary-card strong {
+  color: #d7efff;
+}
+
+:root[data-theme="dark"] .allocation-filter-row label,
+:root[data-theme="dark"] .allocation-pagination label {
+  color: #dceeff;
+}
+
+:root[data-theme="dark"] .allocation-filter-row input,
+:root[data-theme="dark"] .allocation-filter-row select,
+:root[data-theme="dark"] .allocation-pagination select {
+  border-color: #526273;
+  background: #111923;
+  color: #e6edf5;
+}
+
+:root[data-theme="dark"] .allocation-table thead th {
+  border-color: #3b4a59;
+  background: linear-gradient(110deg, #20384b, #29475e);
+  color: #e2f2ff;
+}
+
+:root[data-theme="dark"] .allocation-table td,
+:root[data-theme="dark"] .allocation-table th {
+  border-color: #3b4a59;
+}
+
+:root[data-theme="dark"] .allocation-table tbody tr:nth-child(even),
+:root[data-theme="dark"] .allocation-results-message {
+  background: #1b2835;
+  color: #d0dbe5;
+}
+
+@media (max-width: 720px) {
+  .allocation-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .allocation-summary-card {
+    min-height: 78px;
+  }
+
+  .allocation-filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .allocation-results-card {
+    padding: 12px;
+  }
+
+  .allocation-pagination {
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .allocation-page-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

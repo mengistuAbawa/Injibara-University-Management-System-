@@ -13,7 +13,8 @@ export const createOffering = (departmentId, payload) => data(api.post(`/dean/de
 export const deleteOffering = (id) => data(api.delete(`/dean/offerings/${id}`));
 export const listGradeUploads = () => data(api.get('/dean/grade-uploads'));
 export const reviewGradeUpload = (sectionId, payload) => data(api.patch(`/dean/grade-uploads/${sectionId}`, payload));
-export const listAllocationResults = () => data(api.get('/dean/allocation-results'));
+export const getAllocationResults = () => data(api.get('/dean/allocation-results'));
+export const listAllocationResults = getAllocationResults;
 export const listHods = () => data(api.get('/dean/hods'));
 export const getHodPerformance = (instructorId) => data(api.get(`/dean/hods/${instructorId}/performance`));
 export const listNgStudents = (departmentId) => data(api.get('/dean/ng-students', { params: departmentId ? { department_id: departmentId } : {} }));

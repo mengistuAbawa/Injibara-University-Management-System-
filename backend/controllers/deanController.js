@@ -196,10 +196,25 @@ exports.reviewGradeUpload = async (req, res, next) => {
 
 exports.getAllocationResults = async (req, res, next) => {
   try {
-    const [rows] = await db.query(`SELECT s.student_id,s.student_number,s.first_name,s.last_name,d.department_name,f.field_name,sr.status,sr.announced_on
-      FROM selection_results sr JOIN students s ON s.student_id=sr.student_id
-      LEFT JOIN fields f ON f.field_id=sr.field_id LEFT JOIN departments d ON d.department_id=COALESCE(sr.department_id,f.department_id)
-      WHERE d.college_id=? ORDER BY d.department_name,s.last_name,s.first_name`, [collegeId(req)]);
+    const deanCollegeId = req.user?.college_id;
+    if (!deanCollegeId) return res.status(403).json({ message: 'Not a Dean' });
+
+    const [rows] = await db.query(`SELECT
+        s.student_number,
+        CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+        s.gender,
+        s.university_entrance_result,
+        f.field_name,
+        d.department_name,
+        d.department_code,
+        sr.status,
+        sr.announced_on
+      FROM selection_results sr
+      JOIN students s ON s.student_id = sr.student_id
+      JOIN fields f ON f.field_id = sr.field_id
+      JOIN departments d ON d.department_id = sr.department_id
+      WHERE d.college_id = ?
+      ORDER BY d.department_name, s.student_number`, [deanCollegeId]);
     res.json(rows);
   } catch (error) { next(error); }
 };
