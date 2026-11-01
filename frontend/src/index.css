@@ -486,4 +486,126 @@ button[type="submit"]:hover:not(:disabled),
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
   }
+
+  /* Dashboard dark-theme readability overrides.
+     Keep these overrides late in the stylesheet so page-specific light-theme
+     colors cannot make text disappear on dark surfaces. */
+  :root[data-theme="dark"] body {
+    color: #eaf2f8;
+  }
+
+  :root[data-theme="dark"] .content,
+  :root[data-theme="dark"] .layout,
+  :root[data-theme="dark"] .welcome-page,
+  :root[data-theme="dark"] .public-shell,
+  :root[data-theme="dark"] main {
+    background-color: transparent;
+  }
+
+  :root[data-theme="dark"] body :where(
+    [class*="-container"],
+    [class*="-panel"],
+    [class*="-card"]:not(.hero-login-card):not(.sidebar-login-card),
+    [class*="-box"],
+    [class*="-form"],
+    [class*="-summary"],
+    [class*="-section"],
+    [class*="-modal"],
+    [class*="-dialog"]
+  ) {
+    border-color: #40566a !important;
+    background-color: #1b2937 !important;
+  }
+
+  :root[data-theme="dark"] body :where(
+    h1, h2, h3, h4, h5, h6,
+    th, td, dt, dd, legend, fieldset
+  ) {
+    color: #edf5fb !important;
+  }
+
+  :root[data-theme="dark"] body :where(
+    p, span, label, li, small, strong, em, div
+  ) {
+    color: #d6e1eb;
+  }
+
+  :root[data-theme="dark"] .hero-login-card :where(p, span, small, strong),
+  :root[data-theme="dark"] .login-guide-page :where(p, span, strong),
+  :root[data-theme="dark"] .hero-card-heading :where(small, strong) {
+    color: #263f54 !important;
+  }
+
+  :root[data-theme="dark"] .hero-login-card,
+  :root[data-theme="dark"] .login-guide-page {
+    background: #fff !important;
+    border-color: #dbe5ed !important;
+  }
+
+  :root[data-theme="dark"] .hero-login-card li strong,
+  :root[data-theme="dark"] .hero-card-heading strong,
+  :root[data-theme="dark"] .login-guide-page h2 {
+    color: #17354e !important;
+  }
+
+  :root[data-theme="dark"] .hero-login-card li > span,
+  :root[data-theme="dark"] .login-guide-page article > span {
+    color: #fff !important;
+  }
+
+  :root[data-theme="dark"] body a {
+    color: #9dd3ff !important;
+  }
+
+  :root[data-theme="dark"] .public-sidebar-nav a.active,
+  :root[data-theme="dark"] .public-sidebar-nav a:hover,
+  :root[data-theme="dark"] .hero-card-link,
+  :root[data-theme="dark"] .sidebar-login-card a,
+  :root[data-theme="dark"] button.primary,
+  :root[data-theme="dark"] .welcome-primary {
+    color: #fff !important;
+  }
+
+  :root[data-theme="dark"] body :where(table, .table-scroll) {
+    background-color: #17232f;
+    color: #eaf2f8;
+  }
+
+  :root[data-theme="dark"] table th {
+    background-color: #263b4d !important;
+    color: #f4f8fb !important;
+  }
+
+  :root[data-theme="dark"] table td {
+    background-color: transparent;
+    color: #dce6ef !important;
+  }
+
+  :root[data-theme="dark"] table tr:nth-child(even) td {
+    background-color: #1d2c3a;
+  }
+
+  :root[data-theme="dark"] body :where(.muted, .subtitle, .description, .meta, .helper-text, .field-help),
+  :root[data-theme="dark"] body [class*="-subtitle"],
+  :root[data-theme="dark"] body [class*="-description"],
+  :root[data-theme="dark"] body [class*="-meta"] {
+    color: #b7c7d6 !important;
+  }
+
+  :root[data-theme="dark"] body :where(.status, .badge, .tag, .pill, [class*="-badge"], [class*="-status"]) {
+    border-color: #526b80;
+    color: #eaf2f8 !important;
+  }
+
+  :root[data-theme="dark"] .sidebar-login-card,
+  :root[data-theme="dark"] .welcome-hero,
+  :root[data-theme="dark"] .info-page-header {
+    color: #fff !important;
+  }
+
+  :root[data-theme="dark"] .welcome-hero :where(p, span, strong, h1, h2, h3),
+  :root[data-theme="dark"] .info-page-header :where(p, span, strong, h1, h2, h3),
+  :root[data-theme="dark"] .sidebar-login-card :where(p, span, strong) {
+    color: #fff !important;
+  }
 }
