@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import '../admin/SystemSettings.css';
+import './EditProfile.css';
 
 const emptyProfile = { username: '', first_name: '', last_name: '', email: '', phone_number: '' };
 
@@ -42,31 +42,34 @@ export default function EditProfile() {
     }
   };
 
-  if (loading) return <div className="settings-page"><p>Loading profile...</p></div>;
+  if (loading) return <div className="edit-profile-page"><div className="edit-profile-loading">Loading profile...</div></div>;
 
-  return <div className="settings-page">
-    <h1>Edit Profile</h1>
-    <div className="settings-panel" style={{ maxWidth: 720 }}>
-      <p>Update your account information. Your changes will appear immediately in the sidebar.</p>
-      {message && <div className="settings-message">{message}</div>}
-      {error && <div className="settings-error">{error}</div>}
-      <form onSubmit={submit} className="settings-form">
-        <label>First name
+  return <div className="edit-profile-page">
+    <div className="edit-profile-heading">
+      <span>Edit account details</span>
+      <h1>Edit Profile</h1>
+      <p>Update your personal and account information.</p>
+    </div>
+    <div className="edit-profile-card">
+      {message && <div className="edit-profile-message success" role="status">{message}</div>}
+      {error && <div className="edit-profile-message error" role="alert">{error}</div>}
+      <form onSubmit={submit} className="edit-profile-form">
+        <label><span>First name</span>
           <input name="first_name" value={profile.first_name || ''} onChange={change} required />
         </label>
-        <label>Last name
+        <label><span>Last name</span>
           <input name="last_name" value={profile.last_name || ''} onChange={change} required />
         </label>
-        <label>Username
+        <label><span>Username</span>
           <input name="username" value={profile.username || ''} onChange={change} />
         </label>
-        <label>Email
+        <label><span>Email address</span>
           <input name="email" type="email" value={profile.email || ''} onChange={change} required />
         </label>
-        {user?.role === 'instructor' && <label>Phone number
+        {user?.role === 'instructor' && <label className="edit-profile-wide"><span>Phone number</span>
           <input name="phone_number" value={profile.phone_number || ''} onChange={change} />
         </label>}
-        <button className="settings-save" type="submit" disabled={saving}>
+        <button className="edit-profile-save" type="submit" disabled={saving}>
           {saving ? 'Saving...' : 'Save profile'}
         </button>
       </form>
