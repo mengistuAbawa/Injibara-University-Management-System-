@@ -4,6 +4,7 @@
 }
 
 .brand-bar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: clamp(16px, 4vw, 44px);
@@ -12,6 +13,15 @@
   padding: 16px clamp(16px, 3vw, 40px);
   border-bottom: 1px solid rgba(148, 163, 184, .22);
   background: transparent;
+}
+
+.brand-text {
+  position: absolute;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 170px);
+  text-align: center;
+  transform: translateX(-50%);
 }
 
 .brand-logo {
@@ -104,6 +114,15 @@
     gap: 12px;
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  .brand-text {
+    max-width: calc(100% - 72px);
+    left: 62px;
+    right: 8px;
+    width: auto;
+    text-align: center;
+    transform: none;
   }
 
   .brand-logo {

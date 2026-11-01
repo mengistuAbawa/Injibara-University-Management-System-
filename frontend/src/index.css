@@ -29,6 +29,47 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #222; backgr
 .table-scroll { overflow-x:auto; }
 @media (max-width: 720px) { .layout { display:block; } .sidebar { width:100%; min-height:0; } .content { padding:14px; } .form-grid { grid-template-columns:1fr; } }
 
+/* Dashboard cards: sharp corners with raised 3D edges */
+.stats-grid > .stat-card,
+.quick-grid > .quick-card,
+.dashboard-grid > .stat-card,
+.dashboard-grid > .quick-card,
+.admin-dash .stat-card,
+.admin-dash .quick-card,
+.instructor-dash .stat-card,
+.instructor-dash .quick-card,
+.hod-dash .stat-card,
+.hod-dash .quick-card,
+.finance-dash .finance-card,
+.student-dashboard .dashboard-card {
+  border-radius: 0 !important;
+  box-shadow:
+    5px 5px 0 rgba(20, 73, 112, .14),
+    0 14px 28px rgba(18, 61, 92, .16),
+    inset 0 1px rgba(255, 255, 255, .65) !important;
+  transform: translateY(0);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.stats-grid > .stat-card:hover,
+.quick-grid > .quick-card:hover,
+.dashboard-grid > .stat-card:hover,
+.dashboard-grid > .quick-card:hover,
+.admin-dash .stat-card:hover,
+.admin-dash .quick-card:hover,
+.instructor-dash .stat-card:hover,
+.instructor-dash .quick-card:hover,
+.hod-dash .stat-card:hover,
+.hod-dash .quick-card:hover,
+.finance-dash .finance-card:hover,
+.student-dashboard .dashboard-card:hover {
+  box-shadow:
+    8px 8px 0 rgba(20, 73, 112, .12),
+    0 19px 34px rgba(18, 61, 92, .22),
+    inset 0 1px rgba(255, 255, 255, .75) !important;
+  transform: translate(-2px, -4px);
+}
+
 /* Persistent dark theme */
 :root[data-theme="dark"] { color-scheme: dark; }
 :root[data-theme="dark"] body { color: #e6edf5; background: #111923; }
