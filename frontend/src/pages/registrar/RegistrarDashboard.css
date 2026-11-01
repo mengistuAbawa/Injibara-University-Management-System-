@@ -95,34 +95,34 @@
 :root[data-theme="dark"] .reg-dash .title-strip {
   border-color: #47738f;
   background: #20384b;
-  color: #e2f2ff;
+  color: #e2f2ff !important;
 }
 
 :root[data-theme="dark"] .reg-dash .section-title {
-  color: #dceeff;
+  color: #dceeff !important;
 }
 
 :root[data-theme="dark"] .reg-dash .quick-card {
   border-color: #3b4a59;
-  background: #1a2734;
-  color: #e6edf5;
+  background: #1a2734 !important;
+  color: #e6edf5 !important;
   box-shadow: 0 3px 10px rgba(0, 0, 0, .28);
 }
 
 :root[data-theme="dark"] .reg-dash .quick-card:hover {
   border-color: #66b3eb;
-  background: #22384a;
+  background: #22384a !important;
 }
 
 :root[data-theme="dark"] .reg-dash .qc-title {
-  color: #e2f2ff;
+  color: #e2f2ff !important;
 }
 
 :root[data-theme="dark"] .reg-dash .qc-desc {
-  color: #bdcad7;
+  color: #bdcad7 !important;
 }
 
 :root[data-theme="dark"] .reg-dash .stat-card,
 :root[data-theme="dark"] .reg-dash .stat-card * {
-  color: #fff;
+  color: #fff !important;
 }
