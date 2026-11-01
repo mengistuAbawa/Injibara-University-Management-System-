@@ -87,3 +87,42 @@
   font-size: 12px;
   color: #555;
 }
+
+:root[data-theme="dark"] .reg-dash {
+  color: #e6edf5;
+}
+
+:root[data-theme="dark"] .reg-dash .title-strip {
+  border-color: #47738f;
+  background: #20384b;
+  color: #e2f2ff;
+}
+
+:root[data-theme="dark"] .reg-dash .section-title {
+  color: #dceeff;
+}
+
+:root[data-theme="dark"] .reg-dash .quick-card {
+  border-color: #3b4a59;
+  background: #1a2734;
+  color: #e6edf5;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .28);
+}
+
+:root[data-theme="dark"] .reg-dash .quick-card:hover {
+  border-color: #66b3eb;
+  background: #22384a;
+}
+
+:root[data-theme="dark"] .reg-dash .qc-title {
+  color: #e2f2ff;
+}
+
+:root[data-theme="dark"] .reg-dash .qc-desc {
+  color: #bdcad7;
+}
+
+:root[data-theme="dark"] .reg-dash .stat-card,
+:root[data-theme="dark"] .reg-dash .stat-card * {
+  color: #fff;
+}
