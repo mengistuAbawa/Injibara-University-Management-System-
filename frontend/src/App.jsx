@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import PublicInfoPage from './pages/PublicInfoPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import GraduatedStudents from './pages/GraduatedStudents';
@@ -58,7 +59,7 @@ import AlumniDashboard from './pages/alumni/AlumniDashboard';
 import RequestDocument from './pages/alumni/RequestDocument';
 import MyRequests from './pages/alumni/MyRequests';
 import AlumniProfile from './pages/alumni/AlumniProfile';
-import Transcript from './pages/alumni/Transcript';
+import AlumniTranscript from './pages/alumni/AlumniTranscript';
 import FinanceLayout from './layouts/FinanceLayout';
 import FinanceDashboard from './pages/finance/FinanceDashboard';
 import FeeTypes from './pages/finance/FeeTypes';
@@ -83,6 +84,10 @@ export default function App() {
   return <Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/welcome" element={<HomePage welcomeOnly />} />
+    <Route path="/public/overview" element={<HomePage welcomeOnly />} />
+    <Route path="/public/how-it-works" element={<PublicInfoPage />} />
+    <Route path="/public/user-roles" element={<PublicInfoPage />} />
+    <Route path="/public/login-guide" element={<PublicInfoPage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register-account" element={<RegisterPage />} />
     <Route path="/graduated" element={<GraduatedStudents />} />
@@ -106,7 +111,7 @@ export default function App() {
       <Route path="/alumni/request" element={<RequestDocument />} />
       <Route path="/alumni/requests" element={<MyRequests />} />
       <Route path="/alumni/profile" element={<AlumniProfile />} />
-      <Route path="/alumni/transcript" element={<Transcript />} />
+      <Route path="/alumni/transcript" element={<AlumniTranscript />} />
     </Route>
     <Route element={<FinanceLayout />}>
       <Route path="/finance/dashboard" element={<FinanceDashboard />} />

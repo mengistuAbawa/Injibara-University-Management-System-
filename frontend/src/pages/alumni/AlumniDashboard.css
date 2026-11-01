@@ -1,0 +1,62 @@
+.alumni-info-block {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  border-radius: 8px;
+  background: #d6ecf8;
+}
+
+.alumni-info-block div {
+  display: grid;
+  gap: 6px;
+}
+
+.alumni-info-block strong {
+  color: #0b3a5c;
+}
+
+.alumni-section-heading {
+  margin: 24px 0 12px;
+  color: #0b4a7a;
+}
+
+.alumni-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.alumni-quick-actions a {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid #c8c8c8;
+  border-radius: 6px;
+  background: #fff;
+  color: #0b4a7a;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+
+.alumni-quick-actions a:hover {
+  transform: translateY(-2px);
+  border-color: #2b7de9;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
+}
+
+@media (max-width: 760px) {
+  .alumni-info-block,
+  .alumni-quick-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .alumni-info-block,
+  .alumni-quick-actions {
+    grid-template-columns: 1fr;
+  }
+}

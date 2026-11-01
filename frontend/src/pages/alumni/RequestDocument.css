@@ -1,0 +1,32 @@
+.alumni-form {
+  display: grid;
+  gap: 16px;
+  width: min(680px, 100%);
+  padding: 22px;
+  border: 1px solid #d3e1ea;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.alumni-form label {
+  display: grid;
+  gap: 7px;
+  color: #0b3a5c;
+  font-weight: 700;
+}
+
+.alumni-form input,
+.alumni-form select,
+.alumni-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #aebdca;
+  border-radius: 4px;
+  color: #21364b;
+  font: inherit;
+  font-weight: 400;
+}
+
+.alumni-form textarea {
+  resize: vertical;
+}

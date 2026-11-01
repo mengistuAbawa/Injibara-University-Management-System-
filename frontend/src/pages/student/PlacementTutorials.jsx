@@ -17,7 +17,7 @@ export default function PlacementTutorials() {
           {items.map((t, i) => (
             <li className="placement-tutorial-card" key={t.id || `${t.title}-${i}`}>
               <span className="placement-tutorial-icon" aria-hidden="true">▶</span>
-              <a href={t.url} target="_blank" rel="noreferrer">
+              <a href={t.url}>
                 <span className="placement-tutorial-title">{t.title}</span>
                 <span className="placement-tutorial-action">Open tutorial <span aria-hidden="true">↗</span></span>
               </a>

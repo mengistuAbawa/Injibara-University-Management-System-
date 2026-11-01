@@ -35,7 +35,7 @@ export default function AccessRequests({ office }) {
         <td>{applicant ? 'Assigned on approval' : `INU${String(data.student_number || data.employee_number || '').replace(/^INU/i, '').toUpperCase()}`}</td><td>{request.email}</td>
         <td>{applicant ? [request.first_choice_name, request.second_choice_name, request.third_choice_name].filter(Boolean).map((name, i) => <div key={i}>{i+1}. {name}</div>) : data.department_name || data.department_id || '—'}</td>
         <td>{applicant ? <>{request.gender} · {request.date_of_birth}<br/>{request.phone_number} · {request.region}<br/>{request.high_school_name} ({request.high_school_region})<br/>Entrance result: {request.university_entrance_result}</> : request.role === 'dean' ? <>Academic rank: {data.academic_rank || 'Choose during setup'}<br/>Employee no.: {data.employee_number}</> : '—'}</td>
-        <td>{request.transcript_url && <a href={`${API_ORIGIN}${request.transcript_url}`} target="_blank" rel="noreferrer">Transcript</a>} {request.photo_url && <a href={`${API_ORIGIN}${request.photo_url}`} target="_blank" rel="noreferrer">Photo</a>}</td>
+        <td>{request.transcript_url && <a href={`${API_ORIGIN}${request.transcript_url}`}>Transcript</a>} {request.photo_url && <a href={`${API_ORIGIN}${request.photo_url}`}>Photo</a>}</td>
         <td>{new Date(request.submitted_at).toLocaleDateString()}</td><td><button type="button" onClick={() => review(request.request_id, 'approve')}>{request.needs_dean_setup ? 'Complete dean account' : 'Approve'}</button> {!request.needs_dean_setup && <button type="button" onClick={() => review(request.request_id, 'reject')}>Reject</button>}</td>
       </tr>; })}</tbody></table></div>}
   </section>;

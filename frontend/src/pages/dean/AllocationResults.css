@@ -6,6 +6,20 @@
   margin: 0;
 }
 
+.allocation-results-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #7db4d6;
+  background: #bfe0f2;
+  color: #0b4a7a;
+}
+
+.allocation-print-button {
+  flex: 0 0 auto;
+}
+
 .allocation-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -20,7 +34,7 @@
   padding: 16px 18px;
   border: 1px solid #c0dceb;
   border-radius: 8px;
-  background: linear-gradient(145deg, #f3f9fd, #e1f0f9);
+  background: #e6f2fb;
   color: #31566f;
   box-shadow: 0 3px 8px rgb(23 75 110 / 8%);
 }
@@ -233,5 +247,29 @@
   .allocation-page-controls {
     width: 100%;
     justify-content: space-between;
+  }
+}
+
+@media print {
+  .sidebar,
+  .allocation-results-page > :not(.allocation-results-card),
+  .allocation-filter-row,
+  .allocation-pagination,
+  .allocation-results-message {
+    display: none !important;
+  }
+
+  .allocation-results-page,
+  .allocation-results-card,
+  .allocation-table-wrap {
+    width: 100%;
+    overflow: visible;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .allocation-table {
+    min-width: 0;
   }
 }

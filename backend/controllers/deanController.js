@@ -215,7 +215,7 @@ exports.getAllocationResults = async (req, res, next) => {
       JOIN departments d ON d.department_id = sr.department_id
       WHERE d.college_id = ?
       ORDER BY d.department_name, s.student_number`, [deanCollegeId]);
-    res.json(rows);
+    res.json(Array.isArray(rows) ? rows : []);
   } catch (error) { next(error); }
 };
 

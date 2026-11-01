@@ -33,8 +33,10 @@ const app = express();
 
 const allowedOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/\/+$/, ''))
   .filter(Boolean);
+
+const normalizedOrigin = (origin) => origin.replace(/\/+$/, '');
 
 if (process.env.NODE_ENV === 'production') {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
@@ -49,7 +51,9 @@ app.use(helmet());
 app.use(cors({
   origin(origin, callback) {
     // Allow server-to-server and same-origin requests that do not send an Origin header.
-    if (!origin || process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin)) {
+    const developmentOrigin = process.env.NODE_ENV !== 'production' &&
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+    if (!origin || developmentOrigin || allowedOrigins.includes(normalizedOrigin(origin))) {
       return callback(null, true);
     }
     return callback(new Error('Origin is not allowed by CORS'));

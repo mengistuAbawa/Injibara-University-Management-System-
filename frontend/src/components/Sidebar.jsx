@@ -15,6 +15,7 @@ export default function Sidebar() {
     logout();
     navigate('/login');
   };
+  const isAlumni = user?.role === 'student' && user?.status === 'Graduated';
 
   /* ---------- Public menu (not logged in) ---------- */
   if (!user) {
@@ -27,7 +28,7 @@ export default function Sidebar() {
           <li><Link to="/apply">Apply for Admission</Link></li>
           <li><Link to="/apply/status">Check Application</Link></li>
           <li>
-            <a href="https://inu.edu.et" target="_blank" rel="noreferrer">
+            <a href="https://inu.edu.et">
               INU Web Site
             </a>
           </li>
@@ -50,11 +51,11 @@ export default function Sidebar() {
       { popup: 'priority',          label: 'Priority Summary' },
     ],
  alumni: [
-  { to: '/alumni/dashboard', label: 'Home' },
-  { to: '/alumni/request', label: 'Request Document' },
-  { to: '/alumni/requests', label: 'My Requests' },
-  { to: '/alumni/profile', label: 'My Profile' },
-  { to: '/alumni/transcript', label: 'Transcript' },
+  { to: '/alumni/dashboard', label: '🏠 Home' },
+  { to: '/alumni/request', label: '📄 Request Document' },
+  { to: '/alumni/requests', label: '📋 My Requests' },
+  { to: '/alumni/profile', label: '👤 My Profile' },
+  { to: '/alumni/transcript', label: '🎓 Transcript' },
 ],
  finance: [
   { to: '/finance/dashboard', label: 'Dashboard' },
@@ -116,10 +117,12 @@ admin: [
   { to: '/hod/students',    label: 'Department Students' },
 ] : [];
 
- const menuRole = role === 'student' && user.status === 'Graduated' ? 'alumni' : role;
- const current = user.is_dean
-   ? [...(menus.dean || []), ...(menus.instructor || [])]
-   : [...(menus[menuRole] || []), ...hodMenu];
+ const menuRole = isAlumni ? 'alumni' : role;
+ const current = isAlumni
+   ? menus.alumni
+   : user.is_dean
+     ? [...(menus.dean || []), ...(menus.instructor || [])]
+     : [...(menus[menuRole] || []), ...hodMenu];
 
   return (
     <>
@@ -149,7 +152,7 @@ admin: [
           {role === 'instructor' && location.pathname !== '/instructor/dashboard' && (
             <li><Link to="/instructor/dashboard">Cancel</Link></li>
           )}
-          <li><a href="https://inu.edu.et" target="_blank" rel="noreferrer">INU Website</a></li>
+          {!isAlumni && <li><a href="https://inu.edu.et">INU Website</a></li>}
           <li className="logout-item">
             <button className="logout-btn" onClick={handleLogout}>
               Logout

@@ -3,8 +3,9 @@ const c = require('../controllers/studentController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 const financeController = require('../controllers/financeController');
+const { rejectGraduatedStudent } = require('../middleware/alumniMiddleware');
 
-router.use(protect, authorize('student'));
+router.use(protect, authorize('student'), rejectGraduatedStudent);
 
 router.get('/my-profile',          c.getMyProfile);
 router.get('/my-courses',          c.getMyCourses);

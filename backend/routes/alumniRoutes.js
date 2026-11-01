@@ -1,14 +1,14 @@
-/** Authenticated routes for graduated students. */
 const router = require('express').Router();
-const c = require('../controllers/alumniController');
+const alumni = require('../controllers/alumniController');
 const { protect } = require('../middleware/authMiddleware');
-const alumniGuard = require('../middleware/alumniMiddleware');
+const { authorize } = require('../middleware/roleMiddleware');
+const { requireAlumni } = require('../middleware/alumniMiddleware');
 
-router.use(protect, alumniGuard);
-router.get('/profile', c.profile);
-router.put('/profile', c.updateProfile);
-router.get('/requests', c.requests);
-router.post('/requests', c.createRequest);
-router.get('/transcript', c.transcript);
+router.use(protect, authorize('student'), requireAlumni);
+router.get('/profile', alumni.getProfile);
+router.put('/profile', alumni.updateProfile);
+router.get('/requests', alumni.getMyRequests);
+router.post('/requests', alumni.submitRequest);
+router.get('/transcript', alumni.getMyTranscript);
 
 module.exports = router;

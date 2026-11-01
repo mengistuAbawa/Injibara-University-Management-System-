@@ -1,3 +1,57 @@
-/** Alumni document request submission form. */
-import { useState } from 'react';import { useNavigate } from 'react-router-dom';import api from '../../services/api';import './AlumniPages.css';
-export default function RequestDocument(){const [type,setType]=useState('transcript'),[purpose,setPurpose]=useState(''),[error,setError]=useState('');const nav=useNavigate();const submit=async e=>{e.preventDefault();try{await api.post('/alumni/requests',{request_type:type,purpose});nav('/alumni/requests');}catch(x){setError(x.response?.data?.message||'Request failed');}};return <main className="actor-page"><div className="title-strip"><h1>Request a Document</h1></div><form className="actor-form" onSubmit={submit}><label>Document type<select value={type} onChange={e=>setType(e.target.value)}><option value="transcript">Transcript</option><option value="degree_verification">Degree verification</option><option value="recommendation">Recommendation</option><option value="replacement_id">Replacement ID</option></select></label><label>Purpose<textarea required maxLength="2000" rows="5" value={purpose} onChange={e=>setPurpose(e.target.value)}/></label>{error&&<p className="actor-error">{error}</p>}<button className="actor-button">Submit request</button></form></main>;}
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { submitRequest } from '../../services/alumniService';
+import './RequestDocument.css';
+
+export default function RequestDocument() {
+  const [requestType, setRequestType] = useState('transcript');
+  const [purpose, setPurpose] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError('');
+    setSubmitting(true);
+    try {
+      await submitRequest({ request_type: requestType, purpose });
+      navigate('/alumni/requests');
+    } catch (cause) {
+      setError(cause.response?.data?.message || 'Could not submit your request. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <section className="alumni-page alumni-request-page">
+      <header className="alumni-title-strip"><h1>Request Document</h1></header>
+      <form className="alumni-form" onSubmit={handleSubmit}>
+        <label>
+          Document Type
+          <select value={requestType} onChange={(event) => setRequestType(event.target.value)} required>
+            <option value="transcript">Official Transcript</option>
+            <option value="degree_verification">Degree Verification Letter</option>
+            <option value="recommendation">Recommendation Letter</option>
+            <option value="replacement_id">Replacement ID Card</option>
+          </select>
+        </label>
+        <label>
+          Purpose
+          <textarea
+            value={purpose}
+            onChange={(event) => setPurpose(event.target.value)}
+            maxLength={2000}
+            rows={5}
+            required
+          />
+        </label>
+        {error && <p className="alumni-error" role="alert">{error}</p>}
+        <button className="alumni-submit" type="submit" disabled={submitting}>
+          {submitting ? 'Submitting…' : 'Submit Request'}
+        </button>
+      </form>
+    </section>
+  );
+}

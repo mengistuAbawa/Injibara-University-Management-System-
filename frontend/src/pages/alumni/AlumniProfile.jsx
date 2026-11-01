@@ -1,3 +1,91 @@
-/** Allows an alumnus to update personal contact and employment details. */
-import { useEffect,useState } from 'react';import api from '../../services/api';import './AlumniPages.css';
-export default function AlumniProfile(){const [form,setForm]=useState({}),[message,setMessage]=useState('');useEffect(()=>{api.get('/alumni/profile').then(r=>setForm(r.data));},[]);const change=e=>setForm({...form,[e.target.name]:e.target.value});const save=async e=>{e.preventDefault();try{await api.put('/alumni/profile',form);setMessage('Profile saved.');}catch(x){setMessage(x.response?.data?.message||'Could not save profile.');}};return <main className="actor-page"><div className="title-strip"><h1>My Profile</h1></div><form className="actor-form" onSubmit={save}>{[['current_email','Current email'],['current_phone','Phone'],['current_address','Address'],['employer','Employer'],['job_title','Job title']].map(([name,label])=><label key={name}>{label}{name==='current_address'?<textarea name={name} rows="3" value={form[name]||''} onChange={change}/>:<input name={name} value={form[name]||''} onChange={change}/>}</label>)}{message&&<p className="actor-message">{message}</p>}<button className="actor-button">Save profile</button></form></main>;}
+import { useEffect, useState } from 'react';
+import { getProfile, updateProfile } from '../../services/alumniService';
+import './AlumniProfile.css';
+
+const initialForm = {
+  current_email: '',
+  current_phone: '',
+  current_address: '',
+  employer: '',
+  job_title: '',
+};
+
+export default function AlumniProfile() {
+  const [form, setForm] = useState(initialForm);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    getProfile()
+      .then((profile) => {
+        if (active) {
+          setForm(Object.fromEntries(
+            Object.keys(initialForm).map((field) => [field, profile[field] || ''])
+          ));
+        }
+      })
+      .catch((cause) => {
+        if (active) setError(cause.response?.data?.message || 'Could not load your profile.');
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+
+  function handleChange(event) {
+    setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
+    setSuccess('');
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError('');
+    setSuccess('');
+    setSaving(true);
+    try {
+      await updateProfile(form);
+      setSuccess('Your contact information has been saved.');
+    } catch (cause) {
+      setError(cause.response?.data?.message || 'Could not save your profile.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <section className="alumni-page alumni-profile-page">
+      <header className="alumni-title-strip"><h1>My Profile</h1></header>
+      {loading ? <p role="status">Loading profile…</p> : (
+        <form className="alumni-profile-form" onSubmit={handleSubmit}>
+          <label>
+            Current Email
+            <input name="current_email" type="email" maxLength={100} value={form.current_email} onChange={handleChange} />
+          </label>
+          <label>
+            Current Phone
+            <input name="current_phone" type="tel" maxLength={15} value={form.current_phone} onChange={handleChange} />
+          </label>
+          <label>
+            Current Address
+            <textarea name="current_address" maxLength={5000} rows={4} value={form.current_address} onChange={handleChange} />
+          </label>
+          <label>
+            Employer
+            <input name="employer" maxLength={150} value={form.employer} onChange={handleChange} />
+          </label>
+          <label>
+            Job Title
+            <input name="job_title" maxLength={150} value={form.job_title} onChange={handleChange} />
+          </label>
+          {error && <p className="alumni-error" role="alert">{error}</p>}
+          {success && <p className="alumni-success" role="status">{success}</p>}
+          <button className="alumni-submit" type="submit" disabled={saving}>
+            {saving ? 'Saving…' : 'Save Profile'}
+          </button>
+        </form>
+      )}
+    </section>
+  );
+}

@@ -1,0 +1,19 @@
+.alumni-table {
+  min-width: 740px;
+  border-collapse: collapse;
+}
+
+.alumni-admin-note {
+  margin: 8px 0 0;
+  padding: 8px;
+  border-left: 3px solid #e08080;
+  background: #fff1f1;
+  color: #632020;
+}
+
+.alumni-empty {
+  padding: 22px;
+  border: 1px dashed #9cb8ca;
+  background: #f7fbfd;
+  text-align: center;
+}

@@ -1,0 +1,62 @@
+.alumni-transcript-summary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 16px 0;
+  padding: 14px 18px;
+  border-radius: 6px;
+  background: #d6ecf8;
+}
+
+.alumni-transcript-summary p {
+  margin: 0;
+}
+
+.alumni-transcript-summary .alumni-submit {
+  margin-left: auto;
+}
+
+.alumni-transcript-table {
+  width: 100%;
+  min-width: 760px;
+}
+
+@media (max-width: 600px) {
+  .alumni-transcript-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .alumni-transcript-summary .alumni-submit {
+    margin-left: 0;
+  }
+}
+
+@media print {
+  .site-header,
+  .sidebar,
+  .alumni-copyright,
+  .alumni-transcript-title,
+  .alumni-print-controls {
+    display: none !important;
+  }
+
+  .alumni-shell,
+  .alumni-layout,
+  .alumni-content {
+    display: block;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .alumni-transcript-summary {
+    border: 1px solid #888;
+    background: #fff;
+  }
+
+  .alumni-transcript-table {
+    min-width: 0;
+  }
+}

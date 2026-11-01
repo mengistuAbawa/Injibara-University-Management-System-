@@ -5,14 +5,15 @@ import { useAuth } from '../context/AuthContext';
 import { loginApi } from '../services/authService';
 import './LoginPage.css';
 
-function roleRedirect(role, isHod, status, isDean) {
-  if (role === 'instructor' && isDean) return '/dean/dashboard';
-  if (isHod) return '/hod/dashboard';
-  switch (role) {
+function redirectByRole(user) {
+  if (user?.role === 'student' && user.status === 'Graduated') return '/alumni/dashboard';
+  if (user?.role === 'instructor' && user.is_dean) return '/dean/dashboard';
+  if (user?.role === 'instructor' && user.is_hod) return '/hod/dashboard';
+  switch (user?.role) {
     case 'admin': return '/admin/dashboard';
     case 'registrar': return '/registrar/dashboard';
     case 'instructor': return '/instructor/dashboard';
-    case 'student': return status === 'Graduated' ? '/alumni/dashboard' : '/dashboard';
+    case 'student': return '/dashboard';
     case 'finance': return '/finance/dashboard';
     case 'dean': return '/dean/dashboard';
     default: return '/';
@@ -41,7 +42,7 @@ export default function LoginPage() {
       login(data.token, data.student);
       if (remember) localStorage.setItem('rememberUser', username);
       else localStorage.removeItem('rememberUser');
-      navigate(roleRedirect(data.student.role, data.student.is_hod, data.student.status, data.student.is_dean));
+      navigate(redirectByRole(data.student));
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }

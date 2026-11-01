@@ -73,6 +73,9 @@ export default function AllocationResults() {
     <main className="actor-page dean-page allocation-results-page">
       <div className="title-strip allocation-results-title">
         <h1>Allocation Results — {collegeName || 'Your College'}</h1>
+        <button type="button" className="allocation-print-button" onClick={() => window.print()} disabled={rows.length === 0}>
+          Print
+        </button>
       </div>
 
       {error && <p className="dean-error" role="alert">{error}</p>}
