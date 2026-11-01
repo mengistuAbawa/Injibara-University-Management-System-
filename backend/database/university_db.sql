@@ -125,6 +125,7 @@ CREATE TABLE courses (
     year_level    INT NOT NULL,
     semester      ENUM('I','II','Summer') NOT NULL,
     is_elective   BOOLEAN DEFAULT FALSE,
+    category      VARCHAR(50) NOT NULL DEFAULT 'Major Course',
     FOREIGN KEY (department_id) REFERENCES departments(department_id)
 );
 

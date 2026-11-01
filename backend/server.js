@@ -31,6 +31,19 @@ const deanRoutes = require('./routes/deanRoutes');
 
 const app = express();
 
+let courseCategorySchemaPromise;
+const ensureCourseCategorySchema = () => {
+  if (!courseCategorySchemaPromise) {
+    courseCategorySchemaPromise = db.query(
+      "ALTER TABLE courses ADD COLUMN IF NOT EXISTS category VARCHAR(50) NOT NULL DEFAULT 'Major Course'"
+    ).catch((err) => {
+      courseCategorySchemaPromise = undefined;
+      throw err;
+    });
+  }
+  return courseCategorySchemaPromise;
+};
+
 const allowedOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
   .map((origin) => origin.trim().replace(/\/+$/, ''))
@@ -61,6 +74,15 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '12mb' }));
 app.use(morgan('dev'));
+
+app.use(async (req, res, next) => {
+  try {
+    await ensureCourseCategorySchema();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Health check
 app.get('/', (req, res) => {

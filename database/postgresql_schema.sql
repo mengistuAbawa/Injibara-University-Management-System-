@@ -119,7 +119,8 @@ CREATE TABLE IF NOT EXISTS courses (
   department_id integer NOT NULL REFERENCES departments(department_id),
   year_level integer NOT NULL,
   semester varchar(10) NOT NULL CHECK (semester IN ('I', 'II', 'Summer')),
-  is_elective boolean DEFAULT FALSE
+  is_elective boolean DEFAULT FALSE,
+  category varchar(50) NOT NULL DEFAULT 'Major Course'
 );
 
 CREATE TABLE IF NOT EXISTS sections (
