@@ -10,3 +10,51 @@
 .mu-notice { border: 1px solid #9dd5b2; background: #effaf2; color: #176434 !important; }
 .mu-error { border: 1px solid #e8b5b5; background: #fff4f4; color: #9c2929 !important; }
 .mu-page .data-table button { padding: 6px 10px; border: 1px solid #b8c9d9; border-radius: 5px; background: #fff; cursor: pointer; }
+.mu-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(92px, 1fr));
+  gap: 8px;
+  min-width: 210px;
+}
+.mu-page .mu-actions .mu-action {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  box-shadow: 3px 3px 0 rgba(20, 73, 112, .18), 0 5px 10px rgba(18, 61, 92, .12);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+.mu-page .mu-actions .mu-action:hover {
+  filter: brightness(1.08);
+  transform: translate(-1px, -2px);
+  box-shadow: 4px 5px 0 rgba(20, 73, 112, .16), 0 8px 14px rgba(18, 61, 92, .18);
+}
+.mu-page .mu-actions .mu-action:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(20, 73, 112, .18);
+}
+.mu-page .mu-actions .edit { background: #1769aa; }
+.mu-page .mu-actions .activate { background: #20855a; }
+.mu-page .mu-actions .deactivate { background: #bd7415; }
+.mu-page .mu-actions .reset { background: #596b7b; }
+.mu-page .mu-actions .delete { background: #b94444; }
+.mu-role-badge,
+.mu-status-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.mu-role-badge { border: 1px solid #a9c9df; background: #eaf5fc; color: #175b86; }
+.mu-status-badge.active { border: 1px solid #9bcaae; background: #eaf7ee; color: #1d6b38; }
+.mu-status-badge.inactive { border: 1px solid #d0b3a9; background: #f8eeeb; color: #8a4438; }
+
+:root[data-theme="dark"] .mu-role-badge { border-color: #47738f; background: #203b50; color: #d9efff; }
+:root[data-theme="dark"] .mu-status-badge.active { border-color: #477859; background: #1d3a2b; color: #bce7c9; }
+:root[data-theme="dark"] .mu-status-badge.inactive { border-color: #815d54; background: #412e2a; color: #f1c8bd; }

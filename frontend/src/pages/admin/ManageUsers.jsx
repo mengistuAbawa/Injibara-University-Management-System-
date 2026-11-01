@@ -147,7 +147,23 @@ export default function ManageUsers() {
       <h3>Current users</h3>
       {loading ? <p>Loading users…</p> : users.length ? <div className="table-scroll"><table className="data-table">
         <thead><tr><th>ID</th><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
-        <tbody>{users.map((user) => <tr key={user.user_id}><td>{user.user_id}</td><td>{[user.first_name, user.last_name].filter(Boolean).join(' ') || '—'}</td><td>{user.username || '—'}</td><td>{user.email}</td><td>{user.role}</td><td>{user.is_active ? 'Active' : 'Inactive'}</td><td>{user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}</td><td><button type="button" onClick={() => editUser(user)}>Edit</button> <button type="button" onClick={() => toggle(user.user_id)}>{user.is_active ? 'Deactivate' : 'Activate'}</button> <button type="button" onClick={() => resetPassword(user)}>Reset password</button> <button type="button" onClick={() => removeUser(user)}>Delete</button></td></tr>)}</tbody>
+        <tbody>{users.map((user) => <tr key={user.user_id}>
+          <td>{user.user_id}</td>
+          <td>{[user.first_name, user.last_name].filter(Boolean).join(' ') || '—'}</td>
+          <td>{user.username || '—'}</td>
+          <td>{user.email}</td>
+          <td><span className="mu-role-badge">{user.role}</span></td>
+          <td><span className={`mu-status-badge ${user.is_active ? 'active' : 'inactive'}`}>{user.is_active ? 'Active' : 'Inactive'}</span></td>
+          <td>{user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}</td>
+          <td>
+            <div className="mu-actions" aria-label={`Actions for ${user.username || user.email}`}>
+              <button className="mu-action edit" type="button" onClick={() => editUser(user)}>Edit</button>
+              <button className={`mu-action ${user.is_active ? 'deactivate' : 'activate'}`} type="button" onClick={() => toggle(user.user_id)}>{user.is_active ? 'Deactivate' : 'Activate'}</button>
+              <button className="mu-action reset" type="button" onClick={() => resetPassword(user)}>Reset password</button>
+              <button className="mu-action delete" type="button" onClick={() => removeUser(user)}>Delete</button>
+            </div>
+          </td>
+        </tr>)}</tbody>
       </table></div> : <p>No users found.</p>}
       <h3>College deans</h3>
       {deans.length ? <div className="table-scroll"><table className="data-table"><thead><tr><th>Name</th><th>Employee No.</th><th>College</th><th>Rank</th><th>Email</th><th>Actions</th></tr></thead><tbody>{deans.map((dean)=><tr key={dean.dean_id}><td>{dean.first_name} {dean.last_name}</td><td>{dean.employee_number}</td><td>{dean.college_name}</td><td>{dean.academic_rank}</td><td>{dean.email}</td><td><button type="button" onClick={()=>demoteDean(dean)}>Remove dean role</button></td></tr>)}</tbody></table></div> : <p>No deans assigned.</p>}
