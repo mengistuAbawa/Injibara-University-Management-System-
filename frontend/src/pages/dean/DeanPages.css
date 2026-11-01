@@ -28,3 +28,49 @@
 .dean-pie-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .dean-pie-list span { padding: 7px 10px; border-radius: 18px; background: #e8f3fb; color: #164d70; }
 @media(max-width:720px) { .dean-chart-row { grid-template-columns: 110px 1fr 48px; font-size: 12px; } .dean-page .title-strip { font-size: 18px; } }
+
+:root[data-theme="dark"] .dean-page .title-strip {
+  border-color: #47738f;
+  background: #20384b !important;
+}
+
+:root[data-theme="dark"] .dean-page .title-strip h1,
+:root[data-theme="dark"] .dean-page .actor-card h2 {
+  color: #e2f2ff !important;
+}
+
+:root[data-theme="dark"] .dean-page .actor-card {
+  border-color: #3b4a59;
+  background: #1a2734 !important;
+}
+
+:root[data-theme="dark"] .dean-kpi,
+:root[data-theme="dark"] .dean-action {
+  border-color: #3b4a59;
+  background: #22384a !important;
+  color: #cbd9e6 !important;
+}
+
+:root[data-theme="dark"] .dean-kpi strong,
+:root[data-theme="dark"] .dean-action strong {
+  color: #e2f2ff !important;
+}
+
+:root[data-theme="dark"] .dean-action span {
+  color: #bdcad7 !important;
+}
+
+:root[data-theme="dark"] .dean-action:hover {
+  border-color: #66b3eb;
+  background: #294a63 !important;
+}
+
+:root[data-theme="dark"] .dean-toolbar label,
+:root[data-theme="dark"] .dean-form label {
+  color: #dceeff !important;
+}
+
+:root[data-theme="dark"] .dean-table-wrap th {
+  background: #20384b;
+  color: #e2f2ff;
+}
