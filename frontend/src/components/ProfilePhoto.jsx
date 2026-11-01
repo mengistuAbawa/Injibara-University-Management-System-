@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './ProfilePhoto.css';
@@ -132,6 +133,16 @@ export default function ProfilePhoto() {
     <div className="profile-photo-details">
       <strong>{name}</strong>
       {user?.student_number && <small>{user.student_number}</small>}
+      {user?.role !== 'student' && user?.role !== 'alumni' && (
+        <Link className="profile-edit-link" to={
+          user.role === 'admin' ? '/admin/profile'
+            : user.role === 'registrar' ? '/registrar/profile'
+              : user.role === 'finance' ? '/finance/profile'
+                : user.role === 'instructor'
+                  ? user.is_dean ? '/dean/profile' : user.is_hod ? '/hod/profile' : '/instructor/profile'
+                  : '/profile/edit'
+        }>Edit profile</Link>
+      )}
       <input ref={fileInput} className="profile-photo-input" type="file" accept="image/jpeg,image/png,image/webp" onChange={chooseFile} />
       {error && <small className="profile-photo-error" role="alert">{error}</small>}
     </div>

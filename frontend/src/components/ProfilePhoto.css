@@ -8,6 +8,8 @@
 .profile-photo-details { display: grid; min-width: 0; gap: 4px; }
 .profile-photo-details > strong { overflow-wrap: anywhere; font-size: 13px; }
 .profile-photo-details > small { color: #46647e; }
+.profile-edit-link { color: #064875; font-size: 12px; font-weight: 700; text-decoration: none; }
+.profile-edit-link:hover { text-decoration: underline; }
 .profile-photo-actions { position: absolute; z-index: 20; top: 100%; left: 0; display: none; min-width: 144px; padding: 5px; border: 1px solid #b7c8d7; border-radius: 7px; background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.2); }
 .profile-photo-control:hover .profile-photo-actions,
 .profile-photo-control:focus-within .profile-photo-actions,

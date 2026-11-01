@@ -6,6 +6,80 @@ const db = require('../config/db');
 const avatarDirectory = path.join(__dirname, '..', 'uploads', 'avatars');
 const maxBytes = 5 * 1024 * 1024;
 
+exports.getProfile = async (req, res, next) => {
+  try {
+    const [[user]] = await db.query(
+      'SELECT user_id, username, first_name, last_name, email, role, avatar_path FROM users WHERE user_id = ?',
+      [req.user.id]
+    );
+    if (!user) return res.status(404).json({ message: 'User account not found' });
+
+    let phone_number = '';
+    if (user.role === 'instructor') {
+      const [[instructor]] = await db.query(
+        'SELECT phone_number FROM instructors WHERE user_id = ?',
+        [req.user.id]
+      );
+      phone_number = instructor?.phone_number || '';
+    }
+    return res.json({ ...user, phone_number });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateProfile = async (req, res, next) => {
+  const username = String(req.body?.username || '').trim();
+  const firstName = String(req.body?.first_name || '').trim();
+  const lastName = String(req.body?.last_name || '').trim();
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  const phoneNumber = String(req.body?.phone_number || '').trim();
+
+  if (!firstName || !lastName || !email) {
+    return res.status(400).json({ message: 'First name, last name, and email are required.' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ message: 'Enter a valid email address.' });
+  }
+
+  let connection;
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+    const [[currentUser]] = await connection.query('SELECT role FROM users WHERE user_id = ?', [req.user.id]);
+    if (!currentUser) {
+      await connection.rollback();
+      return res.status(404).json({ message: 'User account not found' });
+    }
+
+    await connection.query(
+      'UPDATE users SET username = ?, first_name = ?, last_name = ?, email = ? WHERE user_id = ?',
+      [username || null, firstName, lastName, email, req.user.id]
+    );
+    if (currentUser.role === 'instructor') {
+      await connection.query(
+        'UPDATE instructors SET first_name = ?, last_name = ?, phone_number = ? WHERE user_id = ?',
+        [firstName, lastName, phoneNumber || null, req.user.id]
+      );
+    }
+    await connection.commit();
+
+    const [[profile]] = await db.query(
+      'SELECT user_id, username, first_name, last_name, email, role, avatar_path FROM users WHERE user_id = ?',
+      [req.user.id]
+    );
+    return res.json({ ...profile, phone_number: phoneNumber });
+  } catch (err) {
+    if (connection) await connection.rollback().catch(() => {});
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ message: 'That username or email is already in use.' });
+    }
+    next(err);
+  } finally {
+    connection?.release();
+  }
+};
+
 exports.uploadAvatar = async (req, res, next) => {
   let newFilePath;
   try {

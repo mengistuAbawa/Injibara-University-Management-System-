@@ -79,6 +79,7 @@ import AllocationResults from './pages/dean/AllocationResults';
 import HodMonitor from './pages/dean/HodMonitor';
 import NgStudents from './pages/dean/NgStudents';
 import TopStudents from './pages/dean/TopStudents';
+import EditProfile from './pages/shared/EditProfile';
 
 export default function App() {
   return <Routes>
@@ -115,6 +116,7 @@ export default function App() {
     </Route>
     <Route element={<FinanceLayout />}>
       <Route path="/finance/dashboard" element={<FinanceDashboard />} />
+      <Route path="/finance/profile" element={<EditProfile />} />
       <Route path="/finance/fees" element={<FeeTypes />} />
       <Route path="/finance/invoices" element={<Invoices />} />
       <Route path="/finance/invoices/create" element={<CreateInvoice />} />
@@ -124,6 +126,7 @@ export default function App() {
     </Route>
     <Route element={<InstructorLayout />}>
       <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
+      <Route path="/instructor/profile" element={<EditProfile />} />
       <Route path="/instructor/sections" element={<MySections />} />
       <Route path="/instructor/sections/:sectionId" element={<SectionStudents />} />
       <Route path="/instructor/grades" element={<EnterGrades />} />
@@ -132,6 +135,7 @@ export default function App() {
     </Route>
     <Route element={<RegistrarLayout />}>
       <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
+      <Route path="/registrar/profile" element={<EditProfile />} />
       <Route path="/registrar/access-requests" element={<AccessRequests office="registrar" />} />
       <Route path="/registrar/assign-instructor/:instructorId" element={<AssignInstructorSections />} />
       <Route path="/registrar/accounts" element={<StudentAccounts />} />
@@ -145,6 +149,7 @@ export default function App() {
     </Route>
     <Route element={<HodLayout />}>
   <Route path="/hod/dashboard"   element={<HodDashboard />} />
+  <Route path="/hod/profile" element={<EditProfile />} />
   <Route path="/hod/overview"    element={<DepartmentOverview />} />
   <Route path="/hod/courses"     element={<HodManageCourses />} />
   <Route path="/hod/assign"      element={<AssignInstructor />} />
@@ -153,6 +158,7 @@ export default function App() {
 </Route>
     <Route element={<DeanLayout />}>
       <Route path="/dean/dashboard" element={<DeanDashboard />} />
+      <Route path="/dean/profile" element={<EditProfile />} />
       <Route path="/dean/departments" element={<DeanManageDepartments />} />
       <Route path="/dean/offerings" element={<ManageOfferings />} />
       <Route path="/dean/grade-approvals" element={<GradeApprovals />} />
@@ -164,6 +170,7 @@ export default function App() {
     </Route>
     <Route element={<AdminLayout />}>
   <Route path="/admin/dashboard"   element={<AdminDashboard />} />
+  <Route path="/admin/profile" element={<EditProfile />} />
   <Route path="/admin/users"       element={<ManageUsers />} />
   <Route path="/admin/access-requests" element={<AccessRequests office="admin" />} />
   <Route path="/admin/departments" element={<ManageDepartments />} />
