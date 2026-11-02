@@ -3,6 +3,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ||
     (import.meta.env.PROD ? 'https://university-management-system-clbw.onrender.com/api' : 'http://localhost:5000/api'),
+  timeout: 30000,
 });
 
 api.interceptors.request.use((config) => {
@@ -15,7 +16,13 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const config = error.config;
+    if (!error.response && config && config._apiRetryCount !== 1) {
+      config._apiRetryCount = 1;
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      return api(config);
+    }
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
