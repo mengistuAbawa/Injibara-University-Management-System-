@@ -91,6 +91,10 @@ app.get('/', (req, res) => {
   res.json({ status: 'OK', message: 'INU Portal API running' });
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use('/uploads', (req, res, next) => {
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   next();
