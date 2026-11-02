@@ -41,7 +41,15 @@ export default function Header() {
         <nav className="nav-links">
           {user && location.pathname !== '/welcome' && <Link className="welcome-back-link" to="/welcome" aria-label="Go to welcome page" title="Go to welcome page">🏠 Welcome</Link>}
           <Link to="/">🏠 Home</Link>
-          {!user && <Link to="/welcome?login=1">🔑 Login</Link>}
+          {!user && (
+            <button
+              type="button"
+              className="header-login-button"
+              onClick={() => window.dispatchEvent(new CustomEvent('inu-open-login'))}
+            >
+              🔑 Login
+            </button>
+          )}
           <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} aria-pressed={theme === 'dark'}>
             {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
           </button>

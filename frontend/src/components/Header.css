@@ -109,6 +109,23 @@
   background: rgba(37, 99, 145, .08);
 }
 
+.header-login-button {
+  padding: 7px 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #31516c;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.header-login-button:hover {
+  border-color: #d5e0e9;
+  background: rgba(37, 99, 145, .08);
+  color: #0b67a3;
+}
+
 @media (max-width: 600px) {
   .brand-bar {
     gap: 12px;

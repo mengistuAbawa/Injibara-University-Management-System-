@@ -254,6 +254,9 @@
 .welcome-login-overlay { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 20px; }
 .welcome-login-backdrop { position: absolute; inset: 0; border: 0; background: rgba(2, 20, 37, .72); backdrop-filter: blur(4px); cursor: default; }
 .welcome-login-overlay .login-container { position: relative; z-index: 1; width: min(550px, 100%); max-height: calc(100vh - 40px); overflow-y: auto; margin: 0; border-radius: 12px; background: #fff; box-shadow: 0 24px 70px rgba(0, 0, 0, .38); }
+.welcome-inline-button, .welcome-footer-login-button { border: 0; font: inherit; cursor: pointer; }
+.welcome-inline-button.welcome-primary { display: inline-flex; align-items: center; gap: 8px; }
+.welcome-footer-login-button { padding: 0; color: inherit; background: transparent; }
 :root[data-theme="dark"] .welcome-login-overlay .login-container { color: #e5eef7; border: 1px solid #4c6680; background: #172b3b; }
 .access-card { max-width: 720px; margin: 42px auto; padding: 32px; border: 1px solid #e1e8f0; border-radius: 14px; background: #fff; }
 .access-card .welcome-eyebrow { color: #0875a8; }

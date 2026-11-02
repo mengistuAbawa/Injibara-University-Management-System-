@@ -20,7 +20,7 @@ function redirectByRole(user) {
   }
 }
 
-export default function LoginPage({ embedded = false }) {
+export default function LoginPage({ embedded = false, onCancel }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -69,7 +69,7 @@ export default function LoginPage({ embedded = false }) {
 
           <div className="buttons">
             <button type="submit" className="login-btn">Login</button>
-            <button type="button" className="cancel-btn" onClick={() => navigate('/welcome')}><span aria-hidden="true">✖</span> Cancel</button>
+            <button type="button" className="cancel-btn" onClick={onCancel}><span aria-hidden="true">✖</span> Cancel</button>
           </div>
 
           <button type="button" className="reset-btn" onClick={() => setResetNotice('Forgot your password? Contact the University Registrar’s Office to verify your identity and reset your account password.')}>Forgot password?</button>
