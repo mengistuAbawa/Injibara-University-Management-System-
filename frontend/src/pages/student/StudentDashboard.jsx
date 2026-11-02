@@ -19,7 +19,7 @@ export default function StudentDashboard() {
 
           <p className="link-line">
             To follow-up your grade and related information {' '}
-            <Link to="/login" className="inline-link">click here</Link>
+            <Link to="/welcome?login=1" className="inline-link">click here</Link>
           </p>
 
           <p className="intro">

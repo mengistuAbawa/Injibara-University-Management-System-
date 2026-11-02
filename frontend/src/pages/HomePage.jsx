@@ -1,4 +1,4 @@
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   FiArrowRight, FiBookOpen, FiCheckCircle, FiChevronRight,
@@ -7,6 +7,7 @@ import {
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import { useAuth } from '../context/AuthContext';
+import LoginPage from './LoginPage';
 import './HomePage.css';
 
 const dashboardFor = (user) => {
@@ -17,8 +18,11 @@ const dashboardFor = (user) => {
 
 export default function HomePage({ welcomeOnly = false }) {
   const { user } = useAuth();
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname } = location;
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const showLogin = new URLSearchParams(location.search).get('login') === '1';
   useEffect(() => setMenuOpen(false), [pathname]);
   const destination = dashboardFor(user);
   if (destination && !welcomeOnly) return <Navigate to={destination} replace />;
@@ -44,7 +48,7 @@ export default function HomePage({ welcomeOnly = false }) {
             <span className="sidebar-login-icon"><FiLogIn /></span>
             <strong>Ready to continue?</strong>
             <p>Sign in to access your university workspace.</p>
-            <Link to="/login">Sign in now <FiArrowRight /></Link>
+            <Link to="/welcome?login=1">Sign in now <FiArrowRight /></Link>
           </div>
         </aside>
         {menuOpen && <button className="sidebar-backdrop" type="button" onClick={() => setMenuOpen(false)} aria-label="Close navigation" />}
@@ -57,7 +61,7 @@ export default function HomePage({ welcomeOnly = false }) {
               <h1>Your university, <span>connected.</span></h1>
               <p>One secure portal for academics, administration, admissions, finance, and university services.</p>
               <div className="welcome-actions">
-                <Link className="welcome-primary" to="/login">Sign in to portal <FiArrowRight /></Link>
+                <Link className="welcome-primary" to="/welcome?login=1">Sign in to portal <FiArrowRight /></Link>
                 <Link className="welcome-secondary" to="/apply">Apply for admission</Link>
               </div>
             </div>
@@ -71,7 +75,7 @@ export default function HomePage({ welcomeOnly = false }) {
                 <li><span>2</span><p><strong>Enter your credentials</strong>Use the username and password issued by your office.</p></li>
                 <li><span>3</span><p><strong>Access your workspace</strong>You will be directed to services assigned to your role.</p></li>
               </ol>
-              <Link className="hero-card-link" to="/login">Go to login <FiArrowRight /></Link>
+              <Link className="hero-card-link" to="/welcome?login=1">Go to login <FiArrowRight /></Link>
             </div>
           </section>
 
@@ -129,13 +133,19 @@ export default function HomePage({ welcomeOnly = false }) {
           </div>
           <nav className="welcome-footer-links" aria-label="Footer links">
             <Link to="/">Home</Link>
-            <Link to="/login">Log in</Link>
+            <Link to="/welcome?login=1">Log in</Link>
             <Link to="/apply">Admissions</Link>
             <Link to="/apply/status">Application status</Link>
           </nav>
           <p className="welcome-footer-copy">© {new Date().getFullYear()} Injibara University. All rights reserved.</p>
         </div>
       </footer>
+      {showLogin && (
+        <div className="welcome-login-overlay" role="dialog" aria-modal="true" aria-label="Portal login">
+          <button className="welcome-login-backdrop" type="button" onClick={() => navigate('/welcome')} aria-label="Close login" />
+          <LoginPage embedded />
+        </div>
+      )}
     </div>
   );
 }

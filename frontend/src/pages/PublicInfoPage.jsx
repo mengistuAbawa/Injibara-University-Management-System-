@@ -68,7 +68,7 @@ export default function PublicInfoPage() {
             <span className="sidebar-login-icon"><FiLogIn /></span>
             <strong>Ready to continue?</strong>
             <p>Sign in to access your university workspace.</p>
-            <Link to="/login">Sign in now <FiArrowRight /></Link>
+            <Link to="/welcome?login=1">Sign in now <FiArrowRight /></Link>
           </div>
         </aside>
         {menuOpen && <button className="sidebar-backdrop" type="button" onClick={closeMenu} aria-label="Close navigation" />}
@@ -79,7 +79,7 @@ export default function PublicInfoPage() {
             <p className="welcome-eyebrow">{page.eyebrow}</p>
             <h1>{page.title}</h1>
             <p>{page.intro}</p>
-            <Link className="welcome-primary" to="/login">Sign in to portal <FiArrowRight /></Link>
+            <Link className="welcome-primary" to="/welcome?login=1">Sign in to portal <FiArrowRight /></Link>
           </section>
 
           {pathname === '/public/how-it-works' && (
@@ -112,7 +112,7 @@ export default function PublicInfoPage() {
               ].map(([number, title, description]) => (
                 <article key={number}><span>{number}</span><div><h2>{title}</h2><p>{description}</p></div></article>
               ))}
-              <Link className="hero-card-link" to="/login">Go to login <FiArrowRight /></Link>
+              <Link className="hero-card-link" to="/welcome?login=1">Go to login <FiArrowRight /></Link>
             </div>
           )}
         </main>
@@ -120,7 +120,7 @@ export default function PublicInfoPage() {
       <footer className="welcome-footer">
         <div className="welcome-footer-inner">
           <div className="welcome-footer-brand"><strong>Injibara University</strong><span>University Management System</span></div>
-          <nav className="welcome-footer-links" aria-label="Footer links"><Link to="/public/overview">Home</Link><Link to="/login">Log in</Link><Link to="/apply">Admissions</Link></nav>
+          <nav className="welcome-footer-links" aria-label="Footer links"><Link to="/public/overview">Home</Link><Link to="/welcome?login=1">Log in</Link><Link to="/apply">Admissions</Link></nav>
           <p className="welcome-footer-copy">© {new Date().getFullYear()} Injibara University. All rights reserved.</p>
         </div>
       </footer>

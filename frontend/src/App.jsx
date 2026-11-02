@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import PublicInfoPage from './pages/PublicInfoPage';
-import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import GraduatedStudents from './pages/GraduatedStudents';
 import NotFound from './pages/NotFound';
@@ -89,7 +88,7 @@ export default function App() {
     <Route path="/public/how-it-works" element={<PublicInfoPage />} />
     <Route path="/public/user-roles" element={<PublicInfoPage />} />
     <Route path="/public/login-guide" element={<PublicInfoPage />} />
-    <Route path="/login" element={<LoginPage />} />
+    <Route path="/login" element={<Navigate to="/welcome?login=1" replace />} />
     <Route path="/register-account" element={<RegisterPage />} />
     <Route path="/graduated" element={<GraduatedStudents />} />
     <Route path="/apply" element={<ApplyWizard />} />
