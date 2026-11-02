@@ -9,7 +9,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({});
 
   useEffect(() => {
-    getAdminStats().then(setStats).catch(console.error);
+    getAdminStats().then(setStats).catch(() => undefined);
   }, []);
 
   const cards = [

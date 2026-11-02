@@ -10,7 +10,7 @@ export default function MySections() {
   useEffect(() => {
     getMySections()
       .then(setSections)
-      .catch(console.error)
+      .catch(() => undefined)
       .finally(() => setLoading(false));
   }, []);
 

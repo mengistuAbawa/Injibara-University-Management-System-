@@ -8,7 +8,7 @@ export default function Students() {
   const [status, setStatus] = useState('');
 
   const load = () => {
-    listStudents({ year, status }).then(setRows).catch(console.error);
+    listStudents({ year, status }).then(setRows).catch(() => undefined);
   };
 
   useEffect(() => { load(); }, [year, status]);

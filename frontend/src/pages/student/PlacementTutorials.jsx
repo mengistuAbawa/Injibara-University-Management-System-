@@ -4,7 +4,7 @@ import './PlacementTutorials.css';
 
 export default function PlacementTutorials() {
   const [items, setItems] = useState([]);
-  useEffect(() => { getTutorials().then(setItems).catch(console.error); }, []);
+  useEffect(() => { getTutorials().then(setItems).catch(() => undefined); }, []);
   return (
     <main className="placement-tutorials-page">
       <header className="placement-tutorials-header">

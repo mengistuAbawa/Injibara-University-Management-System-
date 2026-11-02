@@ -11,11 +11,11 @@ export default function AssignInstructor() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
 
-  const load = () => listSections().then(setSections).catch(console.error);
+  const load = () => listSections().then(setSections).catch(() => undefined);
 
   useEffect(() => {
     load();
-    listInstructors().then(setInstructors).catch(console.error);
+    listInstructors().then(setInstructors).catch(() => undefined);
   }, []);
 
   const assign = async (section_id, instructor_id) => {

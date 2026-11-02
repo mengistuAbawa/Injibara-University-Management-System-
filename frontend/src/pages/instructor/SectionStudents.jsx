@@ -9,8 +9,8 @@ export default function SectionStudents() {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    getSection(sectionId).then(setSection).catch(console.error);
-    getSectionStudents(sectionId).then(setStudents).catch(console.error);
+    getSection(sectionId).then(setSection).catch(() => undefined);
+    getSectionStudents(sectionId).then(setStudents).catch(() => undefined);
   }, [sectionId]);
 
   return (

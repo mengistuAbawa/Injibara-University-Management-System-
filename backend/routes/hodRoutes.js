@@ -13,6 +13,9 @@ router.get('/overview',                c.getOverview);
 /* department resources */
 router.get('/instructors',             c.listInstructors);
 router.get('/courses',                 c.listCourses);
+router.post('/courses',                c.createCourse);
+router.put('/courses/:courseId',       c.updateCourse);
+router.patch('/courses/:courseId/approve', c.approveCourse);
 router.get('/sections',                c.listSections);
 router.put('/sections/:sectionId',      c.updateSection);
 router.get('/students',                c.listStudents);

@@ -15,7 +15,7 @@ export default function SectionEnrollments() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    listSections().then(setSections).catch(console.error);
+    listSections().then(setSections).catch(() => undefined);
     listDepartmentOfferings().then(setOfferings).catch((e) => setError(e.response?.data?.message || 'Could not load dean-approved offerings.'));
   }, []);
 
@@ -36,8 +36,8 @@ export default function SectionEnrollments() {
     try {
       const data = await getSectionStudents(section.section_id);
       setStudents(data);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      // Request errors are reported by the nearest page-level error state.
       setStudents([]);
     }
   };

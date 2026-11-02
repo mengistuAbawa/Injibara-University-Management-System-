@@ -14,7 +14,7 @@ export default function MyStatus() {
         // If backend returns a single object, wrap in array
         setRecords(Array.isArray(data) ? data : data ? [data] : []);
       })
-      .catch(console.error)
+      .catch(() => undefined)
       .finally(() => setLoading(false));
   };
 

@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
 import './AlumniLayout.css';
+import PortalFooter from '../components/PortalFooter';
 
 function dashboardFor(user) {
   if (user.role === 'admin') return '/admin/dashboard';
@@ -33,7 +34,7 @@ export default function AlumniLayout() {
           <Outlet />
         </main>
       </div>
-      <footer className="alumni-copyright">© 2026 Injibara University</footer>
+      <PortalFooter />
     </div>
   );
 }

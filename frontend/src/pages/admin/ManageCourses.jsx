@@ -17,11 +17,11 @@ export default function ManageCourses() {
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState('');
 
-  const load = () => listCourses().then(setItems).catch(console.error);
+  const load = () => listCourses().then(setItems).catch(() => undefined);
 
   useEffect(() => {
     load();
-    listDepartments().then(setDepartments).catch(console.error);
+    listDepartments().then(setDepartments).catch(() => undefined);
   }, []);
 
   const submit = async (e) => {

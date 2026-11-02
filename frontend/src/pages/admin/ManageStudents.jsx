@@ -7,7 +7,7 @@ export default function ManageStudents() {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    listAllStudents().then(setItems).catch(console.error);
+    listAllStudents().then(setItems).catch(() => undefined);
   }, []);
 
   const filtered = items.filter((s) =>

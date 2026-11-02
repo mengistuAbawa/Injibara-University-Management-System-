@@ -1,0 +1,19 @@
+.portal-footer {
+  min-height: 48px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  background: #083b63;
+  color: #fff;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .portal-footer {
+    flex-direction: column;
+    text-align: center;
+  }
+}

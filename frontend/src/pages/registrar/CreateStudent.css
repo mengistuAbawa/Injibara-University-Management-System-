@@ -195,6 +195,133 @@
   background: #d0d0d0;
 }
 
+.enrollment-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.enrollment-modal {
+  width: min(520px, 100%);
+  padding: 20px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+}
+
+.enrollment-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.enrollment-modal select,
+.enrollment-modal input {
+  padding: 8px;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.modal-actions button {
+  border: none;
+  border-radius: 3px;
+  padding: 8px 14px;
+  color: #fff;
+  background: #2b7de9;
+  cursor: pointer;
+}
+
+.modal-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal-actions .close-modal {
+  color: #222;
+  background: #ddd;
+}
+
+.enrollment-message {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 3px;
+  background: #eef6ff;
+}
+
+:root[data-theme="dark"] .create-student-page {
+  color: #e6edf5;
+  background: #111923;
+}
+
+:root[data-theme="dark"] .create-student-page .form-section {
+  border-color: #46596b;
+  background: #192532;
+}
+
+:root[data-theme="dark"] .create-student-page .form-section legend,
+:root[data-theme="dark"] .create-student-page .form-grid label {
+  color: #e6edf5;
+}
+
+:root[data-theme="dark"] .create-student-page .form-grid input,
+:root[data-theme="dark"] .create-student-page .form-grid select {
+  border-color: #526273;
+  background: #111923;
+  color: #f4f8fb;
+}
+
+:root[data-theme="dark"] .create-student-page .form-grid select option {
+  background: #111923;
+  color: #f4f8fb;
+}
+
+:root[data-theme="dark"] .create-student-page .preview-box {
+  border-color: #9c8132;
+  background: #302815;
+}
+
+:root[data-theme="dark"] .create-student-page .preview-label,
+:root[data-theme="dark"] .create-student-page .preview-box code {
+  color: #f1d883;
+}
+
+:root[data-theme="dark"] .create-student-page .preview-box code {
+  border-color: #8d7534;
+  background: #111923;
+}
+
+:root[data-theme="dark"] .create-student-page .enrollment-modal {
+  border: 1px solid #46596b;
+  background: #192532;
+  color: #e6edf5;
+}
+
+:root[data-theme="dark"] .create-student-page .enrollment-modal select,
+:root[data-theme="dark"] .create-student-page .enrollment-modal input {
+  border-color: #526273;
+  background: #111923;
+  color: #f4f8fb;
+}
+
+:root[data-theme="dark"] .create-student-page .enrollment-message {
+  background: #20384b;
+  color: #dceeff;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
   .form-grid {

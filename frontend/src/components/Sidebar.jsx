@@ -122,14 +122,15 @@ admin: [
    ? menus.alumni
    : user.is_dean
      ? [...(menus.dean || []), ...(menus.instructor || [])]
-     : [...(menus[menuRole] || []), ...hodMenu];
+     : user.is_hod
+       ? hodMenu
+       : menus[menuRole] || [];
 
   return (
     <>
       <aside className="sidebar">
         <div className="sidebar-header">
-          {menuRole.charAt(0).toUpperCase() + menuRole.slice(1)} Menu
-          {user.is_hod && ' (HOD)'}
+          {user.is_hod ? 'HOD Menu' : `${menuRole.charAt(0).toUpperCase() + menuRole.slice(1)} Menu`}
         </div>
 
         <ProfilePhoto />
@@ -150,12 +151,12 @@ admin: [
             </li>
           ))}
           {role === 'instructor' && location.pathname !== '/instructor/dashboard' && (
-            <li><Link to="/instructor/dashboard">Cancel</Link></li>
+            <li><Link to="/instructor/dashboard"><span aria-hidden="true">✖</span> Cancel</Link></li>
           )}
           {!isAlumni && <li><a href="https://inu.edu.et">INU Website</a></li>}
           <li className="logout-item">
             <button className="logout-btn" onClick={handleLogout}>
-              Logout
+              <span aria-hidden="true">⏻</span> Logout
             </button>
           </li>
         </ul>

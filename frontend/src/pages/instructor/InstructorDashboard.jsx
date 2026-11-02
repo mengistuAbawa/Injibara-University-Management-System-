@@ -10,8 +10,8 @@ export default function InstructorDashboard() {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    getInstructorStats().then(setStats).catch(console.error);
-    getMySections().then(setSections).catch(console.error);
+    getInstructorStats().then(setStats).catch(() => undefined);
+    getMySections().then(setSections).catch(() => undefined);
   }, []);
 
   const cards = [
@@ -25,7 +25,6 @@ export default function InstructorDashboard() {
     <div className="inst-dash">
       <div className="title-strip">
         Welcome, {user.academic_rank} {user.first_name} {user.last_name}
-        {user.is_hod && <span className="hod-badge"> · HOD</span>}
       </div>
 
       <div className="stats-grid">

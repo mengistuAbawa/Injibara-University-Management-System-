@@ -13,12 +13,12 @@ export default function ClassPerformance() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    getMySections().then(setSections).catch(console.error);
+    getMySections().then(setSections).catch(() => undefined);
   }, []);
 
   useEffect(() => {
     if (!sectionId) return;
-    getSectionPerformance(sectionId).then(setData).catch(console.error);
+    getSectionPerformance(sectionId).then(setData).catch(() => undefined);
   }, [sectionId]);
 
   const stats = data?.stats || {};

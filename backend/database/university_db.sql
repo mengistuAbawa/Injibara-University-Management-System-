@@ -89,6 +89,7 @@ CREATE TABLE students (
     bed_no            VARCHAR(30),
     handicapped_case  VARCHAR(50),
     university_entrance_result DECIMAL(7,2),
+    highschool_region VARCHAR(100),
     status           ENUM('Active','Graduated','Suspended','Withdrawn') DEFAULT 'Active',
     FOREIGN KEY (user_id)       REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (department_id) REFERENCES departments(department_id)

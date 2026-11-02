@@ -14,12 +14,12 @@ export default function Header() {
     window.localStorage.setItem('inu-theme', nextTheme);
     setTheme(nextTheme);
   };
-  const today = new Date().toLocaleDateString('en-US', {
+  const [today] = useState(() => new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  });
+  }));
 
   return (
     <header className="site-header">
@@ -39,9 +39,9 @@ export default function Header() {
       <div className="nav-bar">
         <span className="date">{today}</span>
         <nav className="nav-links">
-          {user && location.pathname !== '/welcome' && <Link className="welcome-back-link" to="/welcome" aria-label="Back to welcome page" title="Back to welcome page">← Welcome</Link>}
-          <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
+          {user && location.pathname !== '/welcome' && <Link className="welcome-back-link" to="/welcome" aria-label="Go to welcome page" title="Go to welcome page">🏠 Welcome</Link>}
+          <Link to="/">🏠 Home</Link>
+          {!user && <Link to="/login">🔑 Login</Link>}
           <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} aria-pressed={theme === 'dark'}>
             {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
           </button>

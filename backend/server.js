@@ -73,7 +73,9 @@ app.use(cors({
   },
 }));
 app.use(express.json({ limit: '12mb' }));
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev'));
+}
 
 app.use(async (req, res, next) => {
   try {
@@ -127,10 +129,9 @@ if (require.main === module) {
   (async () => {
     try {
       await db.query('SELECT 1');
-      console.log('PostgreSQL connected');
-      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+      app.listen(PORT);
     } catch (err) {
-      console.error('PostgreSQL connection failed:', err.message);
+      process.stderr.write(`PostgreSQL connection failed: ${err.message}\n`);
       process.exit(1);
     }
   })();

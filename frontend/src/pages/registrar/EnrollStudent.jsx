@@ -17,21 +17,33 @@ export default function EnrollStudent() {
   const [sectionId, setSectionId] = useState('');
   const [academicYear, setAcademicYear] = useState('2025/2026');
   const [message, setMessage] = useState('');
+  const [studentListOpen, setStudentListOpen] = useState(true);
+  const [loadingStudents, setLoadingStudents] = useState(true);
 
   /* initial load */
   useEffect(() => {
-    listSections().then(setSections).catch(console.error);
+    listSections().then(setSections).catch(() => undefined);
+    searchStudents('')
+      .then((data) => setStudents(data))
+      .catch(() => undefined)
+      .finally(() => setLoadingStudents(false));
   }, []);
 
   /* search students */
   const handleSearch = async () => {
-    const data = await searchStudents(query);
-    setStudents(data);
+    setLoadingStudents(true);
+    try {
+      const data = await searchStudents(query);
+      setStudents(data);
+    } finally {
+      setLoadingStudents(false);
+    }
   };
 
   /* select student → load their enrollments */
   const handleSelect = async (student) => {
     setSelectedStudent(student);
+    setStudentListOpen(false);
     const data = await getStudentEnrollments(student.student_id);
     setEnrollments(data);
     setMessage('');
@@ -65,6 +77,73 @@ export default function EnrollStudent() {
   return (
     <div className="enroll-page">
       <div className="title-strip">Enroll Student</div>
+      <button type="button" className="search-btn" onClick={() => setStudentListOpen(true)}>
+        Select Student
+      </button>
+
+      {studentListOpen && (
+        <div className="student-list-backdrop" role="presentation">
+          <div className="student-list-modal" role="dialog" aria-modal="true" aria-labelledby="student-list-title">
+            <div className="student-list-header">
+              <h3 id="student-list-title">Registered Students</h3>
+              {students.length > 0 && (
+                <span>{students.length} student{students.length === 1 ? '' : 's'}</span>
+              )}
+            </div>
+
+            <div className="search-row student-list-search">
+              <input
+                placeholder="Search by student number / name"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              />
+              <button className="search-btn" type="button" onClick={handleSearch}>Search</button>
+            </div>
+
+            {loadingStudents ? (
+              <div className="student-list-message">Loading registered students...</div>
+            ) : students.length === 0 ? (
+              <div className="student-list-message">No registered students found.</div>
+            ) : (
+              <div className="student-list-table-wrap">
+                <table className="data-table student-list-table">
+                  <thead>
+                    <tr>
+                      <th>Student No.</th>
+                      <th>Name</th>
+                      <th>Department</th>
+                      <th>Year</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {students.map((student) => (
+                      <tr key={student.student_id}>
+                        <td>{student.student_number}</td>
+                        <td>{student.first_name} {student.last_name}</td>
+                        <td>{student.department_name || '-'}</td>
+                        <td>{student.current_year}</td>
+                        <td>{student.status}</td>
+                        <td>
+                          <button type="button" onClick={() => handleSelect(student)}>Select</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="student-list-actions">
+              <button type="button" className="student-list-close" onClick={() => setStudentListOpen(false)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* search bar */}
       <div className="search-row">

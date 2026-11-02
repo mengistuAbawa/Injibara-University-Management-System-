@@ -74,7 +74,7 @@ async function queryWith(client, sql, parameters) {
 }
 
 pool.on('error', (error) => {
-  console.error('Unexpected PostgreSQL pool error:', error.message);
+  process.stderr.write(`Unexpected PostgreSQL pool error: ${error.message}\n`);
 });
 
 module.exports = {

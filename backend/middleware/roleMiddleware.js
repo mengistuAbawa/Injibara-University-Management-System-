@@ -3,7 +3,10 @@ exports.authorize = (...roles) => (req, res, next) => {
     return res.status(401).json({ message: 'Authentication required' });
   }
 
-  if (!roles.includes(req.user.role)) {
+  const userRole = String(req.user.role || '').trim().toLowerCase();
+  req.user.role = userRole;
+
+  if (!roles.map((role) => String(role).toLowerCase()).includes(userRole)) {
     return res.status(403).json({ message: 'Forbidden: insufficient role' });
   }
 

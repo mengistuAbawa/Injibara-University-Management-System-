@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
+import { enrollStudent, listSections } from '../../services/registrarService';
 import './CreateStudent.css';
 
 const initialForm = {
@@ -23,6 +24,7 @@ const initialForm = {
   bed_no: '',
   handicapped_case: '',
   university_entrance_result: '',
+  highschool_region: '',
 };
 
 export default function CreateStudent() {
@@ -31,6 +33,10 @@ export default function CreateStudent() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [sections, setSections] = useState([]);
+  const [sectionId, setSectionId] = useState('');
+  const [academicYear, setAcademicYear] = useState(`${new Date().getFullYear()}/${new Date().getFullYear() + 1}`);
+  const [enrollmentMessage, setEnrollmentMessage] = useState('');
 
   /* ---------- Load departments ---------- */
   useEffect(() => {
@@ -38,6 +44,7 @@ export default function CreateStudent() {
       .get('/departments')
       .then((r) => setDepartments(r.data))
       .catch((err) => setError(err.response?.data?.message || 'Unable to load departments'));
+    listSections().then(setSections).catch(() => undefined);
   }, []);
 
   /* ---------- Field change ---------- */
@@ -66,6 +73,21 @@ export default function CreateStudent() {
       setError(err.response?.data?.message || 'Failed to create student');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const enrollRegisteredStudent = async () => {
+    if (!sectionId || !result?.student_id) return;
+    setEnrollmentMessage('');
+    try {
+      await enrollStudent({
+        student_id: result.student_id,
+        section_id: sectionId,
+        academic_year: academicYear,
+      });
+      setEnrollmentMessage('Student enrolled successfully.');
+    } catch (err) {
+      setEnrollmentMessage(err.response?.data?.message || 'Failed to enroll student');
     }
   };
 
@@ -258,6 +280,31 @@ export default function CreateStudent() {
             </label>
 
             <label>
+              High School Region
+              <select
+                name="highschool_region"
+                value={form.highschool_region}
+                onChange={change}
+              >
+                <option value="">-- Select Region --</option>
+                <option>Addis Ababa</option>
+                <option>Afar</option>
+                <option>Amhara</option>
+                <option>Benishangul-Gumuz</option>
+                <option>Dire Dawa</option>
+                <option>Gambella</option>
+                <option>Harari</option>
+                <option>Oromia</option>
+                <option>Sidama</option>
+                <option>Somali</option>
+                <option>South Ethiopia</option>
+                <option>South West Ethiopia</option>
+                <option>Tigray</option>
+                <option>Central Ethiopia</option>
+              </select>
+            </label>
+
+            <label>
               Handicapped Case
               <select
                 name="handicapped_case"
@@ -330,6 +377,50 @@ export default function CreateStudent() {
           </button>
         </div>
       </form>
+
+      {result && (
+        <div className="enrollment-modal-backdrop" role="presentation">
+          <div className="enrollment-modal" role="dialog" aria-modal="true" aria-labelledby="enrollment-title">
+            <h3 id="enrollment-title">Enroll Registered Student</h3>
+            <p>
+              <strong>{result.student_number}</strong> was registered successfully.
+              Select a section to enroll the student now.
+            </p>
+            <label>
+              Section
+              <select value={sectionId} onChange={(e) => setSectionId(e.target.value)}>
+                <option value="">-- Select Section --</option>
+                {sections.map((section) => (
+                  <option key={section.section_id} value={section.section_id}>
+                    {section.course_code} - {section.course_title} ({section.semester} {section.academic_year})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Academic Year
+              <input value={academicYear} onChange={(e) => setAcademicYear(e.target.value)} />
+            </label>
+            {enrollmentMessage && <div className="enrollment-message">{enrollmentMessage}</div>}
+            <div className="modal-actions">
+              <button type="button" onClick={enrollRegisteredStudent} disabled={!sectionId}>
+                Enroll Student
+              </button>
+              <button
+                type="button"
+                className="close-modal"
+                onClick={() => {
+                  setResult(null);
+                  setSectionId('');
+                  setEnrollmentMessage('');
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

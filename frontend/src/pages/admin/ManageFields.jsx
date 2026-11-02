@@ -5,8 +5,8 @@ import './ManageFields.css';
 export default function ManageFields() {
   const [items, setItems] = useState([]); const [departments, setDepartments] = useState([]);
   const [name, setName] = useState(''); const [departmentId, setDepartmentId] = useState(''); const [editing, setEditing] = useState(null); const [message, setMessage] = useState('');
-  const load = () => listFields().then(setItems).catch(console.error);
-  useEffect(() => { load(); listDepartments().then(setDepartments).catch(console.error); }, []);
+  const load = () => listFields().then(setItems).catch(() => undefined);
+  useEffect(() => { load(); listDepartments().then(setDepartments).catch(() => undefined); }, []);
   const submit = async (e) => {
     e.preventDefault();
     try {

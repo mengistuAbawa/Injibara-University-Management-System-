@@ -14,8 +14,8 @@ export default function PublishResults() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    searchStudents('').then(setStudents).catch(console.error);
-    api.get('/fields').then((r) => setFields(r.data)).catch(console.error);
+    searchStudents('').then(setStudents).catch(() => undefined);
+    api.get('/fields').then((r) => setFields(r.data)).catch(() => undefined);
   }, []);
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });

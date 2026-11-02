@@ -12,14 +12,14 @@ export default function TakeAttendance() {
   const [params] = useSearchParams();
   const [sections, setSections] = useState([]);
   const [sectionId, setSectionId] = useState(params.get('section') || '');
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [students, setStudents] = useState([]);
   const [records, setRecords] = useState({});
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    getMySections().then(setSections).catch(console.error);
+    getMySections().then(setSections).catch(() => undefined);
   }, []);
 
   /* load students when section changes */

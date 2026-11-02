@@ -79,7 +79,7 @@ export default function DepartmentSelectModal({ score, priorities, onAdd, onClos
         </div>
         {error && <p className="department-modal-error" role="alert">{error}</p>}
         {loading ? <p>Loading departments…</p> : <div className="department-table-scroll"><table className="department-table"><thead><tr><th>#</th><th>Code</th><th>Department Name</th><th>College</th><th>Capacity</th><th>Min Score</th><th>Seats Left</th></tr></thead>
-          <tbody>{visible.map((item, index) => {
+          <tbody>{visible.map((item) => {
             const eligible = canChoose(item);
             const current = priorities.some((row) => Number(row.field_id) === Number(item.field_id));
             const rowClass = !item.is_available_for_selection ? 'department-row-unavailable' : eligible ? 'department-row-eligible' : 'department-row-ineligible';

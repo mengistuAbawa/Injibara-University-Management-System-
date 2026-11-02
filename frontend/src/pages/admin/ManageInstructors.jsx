@@ -9,11 +9,11 @@ export default function ManageInstructors() {
   const [departments, setDepartments] = useState([]);
   const [message, setMessage] = useState('');
 
-  const load = () => listAllInstructors().then(setItems).catch(console.error);
+  const load = () => listAllInstructors().then(setItems).catch(() => undefined);
 
   useEffect(() => {
     load();
-    listDepartments().then(setDepartments).catch(console.error);
+    listDepartments().then(setDepartments).catch(() => undefined);
   }, []);
 
   const promote = async (instructor_id, department_id) => {

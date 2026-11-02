@@ -7,8 +7,8 @@ export default function PerformanceReport() {
   const [dist, setDist] = useState([]);
 
   useEffect(() => {
-    getPerformance().then(setPerf).catch(console.error);
-    getGradeDistribution().then(setDist).catch(console.error);
+    getPerformance().then(setPerf).catch(() => undefined);
+    getGradeDistribution().then(setDist).catch(() => undefined);
   }, []);
 
   const totalStudents = perf.reduce((a, p) => a + (p.students || 0), 0);

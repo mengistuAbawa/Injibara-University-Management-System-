@@ -9,7 +9,7 @@ export default function RegistrarDashboard() {
   const [stats, setStats] = useState({});
 
   useEffect(() => {
-    getRegistrarStats().then(setStats).catch(console.error);
+    getRegistrarStats().then(setStats).catch(() => undefined);
   }, []);
 
   const cards = [

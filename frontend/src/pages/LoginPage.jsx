@@ -69,7 +69,7 @@ export default function LoginPage() {
 
           <div className="buttons">
             <button type="submit" className="login-btn">Login</button>
-            <button type="button" className="cancel-btn" onClick={() => navigate('/')}>Cancel</button>
+            <button type="button" className="cancel-btn" onClick={() => navigate('/')}><span aria-hidden="true">✖</span> Cancel</button>
           </div>
 
           <button type="button" className="reset-btn" onClick={() => setResetNotice('Forgot your password? Contact the University Registrar’s Office to verify your identity and reset your account password.')}>Forgot password?</button>

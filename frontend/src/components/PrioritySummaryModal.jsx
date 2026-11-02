@@ -9,7 +9,7 @@ export default function PrioritySummaryModal({ onClose }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getPriority().then(setData).catch(console.error).finally(() => setLoading(false));
+    getPriority().then(setData).catch(() => undefined).finally(() => setLoading(false));
   }, []);
 
   return (

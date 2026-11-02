@@ -17,7 +17,7 @@ export default function ManageDepartments() {
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState('');
 
-  const load = () => Promise.all([listDepartments(), listColleges()]).then(([d, c]) => { setItems(d); setColleges(c); }).catch(console.error);
+  const load = () => Promise.all([listDepartments(), listColleges()]).then(([d, c]) => { setItems(d); setColleges(c); }).catch(() => undefined);
   const renderDepartmentTable = (departments) => (
     <div className="table-scroll">
       <table className="data-table"><thead><tr>

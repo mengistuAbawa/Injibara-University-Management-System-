@@ -8,10 +8,19 @@ export default function HodDashboard() {
   const { user } = useAuth();
   const [data, setData] = useState({});
   const [perf, setPerf] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getOverview().then(setData).catch(console.error);
-    getPerformance().then(setPerf).catch(console.error);
+    Promise.all([getOverview(), getPerformance()])
+      .then(([overview, performance]) => {
+        setData(overview);
+        setPerf(performance);
+      })
+      .catch((requestError) => {
+        setError(requestError.response?.data?.message || 'Unable to load the HOD dashboard.');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const cards = [
@@ -23,6 +32,8 @@ export default function HodDashboard() {
 
   return (
     <div className="hod-dash">
+      {loading && <p role="status">Loading department overview…</p>}
+      {error && <p className="error" role="alert">{error}</p>}
       <Link to="/hod/assign" className="hod-assign-button">Assign Instructor</Link>
       <div className="title-strip">
         Welcome, HOD {user.first_name} {user.last_name}

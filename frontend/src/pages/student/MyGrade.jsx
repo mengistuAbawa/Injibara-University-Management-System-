@@ -15,7 +15,7 @@ export default function MyGrade() {
         const rows = Array.isArray(data) ? data : data?.courses || [];
         setGrades(rows);
       })
-      .catch(console.error)
+      .catch(() => undefined)
       .finally(() => setLoading(false));
   };
 

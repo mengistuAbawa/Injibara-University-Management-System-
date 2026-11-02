@@ -17,11 +17,11 @@ export default function ManageSections() {
   const [editing, setEditing] = useState(null);
   const [message, setMessage] = useState('');
 
-  const load = () => listSections().then(setItems).catch(console.error);
+  const load = () => listSections().then(setItems).catch(() => undefined);
 
   useEffect(() => {
     load();
-    listCourses().then(setCourses).catch(console.error);
+    listCourses().then(setCourses).catch(() => undefined);
   }, []);
 
   const submit = async (e) => {

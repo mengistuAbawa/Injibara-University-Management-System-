@@ -57,7 +57,7 @@ exports.createStudent = async (req, res, next) => {
     );
 
     /* ---- insert student ---- */
-    await conn.query(
+    const [studentResult] = await conn.query(
       `INSERT INTO students
         (user_id, student_number, first_name, last_name, grandfather_name,
          gender, date_of_birth, phone_number, region,
@@ -81,6 +81,7 @@ exports.createStudent = async (req, res, next) => {
     await conn.commit();
     res.status(201).json({
       message: 'Student created successfully',
+      student_id: studentResult.insertId,
       student_number,
       username: generateUsername(student_number),
       email,

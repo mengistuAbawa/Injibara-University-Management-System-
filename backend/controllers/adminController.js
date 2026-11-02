@@ -142,7 +142,8 @@ exports.deleteCollege = async (req, res, next) => {
 exports.createUser = async (req, res, next) => {
   const conn = await db.getConnection();
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
+    const role = String(req.body.role || '').trim().toLowerCase();
     if (!email || !password || !role) {
       return res.status(400).json({ message: 'Email, password, and role are required' });
     }
