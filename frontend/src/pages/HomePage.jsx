@@ -135,6 +135,7 @@ export default function HomePage({ welcomeOnly = false }) {
           <div className="welcome-footer-brand">
             <strong>Injibara University</strong>
             <span>University Management System</span>
+            <p className="welcome-footer-motto">Explore your creative potential</p>
           </div>
           <nav className="welcome-footer-links" aria-label="Footer links">
             <Link to="/">Home</Link>

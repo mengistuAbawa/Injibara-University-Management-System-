@@ -247,6 +247,17 @@
 .welcome-footer-brand { display: grid; gap: 5px; }
 .welcome-footer-brand strong { color: #fff; font-size: 17px; }
 .welcome-footer-brand span { color: #c5d9ea; font-size: 13px; }
+.welcome-footer-motto {
+  margin: 8px 0 0;
+  color: #ffd166;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(19px, 2vw, 26px);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1.2;
+  text-shadow: 0 2px 12px rgba(255, 209, 102, .35);
+}
 .welcome-footer-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px 20px; }
 .welcome-footer-links a { color: #fff; font-size: 14px; text-decoration: none; text-underline-offset: 4px; }
 .welcome-footer-links a:hover { color: #bde7ff; text-decoration: underline; text-decoration-thickness: 2px; }
