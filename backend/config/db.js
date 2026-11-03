@@ -1,12 +1,15 @@
 const { Pool } = require('pg');
 const { bindParameters, prepareSql } = require('./sql');
 const path = require('path');
-require('dotenv').config();
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env.local') });
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env.local'),
+  override: true,
+});
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const connectionString = process.env.DATABASE_URL?.replace(
   'sslmode=require',
-  'sslmode=verify-full'
+  'uselibpqcompat=true&sslmode=require'
 );
 
 const pool = new Pool({

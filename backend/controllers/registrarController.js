@@ -501,3 +501,97 @@ exports.getStats = async (req, res, next) => {
     });
   } catch (err) { next(err); }
 };
+
+/* =========================================================
+   COST SHARING REGISTRATION
+   ========================================================= */
+exports.saveCostSharingStep1 = async (req, res, next) => {
+  try {
+    const body = req.body;
+    const required = ['student_id', 'full_name', 'sex', 'demand_in_kind', 'demand_in_cash'];
+    const missing = required.filter((field) => !body[field] && body[field] !== 0);
+    if (missing.length) {
+      return res.status(400).json({ message: `Missing required fields: ${missing.join(', ')}` });
+    }
+
+    const [[form]] = await db.query(
+      `INSERT INTO cost_sharing_forms (
+        student_id, full_name, sex, date_of_birth, mother_full_name, region, zone, woreda,
+        city_town, phone_number, pobox, highschool_name, highschool_completion_date,
+        college_faculty, department, year_of_attendance, current_year, withdrawn_date,
+        withdrawn_semester, is_transferred, prev_university_name, prev_department,
+        date_of_transfer, demand_in_kind, demand_in_cash, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`,
+      [
+        body.student_id, body.full_name, body.sex, body.date_of_birth || null, body.mother_full_name || null,
+        body.region || null, body.zone || null, body.woreda || null, body.city_town || null,
+        body.phone_number || null, body.pobox || null, body.highschool_name || null,
+        body.highschool_completion_date || null, body.college_faculty || 'Engineering & Technology',
+        body.department || null, body.year_of_attendance || null, body.current_year || null,
+        body.withdrawn_date || null, body.withdrawn_semester || null, Boolean(body.is_transferred),
+        body.prev_university_name || null, body.prev_department || null, body.date_of_transfer || null,
+        body.demand_in_kind, body.demand_in_cash,
+      ]
+    );
+    return res.status(201).json({ form_id: form.form_id });
+  } catch (err) {
+    if (err.code === '23514') return res.status(400).json({ message: 'Invalid sex or demanded service value.' });
+    return next(err);
+  }
+};
+
+exports.getCostSharingStep2 = async (req, res, next) => {
+  try {
+    const [[form]] = await db.query(
+      'SELECT * FROM cost_sharing_forms WHERE form_id = ? LIMIT 1',
+      [req.params.formId]
+    );
+    if (!form) return res.status(404).json({ message: 'Cost sharing form not found.' });
+
+    const baseFee = 17695.95;
+    const discount = form.advance_paid ? baseFee * 0.10 : 0;
+    const total = Number((baseFee - discount).toFixed(2));
+    const agreement = {
+      en: 'I accept the cost-sharing obligation set by Injibara University and agree to comply with the terms of the student service agreement. I confirm that the personal and academic information provided is correct.',
+      am: 'የኢንጅባራ ዩኒቨርሲቲን የወጪ መጋራት ግዴታ ተቀብዬ በተማሪ አገልግሎት ስምምነቱ መሠረት እንደምሰማማ እስማማለሁ። የሰጠኋቸው የግልና የትምህርት መረጃዎች ትክክለኛ መሆናቸውን አረጋግጣለሁ።',
+    };
+
+    return res.json({
+      form,
+      calculation: {
+        baseFee,
+        tuition: 2057.95,
+        food: 15000,
+        boarding: 300,
+        medical: 50,
+        discount,
+        total,
+      },
+      agreement,
+    });
+  } catch (err) { return next(err); }
+};
+
+exports.signCostSharingForm = async (req, res, next) => {
+  try {
+    const advancePaid = Boolean(req.body.advance_paid);
+    const receiptNo = advancePaid ? req.body.receipt_no?.trim() : null;
+    const baseFee = 17695.95;
+    const discount = advancePaid ? 10 : 0;
+    const calculatedFee = Number((baseFee * (1 - discount / 100)).toFixed(2));
+
+    if (advancePaid && !receiptNo) {
+      return res.status(400).json({ message: 'Receipt number is required for advance payment.' });
+    }
+
+    const [[form]] = await db.query(
+      `UPDATE cost_sharing_forms
+       SET advance_paid = ?, advance_discount = ?, receipt_no = ?, calculated_fee = ?,
+           signed_by_student = TRUE, signed_by_head = TRUE, status = 'Approved'
+       WHERE form_id = ? RETURNING *`,
+      [advancePaid, discount, receiptNo, calculatedFee, req.params.formId]
+    );
+    if (!form) return res.status(404).json({ message: 'Cost sharing form not found.' });
+    return res.json({ message: 'Cost sharing form finalized.', form });
+  } catch (err) { return next(err); }
+};

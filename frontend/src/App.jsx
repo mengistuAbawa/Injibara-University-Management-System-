@@ -23,6 +23,8 @@ import SectionStudents from './pages/instructor/SectionStudents';
 import EnterGrades from './pages/instructor/EnterGrades';
 import TakeAttendance from './pages/instructor/TakeAttendance';
 import RegistrarDashboard from './pages/registrar/RegistrarDashboard';
+import CostSharingFormPage2 from './pages/registrar/CostSharingFormPage2';
+import CostSharingFormPage1 from './pages/registrar/CostSharingFormPage1';
 import CreateStudent from './pages/registrar/CreateStudent';
 import EnrollStudent from './pages/registrar/EnrollStudent';
 import PublishResults from './pages/registrar/PublishResults';
@@ -134,6 +136,8 @@ export default function App() {
     </Route>
     <Route element={<RegistrarLayout />}>
       <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
+      <Route path="/registrar/cost-sharing" element={<CostSharingFormPage2 />} />
+      <Route path="/registrar/cost-sharing/:formId" element={<CostSharingFormPage1 />} />
       <Route path="/registrar/profile" element={<EditProfile />} />
       <Route path="/registrar/access-requests" element={<AccessRequests office="registrar" />} />
       <Route path="/registrar/assign-instructor/:instructorId" element={<AssignInstructorSections />} />

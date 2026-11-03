@@ -87,6 +87,7 @@ export default function Sidebar() {
   { to: '/registrar/access-requests', label: 'Access Requests' },
   { to: '/registrar/accounts',       label: 'Student Passwords' },
   { to: '/registrar/create-student', label: 'Register Student' },
+  { to: '/registrar/cost-sharing', label: 'Cost Sharing Registration' },
   { to: '/registrar/enroll',         label: 'Enroll Student' },
   { to: '/registrar/manage',         label: 'Manage Students' },
   { to: '/registrar/publish',        label: 'Publish Results' },

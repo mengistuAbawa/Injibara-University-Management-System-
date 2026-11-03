@@ -28,3 +28,11 @@ export const bulkPublishResults    = ()        => api.post('/registrar/results/b
 /* transcript */
 export const getTranscript         = (studentId) =>
   api.get(`/registrar/transcript/${studentId}`).then(r => r.data);
+
+/* cost sharing registration */
+export const saveCostSharingStep1 = (payload) =>
+  api.post('/registrar/cost-sharing/step1', payload).then(r => r.data);
+export const getCostSharingStep2 = (formId) =>
+  api.get(`/registrar/cost-sharing/${formId}/step2`).then(r => r.data);
+export const signCostSharingForm = (formId, payload) =>
+  api.patch(`/registrar/cost-sharing/${formId}/sign`, payload).then(r => r.data);

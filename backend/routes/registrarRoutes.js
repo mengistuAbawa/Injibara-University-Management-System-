@@ -38,4 +38,9 @@ router.post('/results/bulk-publish',         c.bulkPublishResults);
 /* transcript */
 router.get('/transcript/:studentId',         c.getTranscript);
 
+/* cost sharing registration */
+router.post('/cost-sharing/step1', c.saveCostSharingStep1);
+router.get('/cost-sharing/:formId/step2', c.getCostSharingStep2);
+router.patch('/cost-sharing/:formId/sign', c.signCostSharingForm);
+
 module.exports = router;
