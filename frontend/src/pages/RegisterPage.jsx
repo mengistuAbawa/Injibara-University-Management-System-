@@ -28,7 +28,7 @@ export default function RegisterPage() {
           setError(`Could not load departments: ${serverMessage}`);
         } else {
           setError(import.meta.env.PROD
-            ? `Could not reach the portal API at ${import.meta.env.VITE_API_BASE_URL || 'https://university-management-system-clbw.onrender.com/api'}. Please try again after the backend is available.`
+            ? `Could not reach the portal API at ${import.meta.env.VITE_API_BASE_URL || 'https://injibara-university-management-system-ig8x.onrender.com/api'}. Please try again after the backend is available.`
             : 'Could not reach the portal API. Start the backend and PostgreSQL, then reload this page.');
         }
       });
@@ -45,7 +45,12 @@ export default function RegisterPage() {
         return;
       }
       setNotice({ message: data.message, role: data.role || form.role, status: data.status, username: data.username }); setForm(blank);
-    } catch (err) { setError(err.response?.data?.message || 'Unable to submit your request.'); }
+    } catch (err) {
+      const message = err.response?.data?.message;
+      setError(message || (err.code === 'ECONNABORTED'
+        ? 'The portal server is starting or the database is unavailable. Please wait a moment and try again.'
+        : 'Unable to submit your request. Check your connection and try again.'));
+    }
     finally { setSubmitting(false); }
   };
   const isStudent = form.role === 'student';

@@ -3,9 +3,10 @@ const { bindParameters, prepareSql } = require('./sql');
 const path = require('path');
 require('dotenv').config({
   path: path.resolve(__dirname, '../../.env.local'),
-  override: true,
 });
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config({
+  path: path.resolve(__dirname, '../.env'),
+});
 
 const connectionString = process.env.DATABASE_URL?.replace(
   'sslmode=require',

@@ -26,6 +26,7 @@ export default function LoginPage({ embedded = false, onCancel }) {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState('');
   const [resetNotice, setResetNotice] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ export default function LoginPage({ embedded = false, onCancel }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setSubmitting(true);
     try {
       const data = await loginApi(username, password);
       login(data.token, data.student);
@@ -44,7 +46,12 @@ export default function LoginPage({ embedded = false, onCancel }) {
       else localStorage.removeItem('rememberUser');
       navigate(redirectByRole(data.student));
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const message = err.response?.data?.message;
+      setError(message || (err.code === 'ECONNABORTED'
+        ? 'The portal server is starting or the database is unavailable. Please wait a moment and try again.'
+        : 'Login failed. Check your connection and try again.'));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -68,7 +75,9 @@ export default function LoginPage({ embedded = false, onCancel }) {
           </div>
 
           <div className="buttons">
-            <button type="submit" className="login-btn">Login</button>
+            <button type="submit" className="login-btn" disabled={submitting}>
+              {submitting ? 'Signing in...' : 'Login'}
+            </button>
             <button type="button" className="cancel-btn" onClick={onCancel}><span aria-hidden="true">✖</span> Cancel</button>
           </div>
 

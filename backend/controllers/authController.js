@@ -11,6 +11,8 @@ exports.login = async (req, res, next) => {
     }
 
     const loginName = String(username).trim();
+    const normalizedUsername = loginName.toUpperCase();
+    const normalizedEmail = loginName.toLowerCase();
     const normalizedStudentNumber = loginName.toUpperCase();
     const alternateStudentNumber = normalizedStudentNumber.startsWith('INU')
       ? normalizedStudentNumber.slice(3)
@@ -33,7 +35,7 @@ exports.login = async (req, res, next) => {
           OR i.employee_number = ? OR i.employee_number = ?
        ORDER BY (u.username = ?) DESC, (s.student_number = ?) DESC, (i.employee_number = ?) DESC
        LIMIT 1`,
-      [loginName, loginName, loginName, alternateStudentNumber, loginName, alternateStudentNumber, loginName, loginName, loginName]
+      [normalizedUsername, normalizedEmail, normalizedUsername, alternateStudentNumber, normalizedUsername, alternateStudentNumber, normalizedUsername, normalizedUsername, normalizedUsername]
     );
 
     if (rows.length === 0) {

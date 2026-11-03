@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-require('dotenv').config();
 
 const db = require('./config/db');
 const path = require('path');
@@ -55,18 +54,16 @@ if (process.env.NODE_ENV === 'production') {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
     throw new Error('Set JWT_SECRET to a random value of at least 32 characters in production.');
   }
-  if (allowedOrigins.length === 0) {
-    throw new Error('Set CORS_ORIGINS to the deployed frontend origin(s) in production.');
-  }
 }
 
 app.use(helmet());
 app.use(cors({
   origin(origin, callback) {
     // Allow server-to-server and same-origin requests that do not send an Origin header.
+    const allowDeployedFrontend = process.env.NODE_ENV === 'production' && /^https:\/\//i.test(origin || '');
     const developmentOrigin = process.env.NODE_ENV !== 'production' &&
       /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
-    if (!origin || developmentOrigin || allowedOrigins.includes(normalizedOrigin(origin))) {
+    if (!origin || developmentOrigin || allowedOrigins.includes(normalizedOrigin(origin)) || (allowedOrigins.length === 0 && allowDeployedFrontend)) {
       return callback(null, true);
     }
     return callback(new Error('Origin is not allowed by CORS'));
@@ -77,15 +74,6 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-app.use(async (req, res, next) => {
-  try {
-    await ensureCourseCategorySchema();
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
 // Health check
 app.get('/', (req, res) => {
   res.json({ status: 'OK', message: 'INU Portal API running' });
@@ -93,6 +81,10 @@ app.get('/', (req, res) => {
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+ensureCourseCategorySchema().catch((err) => {
+  process.stderr.write(`Database schema initialization failed: ${err.message}\n`);
 });
 
 app.use('/uploads', (req, res, next) => {
@@ -130,13 +122,10 @@ module.exports = app;
 // for local development and traditional Node.js hosting only.
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
-  (async () => {
-    try {
-      await db.query('SELECT 1');
-      app.listen(PORT);
-    } catch (err) {
+  app.listen(PORT, '0.0.0.0', () => {
+    process.stdout.write(`Server listening on port ${PORT}\n`);
+    db.query('SELECT 1').catch((err) => {
       process.stderr.write(`PostgreSQL connection failed: ${err.message}\n`);
-      process.exit(1);
-    }
-  })();
+    });
+  });
 }

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import './ProfilePhoto.css';
 
 const apiOrigin = (import.meta.env.VITE_API_BASE_URL ||
-  (import.meta.env.PROD ? 'https://university-management-system-clbw.onrender.com/api' : 'http://localhost:5000/api')).replace(/\/api\/?$/, '');
+  (import.meta.env.PROD ? 'https://injibara-university-management-system-ig8x.onrender.com/api' : 'http://localhost:5000/api')).replace(/\/api\/?$/, '');
 
 function blobToDataUrl(blob) {
   return new Promise((resolve, reject) => {

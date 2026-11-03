@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL ||
-  (import.meta.env.PROD ? 'https://university-management-system-clbw.onrender.com/api' : 'http://localhost:5000/api')).replace(/\/api\/?$/, '');
+  (import.meta.env.PROD ? 'https://injibara-university-management-system-ig8x.onrender.com/api' : 'http://localhost:5000/api')).replace(/\/api\/?$/, '');
 
 export default function AccessRequests({ office }) {
   const location = useLocation(); const navigate = useNavigate();
