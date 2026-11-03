@@ -86,3 +86,81 @@ exports.applicationStatus = async (req, res, next) => {
     res.json(rows[0]);
   } catch (err) { next(err); }
 };
+
+exports.studentApplication = async (req, res, next) => {
+  const conn = await db.getConnection();
+  try {
+    const data = req.body || {};
+    const email = String(data.email || '').trim().toLowerCase();
+    const names = String(data.fullName || '').trim().split(/\s+/).filter(Boolean);
+    const departmentId = Number(data.departmentChoice);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || names.length < 2 || !names[0] ||
+      !data.phoneNo || !Number.isInteger(departmentId)) {
+      return res.status(400).json({ message: 'Enter your email, full name, phone number, and department.' });
+    }
+
+    const firstName = names[0];
+    const lastName = names.length === 1 ? names[0] : names[names.length - 1];
+    const grandfatherName = names.length > 2 ? names[names.length - 2] : names[names.length - 1];
+    const ecYear = Number(data.dateOfBirthYear);
+    const gregorianYear = Number.isFinite(ecYear) && ecYear > 0 ? ecYear - 7 : new Date().getFullYear() - 20;
+    const day = String(Number(data.dateOfBirthDay) || 1).padStart(2, '0');
+    const monthNames = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12 };
+    const monthValue = monthNames[String(data.dateOfBirthMonth || '').toLowerCase()] || Number(data.dateOfBirthMonth) || 1;
+    const dateOfBirth = `${gregorianYear}-${String(monthValue).padStart(2, '0')}-${day}`;
+
+    await conn.beginTransaction();
+    const [[existing]] = await conn.query(
+      'SELECT user_id FROM users WHERE email = ? UNION SELECT request_id FROM access_requests WHERE email = ? LIMIT 1',
+      [email, email]
+    );
+    if (existing) {
+      await conn.rollback();
+      return res.status(409).json({ message: 'An account or application already uses this email.' });
+    }
+
+    const [[department]] = await conn.query(
+      'SELECT department_id FROM departments WHERE department_id = ? LIMIT 1',
+      [departmentId]
+    );
+    if (!department) {
+      await conn.rollback();
+      return res.status(400).json({ message: 'Selected department is unavailable.' });
+    }
+
+    const details = {
+      first_name: firstName,
+      last_name: lastName,
+      grandfather_name: grandfatherName,
+      gender: data.sex === 'Female' ? 'Female' : 'Male',
+      date_of_birth: dateOfBirth,
+      phone_number: String(data.phoneNo).trim(),
+      region: String(data.region || '').trim(),
+      department_id: departmentId,
+      student_application: data,
+    };
+    const hash = require('../utils/hashPassword').hash;
+    const tempPassword = require('../utils/generateTempPassword')(grandfatherName);
+    const [request] = await conn.query(
+      "INSERT INTO access_requests (role, email, password_hash, applicant_data) VALUES ('student', ?, ?, ?)",
+      [email, hash(tempPassword), JSON.stringify(details)]
+    );
+    await conn.query(
+      `INSERT INTO applicant_profiles
+       (access_request_id, first_name, last_name, grandfather_name, gender, date_of_birth,
+        phone_number, region, high_school_name, high_school_region, university_entrance_result,
+        first_choice_department, second_choice_department, third_choice_department)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)`,
+      [request.insertId, firstName, lastName, grandfatherName, details.gender, dateOfBirth,
+       details.phone_number, details.region, String(data.preparatorySchool || '').trim(), String(data.region || '').trim(),
+       0, departmentId]
+    );
+    await conn.commit();
+    res.status(201).json({ request_id: request.insertId, email, message: 'Student application submitted successfully and is awaiting registrar review.' });
+  } catch (err) {
+    await conn.rollback();
+    next(err);
+  } finally {
+    conn.release();
+  }
+};

@@ -8,6 +8,8 @@ const initialForm = {
   first_name: '',
   last_name: '',
   grandfather_name: '',
+  password: '',
+  confirm_password: '',
   gender: 'Male',
   date_of_birth: '',
   phone_number: '',
@@ -53,11 +55,6 @@ export default function CreateStudent() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  /* ---------- Preview the auto-generated password rule ---------- */
-  const previewPassword = form.grandfather_name
-    ? `${form.grandfather_name.toLowerCase().replace(/\s+/g, '')}1234abcd#`
-    : 'abebe1234abcd#';
-
   /* ---------- Submit ---------- */
   const submit = async (e) => {
     e.preventDefault();
@@ -66,6 +63,11 @@ export default function CreateStudent() {
     setSubmitting(true);
 
     try {
+      if (form.password !== form.confirm_password) {
+        setError('Password and confirm password do not match');
+        setSubmitting(false);
+        return;
+      }
       const { data } = await api.post('/registrar/students', form);
       setResult(data);
       setForm(initialForm);
@@ -104,12 +106,8 @@ export default function CreateStudent() {
             <strong>Login email:</strong>{' '}
             <code>{result.email}</code>
           </div>
-          <div className="temp-pass">
-            <strong>Temporary Password:</strong>{' '}
-            <code>{result.tempPassword}</code>
-          </div>
           <div className="hint">
-            The student can sign in with their student number or email and this temporary password.
+            The student can sign in with their student number or email and the password set during registration.
           </div>
         </div>
       )}
@@ -161,7 +159,32 @@ export default function CreateStudent() {
                 name="grandfather_name"
                 value={form.grandfather_name}
                 onChange={change}
-                placeholder="Used for temp password"
+                required
+              />
+            </label>
+
+            <label>
+              Password <span className="req">*</span>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={change}
+                minLength={6}
+                autoComplete="new-password"
+                required
+              />
+            </label>
+
+            <label>
+              Confirm Password <span className="req">*</span>
+              <input
+                type="password"
+                name="confirm_password"
+                value={form.confirm_password}
+                onChange={change}
+                minLength={6}
+                autoComplete="new-password"
                 required
               />
             </label>
@@ -356,12 +379,6 @@ export default function CreateStudent() {
             </label>
           </div>
         </fieldset>
-
-        {/* ------ Temp password preview ------ */}
-        <div className="preview-box">
-          <span className="preview-label">Auto-generated temporary password:</span>
-          <code>{previewPassword}</code>
-        </div>
 
         {/* ------ Actions ------ */}
         <div className="form-actions">

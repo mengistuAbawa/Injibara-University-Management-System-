@@ -87,6 +87,7 @@ export default function App() {
   return <Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/welcome" element={<HomePage welcomeOnly />} />
+    <Route path="/student-application" element={<HomePage welcomeOnly />} />
     <Route path="/public/overview" element={<HomePage welcomeOnly />} />
     <Route path="/public/how-it-works" element={<PublicInfoPage />} />
     <Route path="/public/user-roles" element={<PublicInfoPage />} />

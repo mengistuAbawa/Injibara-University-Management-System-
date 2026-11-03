@@ -8,6 +8,7 @@ import {
 import Header from '../components/Header';
 import { useAuth } from '../context/AuthContext';
 import LoginPage from './LoginPage';
+import StudentAppForm from './StudentAppForm';
 import './HomePage.css';
 
 const dashboardFor = (user) => {
@@ -46,6 +47,7 @@ export default function HomePage({ welcomeOnly = false }) {
             <Link to="/public/how-it-works"><FiGrid /> How it works</Link>
             <Link to="/public/user-roles"><FiUsers /> User roles</Link>
             <Link to="/public/login-guide"><FiShield /> Login guide</Link>
+            <Link to="/student-application"><FiBookOpen /> Student Application <FiChevronRight /></Link>
             <Link to="/apply"><FiBookOpen /> Admissions <FiChevronRight /></Link>
             <Link to="/apply/status"><FiHelpCircle /> Application status <FiChevronRight /></Link>
           </nav>
@@ -60,6 +62,7 @@ export default function HomePage({ welcomeOnly = false }) {
 
         <main className="welcome-main" id="overview">
           <button type="button" className="mobile-menu-button" onClick={() => setMenuOpen(true)}><FiMenu /> Menu</button>
+          {pathname === '/student-application' && <StudentAppForm />}
           <section className="welcome-hero">
             <div className="hero-copy">
               <p className="welcome-eyebrow">INJIBARA UNIVERSITY</p>

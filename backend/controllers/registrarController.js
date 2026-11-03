@@ -1,6 +1,5 @@
 const db = require('../config/db');
 const { hash } = require('../utils/hashPassword');
-const generateTempPassword = require('../utils/generateTempPassword');
 const generateUsername = require('../utils/generateUsername');
 
 /* =========================================================
@@ -13,6 +12,7 @@ exports.createStudent = async (req, res, next) => {
 
     const {
       student_number, first_name, last_name, grandfather_name,
+      password, confirm_password,
       gender, date_of_birth, phone_number, region,
       department_id, admission_year, current_year,
       dormitory, campus, building_no, building_name, floor, dorm, bed_no,
@@ -30,6 +30,18 @@ exports.createStudent = async (req, res, next) => {
       await conn.rollback();
       return res.status(400).json({ message: 'Department is required' });
     }
+    if (!password || !confirm_password) {
+      await conn.rollback();
+      return res.status(400).json({ message: 'Password and confirm password are required' });
+    }
+    if (password !== confirm_password) {
+      await conn.rollback();
+      return res.status(400).json({ message: 'Password and confirm password do not match' });
+    }
+    if (password.length < 6) {
+      await conn.rollback();
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
 
     /* ---- duplicate check ---- */
     const [dup] = await conn.query(
@@ -43,9 +55,8 @@ exports.createStudent = async (req, res, next) => {
         .json({ message: `Student number ${student_number} already exists` });
     }
 
-    /* ---- auto-generate temp password ---- */
-    const tempPassword = generateTempPassword(grandfather_name);
-    const hashed = hash(tempPassword);
+    /* ---- hash registrar-entered student password ---- */
+    const hashed = hash(password);
     const email = `${student_number
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '')}@inu.edu.et`;
@@ -85,8 +96,7 @@ exports.createStudent = async (req, res, next) => {
       student_number,
       username: generateUsername(student_number),
       email,
-      tempPassword,
-      loginHint: 'Username = INU + student number, Password = temporary password',
+      loginHint: 'The student can log in with this username or email and the password set during registration',
     });
   } catch (err) {
     await conn.rollback();
