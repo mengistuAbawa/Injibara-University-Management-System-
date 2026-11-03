@@ -17,6 +17,12 @@ export const selectFields = (priorities) => {
 export const getResults   = () => api.get('/students/selection-results').then(r => r.data);
 export const getPriority  = () => api.get('/students/priority-summary').then(r => r.data);
 export const getMyProfile      = () => api.get('/students/my-profile').then(r => r.data);
+export const submitCostSharingForm = (payload) =>
+  api.post('/students/cost-sharing/step1', payload).then(r => r.data);
+export const getCurrentCostSharingForm = () =>
+  api.get('/students/cost-sharing/current').then(r => r.data);
+export const signCostSharingAgreement = (formId, payload) =>
+  api.patch(`/students/cost-sharing/${formId}/sign`, payload).then(r => r.data);
 export const getPrioritySummary = (filters = {}) => {
   const qs = new URLSearchParams(
     Object.entries(filters).filter(([, v]) => v !== '' && v != null)

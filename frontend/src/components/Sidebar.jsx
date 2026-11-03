@@ -48,6 +48,7 @@ export default function Sidebar() {
       { to: '/field-selection',     label: 'Field Selection' },
       { to: '/selection-results',   label: 'Selection Results Summary' },
       { to: '/my-fees',             label: 'My Fees' },
+      { to: '/student/cost-sharing', label: 'Cost Sharing Registration' },
       { popup: 'priority',          label: 'Priority Summary' },
     ],
  alumni: [
@@ -87,7 +88,7 @@ export default function Sidebar() {
   { to: '/registrar/access-requests', label: 'Access Requests' },
   { to: '/registrar/accounts',       label: 'Student Passwords' },
   { to: '/registrar/create-student', label: 'Register Student' },
-  { to: '/registrar/cost-sharing', label: 'Cost Sharing Registration' },
+  { to: '/registrar/cost-sharing', label: 'Cost Sharing Review' },
   { to: '/registrar/enroll',         label: 'Enroll Student' },
   { to: '/registrar/manage',         label: 'Manage Students' },
   { to: '/registrar/publish',        label: 'Publish Results' },

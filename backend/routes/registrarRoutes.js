@@ -42,5 +42,7 @@ router.get('/transcript/:studentId',         c.getTranscript);
 router.post('/cost-sharing/step1', c.saveCostSharingStep1);
 router.get('/cost-sharing/:formId/step2', c.getCostSharingStep2);
 router.patch('/cost-sharing/:formId/sign', c.signCostSharingForm);
+router.get('/cost-sharing/forms/list', c.listCostSharingForms);
+router.patch('/cost-sharing/:formId/review', c.reviewCostSharingForm);
 
 module.exports = router;

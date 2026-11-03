@@ -36,3 +36,7 @@ export const getCostSharingStep2 = (formId) =>
   api.get(`/registrar/cost-sharing/${formId}/step2`).then(r => r.data);
 export const signCostSharingForm = (formId, payload) =>
   api.patch(`/registrar/cost-sharing/${formId}/sign`, payload).then(r => r.data);
+export const listCostSharingForms = (status = '') =>
+  api.get('/registrar/cost-sharing/forms/list', { params: status ? { status } : {} }).then(r => r.data);
+export const reviewCostSharingForm = (formId, payload) =>
+  api.patch(`/registrar/cost-sharing/${formId}/review`, payload).then(r => r.data);

@@ -25,6 +25,7 @@ import TakeAttendance from './pages/instructor/TakeAttendance';
 import RegistrarDashboard from './pages/registrar/RegistrarDashboard';
 import CostSharingFormPage2 from './pages/registrar/CostSharingFormPage2';
 import CostSharingFormPage1 from './pages/registrar/CostSharingFormPage1';
+import CostSharingReviewPage from './pages/registrar/CostSharingReviewPage';
 import CreateStudent from './pages/registrar/CreateStudent';
 import EnrollStudent from './pages/registrar/EnrollStudent';
 import PublishResults from './pages/registrar/PublishResults';
@@ -98,6 +99,8 @@ export default function App() {
     <Route path="/apply/success" element={<SuccessPage />} />
     <Route element={<StudentLayout />}>
       <Route path="/dashboard" element={<StudentDashboard />} />
+      <Route path="/student/cost-sharing" element={<CostSharingFormPage2 />} />
+      <Route path="/student/cost-sharing/:formId" element={<CostSharingFormPage1 />} />
       <Route path="/register" element={<Navigate to="/my-course" replace />} />
       <Route path="/placement-tutorials" element={<PlacementTutorials />} />
       <Route path="/my-course" element={<MyCourse />} />
@@ -136,7 +139,7 @@ export default function App() {
     </Route>
     <Route element={<RegistrarLayout />}>
       <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
-      <Route path="/registrar/cost-sharing" element={<CostSharingFormPage2 />} />
+      <Route path="/registrar/cost-sharing" element={<CostSharingReviewPage />} />
       <Route path="/registrar/cost-sharing/:formId" element={<CostSharingFormPage1 />} />
       <Route path="/registrar/profile" element={<EditProfile />} />
       <Route path="/registrar/access-requests" element={<AccessRequests office="registrar" />} />

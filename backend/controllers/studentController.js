@@ -295,3 +295,86 @@ exports.getPrioritySummary = async (req, res, next) => {
     res.json(rows);
   } catch (err) { next(err); }
 };
+
+// ---------- COST SHARING ----------
+exports.submitCostSharingForm = async (req, res, next) => {
+  try {
+    const studentId = req.user.student_id;
+    const [[profile]] = await db.query(
+      `SELECT s.*, d.department_name
+       FROM students s
+       LEFT JOIN departments d ON d.department_id = s.department_id
+       WHERE s.student_id = ?`,
+      [studentId]
+    );
+    if (!profile) return res.status(404).json({ message: 'Student profile not found.' });
+
+    const [[existing]] = await db.query(
+      `SELECT form_id FROM cost_sharing_forms
+       WHERE student_id = ? AND status IN ('Draft', 'Pending', 'Approved') LIMIT 1`,
+      [studentId]
+    );
+    if (existing) return res.status(409).json({ message: 'A cost-sharing form already exists.' });
+
+    const body = req.body;
+    const studentType = profile.department_id ? 'department' : 'fresh';
+    const [[form]] = await db.query(
+      `INSERT INTO cost_sharing_forms (
+        student_id, student_type, full_name, sex, date_of_birth, mother_full_name, region, zone,
+        woreda, city_town, phone_number, pobox, highschool_name, highschool_completion_date,
+        college_faculty, department, year_of_attendance, current_year, withdrawn_date,
+        withdrawn_semester, is_transferred, prev_university_name, prev_department,
+        date_of_transfer, demand_in_kind, demand_in_cash, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')
+      RETURNING *`,
+      [
+        studentId, studentType, body.full_name || `${profile.first_name} ${profile.last_name}`,
+        body.sex || profile.gender, body.date_of_birth || profile.date_of_birth,
+        body.mother_full_name || null, body.region || profile.region || null, body.zone || null,
+        body.woreda || null, body.city_town || null, body.phone_number || profile.phone_number || null,
+        body.pobox || null, body.highschool_name || null, body.highschool_completion_date || null,
+        body.college_faculty || 'Engineering & Technology', body.department || profile.department_name || null,
+        body.year_of_attendance || profile.admission_year || null, body.current_year || profile.current_year || null,
+        studentType === 'department' ? (body.withdrawn_date || null) : null,
+        studentType === 'department' ? (body.withdrawn_semester || null) : null,
+        studentType === 'department' ? Boolean(body.is_transferred) : false,
+        studentType === 'department' ? (body.prev_university_name || null) : null,
+        studentType === 'department' ? (body.prev_department || null) : null,
+        studentType === 'department' ? (body.date_of_transfer || null) : null,
+        body.demand_in_kind || 'none', body.demand_in_cash || 'none',
+      ]
+    );
+    return res.status(201).json({ form_id: form.form_id, student_type: studentType });
+  } catch (err) { return next(err); }
+};
+
+exports.getCurrentCostSharingForm = async (req, res, next) => {
+  try {
+    const [[form]] = await db.query(
+      'SELECT * FROM cost_sharing_forms WHERE student_id = ? ORDER BY created_at DESC LIMIT 1',
+      [req.user.student_id]
+    );
+    return res.json(form || null);
+  } catch (err) { return next(err); }
+};
+
+exports.signCostSharingAgreement = async (req, res, next) => {
+  try {
+    const advancePaid = Boolean(req.body.advance_paid);
+    const receiptNo = advancePaid ? String(req.body.receipt_no || '').trim() : null;
+    if (advancePaid && !receiptNo) {
+      return res.status(400).json({ message: 'Receipt number is required for advance payment.' });
+    }
+    const discount = advancePaid ? 10 : 0;
+    const calculatedFee = Number((17695.95 * (1 - discount / 100)).toFixed(2));
+    const [[form]] = await db.query(
+      `UPDATE cost_sharing_forms
+       SET signed_by_student = TRUE, advance_paid = ?, advance_discount = ?,
+           receipt_no = ?, calculated_fee = ?, status = CASE WHEN status = 'Draft' THEN 'Pending' ELSE status END
+       WHERE form_id = ? AND student_id = ? RETURNING *`,
+      [advancePaid, discount, receiptNo, calculatedFee, req.params.formId, req.user.student_id]
+    );
+    if (!form) return res.status(404).json({ message: 'Cost-sharing form not found.' });
+    return res.json({ message: 'Agreement signed and submitted to the registrar.', form });
+  } catch (err) { return next(err); }
+};

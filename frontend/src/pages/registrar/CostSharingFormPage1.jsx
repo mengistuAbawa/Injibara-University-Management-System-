@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getCostSharingStep2, signCostSharingForm } from '../../services/registrarService';
+import { getCurrentCostSharingForm, signCostSharingAgreement } from '../../services/studentService';
 import './CostSharingForm.css';
 
 export default function CostSharingFormPage1() {
@@ -17,10 +18,23 @@ export default function CostSharingFormPage1() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (user?.role === 'student') {
+      getCurrentCostSharingForm().then((form) => {
+        if (!form) throw new Error('No cost-sharing form has been submitted.');
+        setData({
+          form,
+          agreement: {
+            en: 'I accept the cost-sharing obligation set by Injibara University and agree to comply with the terms of the student service agreement. I confirm that the personal and academic information provided is correct.',
+            am: 'የኢንጅባራ ዩኒቨርሲቲን የወጪ መጋራት ግዴታ ተቀብዬ በተማሪ አገልግሎት ስምምነቱ መሠረት እንደምሰማማ እስማማለሁ።',
+          },
+        });
+      }).catch((err) => setError(err.response?.data?.message || err.message));
+      return;
+    }
     getCostSharingStep2(formId).then(setData).catch((err) => {
       setError(err.response?.data?.message || 'Unable to load the agreement.');
     });
-  }, [formId]);
+  }, [formId, user?.role]);
 
   const money = (value) => Number(value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const total = advancePaid ? Number((17695.95 * 0.90).toFixed(2)) : 17695.95;
@@ -33,7 +47,11 @@ export default function CostSharingFormPage1() {
       return;
     }
     try {
-      await signCostSharingForm(formId, { advance_paid: advancePaid, receipt_no: receiptNo, payment_date: paymentDate });
+      if (user?.role === 'student') {
+        await signCostSharingAgreement(formId, { advance_paid: advancePaid, receipt_no: receiptNo, payment_date: paymentDate });
+      } else {
+        await signCostSharingForm(formId, { advance_paid: advancePaid, receipt_no: receiptNo, payment_date: paymentDate });
+      }
       window.print();
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to finalize the form.');

@@ -21,5 +21,8 @@ router.post('/select-fields',      c.selectFields);
 router.get('/selection-results',   c.getSelectionResults);
 router.get('/priority-summary',    c.getPrioritySummary);
 router.get('/my-fees',             financeController.studentFees);
+router.post('/cost-sharing/step1', c.submitCostSharingForm);
+router.get('/cost-sharing/current', c.getCurrentCostSharingForm);
+router.patch('/cost-sharing/:formId/sign', c.signCostSharingAgreement);
 
 module.exports = router;

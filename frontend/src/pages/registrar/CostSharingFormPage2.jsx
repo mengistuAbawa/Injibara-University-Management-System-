@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getStudent, saveCostSharingStep1, searchStudents } from '../../services/registrarService';
+import { getMyProfile, submitCostSharingForm } from '../../services/studentService';
 import './CostSharingForm.css';
 
 const initial = {
@@ -16,12 +16,24 @@ const initial = {
 export default function CostSharingFormPage2() {
   const navigate = useNavigate();
   const [form, setForm] = useState(initial);
-  const [students, setStudents] = useState([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [studentType, setStudentType] = useState('fresh');
 
   useEffect(() => {
-    searchStudents('').then(setStudents).catch(() => setStudents([]));
+    getMyProfile().then((profile) => {
+      setStudentType(profile.department_name ? 'department' : 'fresh');
+      setForm((current) => ({
+        ...current,
+        full_name: profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+        sex: profile.gender || '',
+        date_of_birth: profile.date_of_birth?.slice(0, 10) || '',
+        region: profile.region || '',
+        phone_number: profile.phone_number || '',
+        current_year: profile.current_year || '',
+        department: profile.department_name || '',
+      }));
+    }).catch(() => setError('Unable to load the student profile.'));
   }, []);
 
   const change = (event) => {
@@ -29,34 +41,13 @@ export default function CostSharingFormPage2() {
     setForm((current) => ({ ...current, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const chooseStudent = async (event) => {
-    const studentId = event.target.value;
-    setForm((current) => ({ ...current, student_id: studentId }));
-    if (!studentId) return;
-    try {
-      const student = await getStudent(studentId);
-      setForm((current) => ({
-        ...current,
-        full_name: `${student.first_name || ''} ${student.last_name || ''}`.trim(),
-        sex: student.gender || '',
-        date_of_birth: student.date_of_birth?.slice(0, 10) || '',
-        region: student.region || '',
-        phone_number: student.phone_number || '',
-        current_year: student.current_year || '',
-        department: student.department_name || '',
-      }));
-    } catch {
-      setError('The selected student could not be loaded.');
-    }
-  };
-
   const submit = async (event) => {
     event.preventDefault();
     setSaving(true);
     setError('');
     try {
-      const result = await saveCostSharingStep1(form);
-      navigate(`/registrar/cost-sharing/${result.form_id}`);
+      const result = await submitCostSharingForm(form);
+      navigate(`/student/cost-sharing/${result.form_id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Unable to save the registration form.');
     } finally {
@@ -75,12 +66,6 @@ export default function CostSharingFormPage2() {
 
       <fieldset>
         <legend>1. Student / ተማሪ</legend>
-        <label>Student / ተማሪ<select name="student_id" value={form.student_id} onChange={chooseStudent} required>
-          <option value="">Select student / ተማሪ ይምረጡ</option>
-          {students.map((student) => <option key={student.student_id} value={student.student_id}>
-            {student.student_number} - {student.first_name} {student.last_name}
-          </option>)}
-        </select></label>
         <div className="cost-grid cost-grid-2">
           <label>Full Name / ሙሉ ስም<input name="full_name" value={form.full_name} onChange={change} required /></label>
           <fieldset className="cost-inline"><legend>Sex / ፆታ</legend>
@@ -118,15 +103,15 @@ export default function CostSharingFormPage2() {
         </fieldset>
       </fieldset>
 
-      <fieldset>
+      {studentType === 'department' && <fieldset>
         <legend>7. Withdrawal Information / የማቋረጥ መረጃ</legend>
         <div className="cost-grid cost-grid-2">
           <label>Withdrawal Date / የማቋረጥ ቀን<input type="date" name="withdrawn_date" value={form.withdrawn_date} onChange={change} /></label>
           <label>Semester / ሴሚስተር<input name="withdrawn_semester" value={form.withdrawn_semester} onChange={change} /></label>
         </div>
-      </fieldset>
+      </fieldset>}
 
-      <fieldset>
+      {studentType === 'department' && <fieldset>
         <legend>8. Transfer Information / የሽግግር መረጃ</legend>
         <label className="cost-check"><input type="checkbox" name="is_transferred" checked={form.is_transferred} onChange={change} /> Transferred / የተዛወረ</label>
         {form.is_transferred && <div className="cost-grid cost-grid-3">
@@ -134,7 +119,7 @@ export default function CostSharingFormPage2() {
           <label>Previous Department / የቀድሞ ዲፓርትመንት<input name="prev_department" value={form.prev_department} onChange={change} /></label>
           <label>Date of Transfer / የሽግግር ቀን<input type="date" name="date_of_transfer" value={form.date_of_transfer} onChange={change} /></label>
         </div>}
-      </fieldset>
+      </fieldset>}
 
       <fieldset>
         <legend>9. Demanded Services / የሚጠየቁ አገልግሎቶች</legend>

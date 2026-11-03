@@ -587,11 +587,47 @@ exports.signCostSharingForm = async (req, res, next) => {
     const [[form]] = await db.query(
       `UPDATE cost_sharing_forms
        SET advance_paid = ?, advance_discount = ?, receipt_no = ?, calculated_fee = ?,
-           signed_by_student = TRUE, signed_by_head = TRUE, status = 'Approved'
+           signed_by_head = TRUE, status = 'Pending'
        WHERE form_id = ? RETURNING *`,
       [advancePaid, discount, receiptNo, calculatedFee, req.params.formId]
     );
     if (!form) return res.status(404).json({ message: 'Cost sharing form not found.' });
     return res.json({ message: 'Cost sharing form finalized.', form });
+  } catch (err) { return next(err); }
+};
+
+exports.listCostSharingForms = async (req, res, next) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT cf.*, s.student_number, u.first_name AS registrar_first_name, u.last_name AS registrar_last_name
+       FROM cost_sharing_forms cf
+       JOIN students s ON s.student_id = cf.student_id
+       JOIN users u ON u.user_id = s.user_id
+       ORDER BY
+         CASE WHEN cf.status = 'Pending' THEN 0 ELSE 1 END,
+         cf.created_at DESC`
+    );
+    return res.json(rows);
+  } catch (err) { return next(err); }
+};
+
+exports.reviewCostSharingForm = async (req, res, next) => {
+  try {
+    const decision = String(req.body.status || '').trim();
+    if (!['Approved', 'Rejected'].includes(decision)) {
+      return res.status(400).json({ message: 'Status must be Approved or Rejected.' });
+    }
+    const reason = decision === 'Rejected' ? (req.body.rejection_reason || '').trim() : null;
+    if (decision === 'Rejected' && !reason) {
+      return res.status(400).json({ message: 'A rejection reason is required.' });
+    }
+    const [[form]] = await db.query(
+      `UPDATE cost_sharing_forms
+       SET status = ?, rejection_reason = ?, signed_by_head = ?
+       WHERE form_id = ? RETURNING *`,
+      [decision, reason, decision === 'Approved', req.params.formId]
+    );
+    if (!form) return res.status(404).json({ message: 'Cost-sharing form not found.' });
+    return res.json({ message: `Cost-sharing form ${decision.toLowerCase()}.`, form });
   } catch (err) { return next(err); }
 };
