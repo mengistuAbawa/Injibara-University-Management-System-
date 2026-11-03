@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS colleges (
   college_id SERIAL PRIMARY KEY,
   college_name VARCHAR(120) NOT NULL UNIQUE,
   college_code VARCHAR(20) NOT NULL UNIQUE,
+  dean_user_id INT,
+  dean_name VARCHAR(120),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

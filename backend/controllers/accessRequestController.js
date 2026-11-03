@@ -250,8 +250,8 @@ exports.review = async (req, res, next) => {
         await conn.query('UPDATE colleges SET dean_user_id=?,dean_name=? WHERE college_id=?', [user.insertId, `${data.first_name} ${data.last_name}`, data.college_id]);
         await conn.query(
           `INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details)
-           VALUES (?,?,'assign','dean',?,JSON_OBJECT('source','approved_access_request'))`,
-          [data.college_id, user.insertId, dean.insertId]
+           VALUES (?,?,'assign','dean',?,?)`,
+          [data.college_id, user.insertId, dean.insertId, JSON.stringify({ source: 'approved_access_request' })]
         );
         await conn.query('UPDATE access_requests SET applicant_data=? WHERE request_id=?', [JSON.stringify(data), request.request_id]);
       }

@@ -225,7 +225,7 @@ exports.createDean = async (req, res, next) => {
     if (college.dean_user_id) {
       const [[oldDean]] = await conn.query('SELECT dean_id,user_id FROM college_deans WHERE user_id=? AND college_id=? FOR UPDATE', [college.dean_user_id, college_id]);
       if (oldDean) {
-        await conn.query("INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details) VALUES (?,?,'auto_demote','dean',?,JSON_OBJECT('reason','Reassigned by administrator'))", [college_id, oldDean.user_id, oldDean.dean_id]);
+        await conn.query("INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details) VALUES (?,?,'auto_demote','dean',?,?)", [college_id, oldDean.user_id, oldDean.dean_id, JSON.stringify({ reason: 'Reassigned by administrator' })]);
         await conn.query('UPDATE users SET college_id=NULL WHERE user_id=?', [oldDean.user_id]);
         await conn.query('DELETE FROM college_deans WHERE dean_id=?', [oldDean.dean_id]);
       }
@@ -263,7 +263,7 @@ exports.demoteDean = async (req, res, next) => {
     await conn.beginTransaction();
     const [[dean]] = await conn.query('SELECT dean_id,user_id,college_id FROM college_deans WHERE dean_id=? FOR UPDATE', [deanId]);
     if (!dean) { await conn.rollback(); return res.status(404).json({ message: 'Dean not found.' }); }
-    await conn.query("INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details) VALUES (?,?,'demote','dean',?,JSON_OBJECT('reason','Administrator removed dean assignment'))", [dean.college_id, dean.user_id, dean.dean_id]);
+    await conn.query("INSERT INTO dean_audit_logs (college_id,dean_user_id,action,entity_type,entity_id,details) VALUES (?,?,'demote','dean',?,?)", [dean.college_id, dean.user_id, dean.dean_id, JSON.stringify({ reason: 'Administrator removed dean assignment' })]);
     await conn.query('UPDATE colleges SET dean_user_id=NULL,dean_name=NULL WHERE college_id=? AND dean_user_id=?', [dean.college_id, dean.user_id]);
     await conn.query('UPDATE users SET college_id=NULL WHERE user_id=?', [dean.user_id]);
     await conn.query('DELETE FROM college_deans WHERE dean_id=?', [deanId]);

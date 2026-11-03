@@ -62,6 +62,11 @@ const ensureDeanSchema = () => {
         db.query(`ALTER TABLE college_deans ADD COLUMN IF NOT EXISTS ${definition}`)
       ),
       Promise.resolve()
+    ).then(() =>
+      Promise.all([
+        db.query('ALTER TABLE colleges ADD COLUMN IF NOT EXISTS dean_user_id INT'),
+        db.query('ALTER TABLE colleges ADD COLUMN IF NOT EXISTS dean_name VARCHAR(120)'),
+      ])
     ).catch((err) => {
       deanSchemaPromise = undefined;
       throw err;
