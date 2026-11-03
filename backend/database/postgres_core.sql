@@ -86,9 +86,18 @@ CREATE TABLE IF NOT EXISTS instructors (
 CREATE TABLE IF NOT EXISTS college_deans (
   dean_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  employee_number VARCHAR(30),
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
+  gender VARCHAR(20),
+  phone_number VARCHAR(30),
+  academic_rank VARCHAR(50),
   college_id INT NOT NULL REFERENCES colleges(college_id) ON DELETE CASCADE,
+  office_location VARCHAR(100),
+  hire_date DATE,
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
-  appointed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  appointed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS courses (

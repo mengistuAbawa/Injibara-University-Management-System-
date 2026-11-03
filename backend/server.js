@@ -43,6 +43,33 @@ const ensureCourseCategorySchema = () => {
   return courseCategorySchemaPromise;
 };
 
+let deanSchemaPromise;
+const ensureDeanSchema = () => {
+  if (!deanSchemaPromise) {
+    const deanColumns = [
+      'employee_number VARCHAR(30)',
+      'first_name VARCHAR(50)',
+      'last_name VARCHAR(50)',
+      'gender VARCHAR(20)',
+      'phone_number VARCHAR(30)',
+      'academic_rank VARCHAR(50)',
+      'office_location VARCHAR(100)',
+      'hire_date DATE',
+      'created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
+    ];
+    deanSchemaPromise = deanColumns.reduce(
+      (promise, definition) => promise.then(() =>
+        db.query(`ALTER TABLE college_deans ADD COLUMN IF NOT EXISTS ${definition}`)
+      ),
+      Promise.resolve()
+    ).catch((err) => {
+      deanSchemaPromise = undefined;
+      throw err;
+    });
+  }
+  return deanSchemaPromise;
+};
+
 const allowedOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
   .map((origin) => origin.trim().replace(/\/+$/, ''))
@@ -85,6 +112,9 @@ app.get('/api/health', (req, res) => {
 
 ensureCourseCategorySchema().catch((err) => {
   process.stderr.write(`Database schema initialization failed: ${err.message}\n`);
+});
+ensureDeanSchema().catch((err) => {
+  process.stderr.write(`Dean database schema initialization failed: ${err.message}\n`);
 });
 
 app.use('/uploads', (req, res, next) => {
