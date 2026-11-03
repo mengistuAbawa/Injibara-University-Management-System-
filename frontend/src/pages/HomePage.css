@@ -411,6 +411,31 @@
   padding: 24px 24px 72px;
   perspective: none;
 }
+.welcome-page.application-open {
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.welcome-page.application-open .site-header,
+.welcome-page.application-open .public-sidebar {
+  flex-shrink: 0;
+}
+.welcome-page.application-open .public-shell {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+.welcome-page.application-open .welcome-main {
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.welcome-page.application-open .welcome-footer {
+  display: none;
+}
 .mobile-menu-button { display: none; }
 .welcome-hero {
   display: grid;

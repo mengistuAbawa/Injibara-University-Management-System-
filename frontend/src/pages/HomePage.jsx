@@ -34,7 +34,7 @@ export default function HomePage({ welcomeOnly = false }) {
   if (destination && !welcomeOnly) return <Navigate to={destination} replace />;
 
   return (
-    <div className="welcome-page welcome-home">
+    <div className={`welcome-page welcome-home${pathname === '/student-application' ? ' application-open' : ''}`}>
       <Header />
       <div className="public-shell">
         <aside className={`public-sidebar ${menuOpen ? 'is-open' : ''}`} aria-label="Public navigation">
